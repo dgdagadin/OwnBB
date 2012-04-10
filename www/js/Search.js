@@ -1,0 +1,1 @@
+/***Search***/jQuery(document).ready(function($) {	$("#SearchForm").submit(function() {		if (javascriptStrlen($('#SearchWord').val())<1 && javascriptStrlen($('#SearchLogin').val())<1) {			alert(SearchEmptyFields);			return false		}		return true;	});});
