@@ -1,0 +1,17 @@
+--—тарый запрос извлечени€ списка форумов
+/* $SQL = 'SELECT charters.CharterID AS IDCharter,
+               charters.CharterName AS NameCharter,
+               forums_list.ForumID AS IdForum,
+			   forums_list.ForumName AS NameForum,
+			   forums_list.ForumDescription AS Description,
+			   forums_list.ForumNumThemes AS NumTh,
+			   forums_list.ForumNumPosts AS NumP,
+			   forums_list.ForumLastThemeID AS LastThID,
+			   forums_list.ForumLastPostID AS LastPID,
+			   forums_list.ForumLastUserID AS LastUID,
+			   forums_list.ForumLastUserName AS LastUName,
+			   forums_list.ForumLastUpDate AS LastUpDate,
+			   forums_list.ForumBlock AS Block
+		FROM charters
+		INNER JOIN forums_list ON charters.CharterID = forums_list.CharterID
+        ORDER BY charters.CharterPosition, charters.CharterID, forums_list.ForumID'; */
