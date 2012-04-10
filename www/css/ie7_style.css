@@ -1,0 +1,25 @@
+/***Main Table***/
+.OtherRightDiv .ForumJumpSelect {
+	margin-top:-14px;
+	padding:0;
+}
+.PostsMainBlock  .MainBlockPost {
+
+}
+.FormsTable .InpButton {
+	padding:0px;
+}
+.FormsTable .Alert {
+	padding:0 13px;
+}
+#AddDelimiterDiv {
+	height:26px;
+}
+/***Main Table***/
+
+/***Other***/
+#ThemeDelimiterDiv {
+	height:17px;
+	width:100%;
+}
+/***Other***/

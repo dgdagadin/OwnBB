@@ -1,0 +1,2038 @@
+/***COMMON***/
+html, body {
+	min-height:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+	background:#FFFFFF;
+}
+
+html {
+	overflow-y:scroll;
+	overflow-x:auto;
+	background:#FFF;
+}
+
+body {
+	font-size:13px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	background:#FFF;
+}
+img {
+	border:0;
+}
+/***COMMON***/
+
+/***Highlighter DIV***/
+#LightboxDiv {
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:99;
+	background:url(../images/overlay.png) repeat;
+	display:none;
+}
+
+.LightboxTable {
+	border:1px solid #5176B5;
+	background:#FFFFFF;
+}
+.LightboxTable .LightboxHead, .LightboxTable .LightboxBottom {
+	background:#D1DCEB;
+	padding:4px;
+	font-weight:bold;
+	color:#444444;
+}
+.LightboxTable .LightboxHead {
+	border-bottom:1px solid #5176B5;
+}
+.LightboxTable .LightboxBottom {
+	border-top:1px solid #5176B5;
+}
+.LightboxTable .LightboxTD1 {
+	background:#E4EAF2;
+	border-left:1px solid #FFFFFF;
+	border-right:1px solid #5176B5;
+	padding:4px;
+	text-align:center;
+	vertical-align:middle;
+}
+.LightboxTable .LightboxTD2{
+	background:#DFE6EF;
+	border-right:1px solid #FFFFFF;
+	padding:4px;
+	text-align:left;
+	vertical-align:top;
+	color:#333333;
+}
+.LightboxInput {
+	border:1px solid #444444;
+	background:#E4EAF2;
+	color:#000000;
+	font-size:13px;
+	font-weight:bold;
+	cursor:pointer;
+}
+.LightboxInput:hover {
+	border:1px solid #AA0000;
+	color:#AA0000;
+}
+/***Highlighter DIV***/
+
+/***Container DIV***/
+#Container {
+	border:none;
+	min-width: 765px;
+	background:#FFFFFF;
+	min-height:100%;
+	height:auto !important;
+	height:100%;
+	margin:0 auto -30px;
+}
+/***Container DIV***/
+
+/***Container TABLE***/
+#ContainerTable {
+	width:98%;
+	background:#FFFFFF;
+	margin:0 auto;
+	padding:0;
+}
+
+#ContainerTD {
+	width:100%;
+	background:#FFFFFF;
+	margin:0;
+	padding:0;
+}
+/***Container TABLE***/
+
+
+
+/***Main TABLE***/
+#MainTable, #HeaderTable {
+	width:100%;
+	background:#FFFFFF;
+	padding:0;
+}
+
+#MainTable {
+	margin:0;
+}
+
+#HeaderTable {
+	margin:0 0 0 0;
+}
+
+#Header {
+	width:100%;
+	background:#FFFFFF;
+	margin:0;
+	padding:0;
+}
+
+#HeaderLogoTD {
+	height:89px;
+	width:100%;
+}
+
+#HeaderLogoCommonDiv {
+	height:89px;
+	width:100%;
+	position:relative;
+	border:1px solid #5B82E7;
+	background:#FFFFFF url(../images/header_bg.gif) repeat-x top left;
+	padding:0;
+	margin:0;
+}
+
+#HeaderLogoDiv {
+	width:150px;
+	height:40px;
+	position:absolute;
+	top:6px;
+	left:2px;
+}
+#HeaderLogoDiv img {
+	border:0;
+}
+
+#HeaderLogoSearch {
+	position:absolute;
+	width:195px;
+	height:40px;
+	top:17px;
+	right:5px;
+}
+#HeaderLogoSearch .HeaderSearchInput {
+	outline:none;
+	color:#105289;
+	background:#FFFFFF;
+	border:1px solid #FFFFFF;
+	width:110px;
+	font-size:12px;
+	padding-left:18px;
+	background:#FFFFFF url(../images/search.png) no-repeat center left;
+}
+#HeaderLogoSearch .HeaderSearchSubmit {
+	color:#105289;
+	font-size:11px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	border:1px solid #105289;
+	background:#FFFFFF url(../images/button_bg.gif) repeat-x top left;
+	width:55px;
+	cursor:pointer;
+	height:20px;
+}
+#HeaderAdvancdSearch {
+	position:absolute;
+	top:39px;
+	right:13px;
+}
+#HeaderAdvancdSearch a {
+	color:#FFFFFF;
+	font-size:13px;
+	font-weight:normal;
+	text-decoration:none;
+}
+#HeaderAdvancdSearch a:hover{
+	text-decoration:underline;
+}
+#HeaderLogoDescription1, #HeaderLogoDescription2 {
+	height:20px;
+	width:200px;
+	position:absolute;
+	color:#FFFFFF;
+}
+#HeaderLogoDescription1 {
+	font-weight:bold;
+	top:9px;
+	left:135px;
+	font-size:16px;
+}
+#HeaderLogoDescription2 {
+	font-weight:normal;
+	top:30px;
+	left:135px;
+	line-height:13px;
+}
+
+#HeaderTopMenuUL {
+	position:absolute;
+	bottom:-5px;
+	left:20px;
+	margin:0;
+	padding:0;
+	list-style:none;
+	height:30px;
+}
+#HeaderTopMenuUL li {
+	float:left;
+	/* color:#269828; */
+	color:#FFFFFF;
+	border-top:1px solid #a9b7e5;
+	font-weight:bold;
+	padding:4px 9px 5px 9px;
+	margin-left:0px;
+}
+#HeaderTopMenuUL li.Standart{
+	color:#fff;
+	/* border-right:1px solid #5e77c9; */
+	border-right:1px solid #5e77c9;
+	background:#FFFFFF url(../images/top_menu_bg.gif) repeat-x top left;
+}
+#HeaderTopMenuUL li.First{
+	border-left:1px solid #5e77c9;
+	border-right:1px solid #5e77c9;
+	/* background:url(../images/top_menu_left_corner.gif) repeat-x top left; */
+	background:#FFFFFF url(../images/top_menu_bg.gif) repeat-x top left;
+}
+#HeaderTopMenuUL li.Last{
+	/* background:url(../images/top_menu_right_corner.gif) repeat-x top right; */
+	background:#FFFFFF url(../images/top_menu_bg.gif) repeat-x top left;
+	border-right:1px solid #5e77c9;
+	border-left:0px solid #5e77c9;
+}
+#HeaderTopMenuUL a {
+	/* color:#269828; */
+	/* color:#333333; */
+	color:#fff;
+	text-decoration:none;
+}
+#HeaderTopMenuUL a:hover {
+	text-decoration:underline;
+}
+
+/*Navigation*/
+#Navigation {
+	width:100%;
+	background:#FFFFFF;
+	margin:0;
+	padding:0;
+}
+#NavigationUL {
+	margin:17px 5px 0 5px;
+	padding:0;
+	list-style:none;
+}
+#NavigationUL img {
+	border:0;
+}
+#NavigationUL li {
+	float:left;
+	color:#222222;
+	font-weight:bold;
+	text-decoration:none;
+	font-size:13px;
+	font-family:Arial !important;
+}
+#NavigationUL li.IndexLI {
+	background:#FFFFFF url(../images/home.gif) no-repeat 0% 90%;
+	padding-left:23px;
+	letter-spacing:0.5px;
+	word-spacing:1px;
+}
+#NavigationUL li.DividerLI {
+	padding:0 10px;
+	font-size:16px;
+}
+#NavigationUL a {
+	color:#105CB6;
+	font-weight:bold;
+	text-decoration:underline;
+	font-size:13px;
+	font-family:Arial !important;
+}
+#NavigationUL a.Index {
+	color:#105CB6;
+}
+#NavigationUL a:hover {
+	text-decoration:none;
+}
+
+/*Shalom*/
+#Shalom {
+	width:100%;
+	background:#FFFFFF;
+	margin:0;
+	padding:0;
+	vertical-align:middle;
+}
+#ShalomDiv {
+	margin:10px 0 0 0;
+	height:35px;
+	border:1px solid #BCD0ED;
+	background:#F0F5FA;
+	font-size:13px;
+}
+#ShalomDiv a {
+	font-size:13px;
+	text-decoration:underline;
+	color:blue;
+}
+#ShalomDiv a.Admin {
+	font-size:13px;
+	text-decoration:underline;
+	color:#AA0000;
+}
+#ShalomDiv a:hover {
+	text-decoration:none;
+}
+#ShalomDiv span {
+	font-weight:normal;
+	font-size:13px;
+}
+#ShalomDiv #RSS {
+	margin:8px 0 0 9px;
+	background:#F0F5FA url(../images/feed_star.gif) no-repeat center left;
+	padding:0 0 0 20px;
+	float:left;
+}
+#ShalomDiv #Welcome {
+	margin:8px 9px 0 0;
+	float:right;
+}
+
+/*MainContTD*/
+#MainContTD {
+	width:100%;
+	margin:0;
+	padding:0;
+	background:#FFFFFF;
+}
+
+.OtherShowDiv {
+	font-size:13px;
+	color:#222222;
+	border:1px solid #BCD0ED;
+	background:#F0F5FA;
+	padding:5px;
+	height:80px;
+}
+.OtherShowDiv span{
+	font-weight:bold;
+}
+.OtherShowDiv select{
+	color:#222222;
+	font-size:13px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	outline:none;
+}
+.OtherShowDiv .FastGoButton{
+	color:#105289;
+	font-size:11px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	border:1px solid #105289;
+	background:#FFFFFF url(../images/button_bg.gif) repeat-x top left;
+	cursor:pointer;
+}
+.OtherLeftDiv {
+	float:left;
+}
+.OtherRightDiv {
+	float:right;
+	margin:15px 0 0 0;
+}
+.OtherRightDiv .ForumJump {
+	margin:0;
+	padding:0;
+}
+.OtherRightDiv .ForumJumpSelect {
+	margin-top:2px;
+	padding:0;
+}
+
+.MainForumsTable {
+	width:100%;
+	/* border:1px solid #BCD0ED; */
+	border:1px solid #a9b4c8;
+}
+
+.MainForumsTable .AdminShowFirst {
+	border-top:1px solid #FFFFFF;
+	background:#DFE6EF;
+	text-align:center;
+	vertical-align:middle;
+}
+.MainForumsTable .AdminShow {
+	border-top:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+	border-right:1px solid #FFFFFF;
+	background:#DFE6EF;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.MainColumnRow {
+	background: #FFFFFF url(../images/tr_bg.gif) repeat-x top left;
+}
+.MainColumnName {
+	color:#FFFFFF;
+	font-weight:bold;
+	padding:5px;
+	font-size:14px;
+}
+.MainColumnName span {
+	padding-left:7px;
+}
+.ForumMainTR {
+	border-collapse:collapse;
+}
+.ForumCharter {
+	background:#D6DEEA url(../images/tile_sub.gif) repeat-x top left;
+	padding:5px;
+	color:#3A4F6C;
+	font-size:13px;
+	font-weight:bold;
+	border-bottom:1px solid #BCD0ED;
+	border-top:1px solid #FFFFFF;
+}
+.ForumCharter .ThemesTitle {
+	padding-left:2px;
+}
+.ForumCharter .ThemesPosts {
+	padding-left:7px;
+}
+.ForumCharter a {
+	color:#3A4F6C;
+	text-decoration:underline;
+}
+.ForumCharter img {
+	border:0;
+	vertical-align:middle;
+	margin:0 0 0 3px;
+}
+.ForumCharter a:hover {
+	text-decoration:none;
+}
+.ForumCharterBullet {
+	background:url(../images/bullet.png) no-repeat center left;
+	padding:0 0 0 21px;
+}
+.ForumIconTD {
+	background:#DFE6EF;
+	text-align:center;
+	vertical-align:middle;
+	border-left:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+}
+.ForumNameTD {
+	padding:8px 8px 8px 12px;
+	vertical-align:middle;
+	border-left:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+	background:#E4EAF2;
+}
+.ForumNameTD .OnlineImg {
+	vertical-align:middle;
+	border:0;
+}
+.ForumNameTD .OnlineActivity {
+	margin-left:3px;
+}
+.ForumNameTD .OnlineActivityTime {
+	border-bottom:1px dotted #666666;
+}
+.ForumNameTD .OnlineActivityOn {
+	color:#000000;
+}
+.ForumNameTD .OnlineActivityOff {
+	color:#555555;
+}
+.ThemeNameTD {
+	padding:10px 8px 11px;
+}
+.ForumNameTD .ForumNameDiv{
+	font-weight:bold;
+	/* font-size:13px; */
+	font-size:14px;
+	padding:0;
+	margin:0;
+}
+.ForumNameTD .ForumNameDiv a {
+	/* color:#2a567b;0066CC */
+	color:#222222;
+	text-decoration:underline;
+}
+.ForumNameTD .ForumNameDiv a:hover {
+	text-decoration:none;
+}
+.ForumNameTD .ThemeNameDiv{
+	padding:0;
+	margin:0;
+}
+.ForumNameTD .ThemeNameDiv .NumAttaches {
+	vertical-align:middle;
+}
+.ForumNameTD .ThemeNameDiv .ThemeLink{
+	/* color:#2a567b; */
+	color:#222222;
+	text-decoration:none;
+	font-size:13px;
+	font-weight:bold;
+}
+.ForumNameTD .ThemeNameDiv .LoginLink{
+	/* color:#2a567b; */
+	color:#222222;
+	text-decoration:underline;
+	font-size:13px;
+	font-weight:bold;
+}
+.ForumNameTD .ThemeNameDiv .ThemeLink:hover{
+	text-decoration:underline;
+}
+.ForumNameTD .ThemeNameDiv .LoginLink:hover{
+	text-decoration:none;
+}
+.ForumNameTD .ThemeNameDiv .ThemeIsImportant {
+	font-weight:normal;
+	color:#222222;
+	font-size:12px;
+	text-transform:uppercase;
+}
+.ForumNameTD .ThemeNameDiv .ThemeIsImportantImg {
+	vertical-align:middle;
+	margin:0 5px 0 0;
+}
+.ForumNameTD .ThemeADPDDiv{
+	padding:0;
+	margin:0px 0 0 0;
+}
+.ForumNameTD .ThemeADPDDiv .ThemeAuthorDate{
+	float:left;
+}
+.ForumNameTD .ThemeADPDDiv .ImgHref{
+	text-decoration:none;
+}
+.ForumNameTD .ThemeADPDDiv .ImgHref img {
+	vertical-align:middle;
+}
+.ForumNameTD .ThemeADPDDiv .SmallLink {
+	border:1px solid #C2CFDF;
+	margin:0 1px 0 0;
+	padding:1px 4px;
+	font-size:11px;
+	background:#F0F5FA;
+}
+.ForumNameTD .ThemeADPDDiv .SmallLink a {
+	color:#222222;
+	text-decoration:none;
+}
+.ForumNameTD .ThemeADPDDiv .SmallLink a:hover {
+	color:#2a567b;
+}
+.ForumNameTD .ThemeADPDDiv .CreateAcr{
+	text-transform:lowercase;
+	color:#444444;
+	font-size:13px;
+	border:0;
+}
+.ForumNameTD .ThemeADPDDiv a {
+	text-decoration:underline;
+}
+.ForumNameTD .ThemeADPDDiv a:hover {
+	text-decoration:none;
+}
+.ForumNameTD .ThemeADPDDiv .UserNameHref {
+	color:#444444;
+	font-size:13px;
+	font-weight:normal;
+}
+.ForumNameTD .ThemeADPDDiv .UserNameSpan{
+	color:#444444;
+	font-size:13px;
+	font-weight:normal;
+}
+.ForumNameTD .ForumDescriptionDiv{
+	font-weight:normal;
+	font-size:13px;
+	padding:0;
+	margin:2px 0 0 0;
+	color:#444444;
+}
+.ForumNameTD .ForumBlockDiv{
+	width:112px;
+	height:17px;
+	font-weight:normal;
+	font-size:11px;
+	background:#AA0000 url(../images/lock_small.png) no-repeat center left;
+	padding:4px 0 0 19px;
+	margin:7px 0 4px 10px;
+	color:#FFFFFF;
+	border:1px solid #AA0000;
+}
+.ForumNameTD .RSSForumIcon {
+	vertical-align:middle;
+	margin:0 3px 0 22px;
+}
+.ForumNameTD .CurRSSHref {
+	color:blue !important;
+	font-size:12px;
+	text-decoration:underline !important;
+	font-weight:normal;
+}
+.ForumNameTD .CurRSSHref:hover {
+	text-decoration:none !important;
+}
+.RSSIconTD {
+	border-top:1px solid #FFFFFF;
+	background:#E4EAF2;
+	vertical-align:bottom;
+	text-align:left;
+}
+.RSSIconTD img {
+	border:0;
+	margin-top:4px;
+}
+
+.ForumNumThemesTD, .ForumNumPostsTD {
+	font-weight:normal;
+	font-size:14px;
+	color:#222222;
+	border-left:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+	background:#DFE6EF;
+	vertical-align:middle;
+	text-align:center;
+}
+.ForumUpdateTD {
+	border-left:1px solid #FFFFFF;
+	border-right:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+	background:#DFE6EF;
+	padding: 5px 1px 5px 9px;
+	text-align:left;
+	vertical-align:top;
+}
+.ForumUpdateTD div {
+	margin:2px 0 0 0;
+}
+.ForumUpdateTD  img{
+	border:0;
+}
+.ForumUpdateTD a {
+	text-decoration:underline;
+}
+.ForumUpdateTD a:hover {
+	text-decoration:none;
+}
+.ForumUpdateTD .UpdateTime acronym.UpdateAcr {
+	color:#222222;
+	font-size:13px;
+	border-bottom: 1px dotted #666666;
+}
+.ForumUpdateTD .UpdateThemeName a {
+	color:#222222;
+	font-weight:normal;
+}
+.ForumUpdateTD .UpdateAuthor {
+	overflow:hidden;
+}
+.ForumUpdateTD .UpdateAuthorTitle {
+	color:#000000;
+	font-weight:bold;
+}
+.ForumUpdateTD .UpdateUserLink {
+	color:#AA0000;
+	font-weight:bold;
+}
+.ForumUpdateTD .UpdateUserText {
+	color:#AA0000;
+	font-weight:normal;
+}
+.ForumsTableBottom {
+	padding:0;
+	background:#FFFFFF;
+	border-top:1px solid #FFFFFF;
+}
+.ForumsTableDivider {
+	border-bottom:1px solid #5176B5;
+}
+.ForumsTableBottom div {
+	width:100%;
+	height:4px;
+	background:#8394B2;
+}
+
+.ForumStatTD {
+	padding:5px 8px;
+	vertical-align:middle;
+	text-align:center;
+	border-left:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+	background:#E4EAF2;
+}
+.ForumStatContent {
+	border-left:1px solid #FFFFFF;
+	border-right:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
+	background:#DFE6EF;
+	padding: 5px 10px 5px 10px;
+	color:#222222;
+	font-size:13px;
+}
+.ForumStatContent .StatisticsDiv {
+	margin:1px 0;
+	padding:0;
+	width:100%;
+}
+.ForumStatContent .UserGroupSpan{
+	font-weight:bold;
+}
+.ForumStatContent .StatisticsNum{
+	font-weight:bold;
+}
+.ForumStatContent a {
+	text-decoration:underline;
+}
+.ForumStatContent a:hover {
+	text-decoration:none;
+}
+
+.PostsUserName, .PostsDateLink{
+	background:#DFE6EF;
+	border-top:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+	color:#222222;
+	font-size:13px;
+	padding:0;
+}
+.PostsUserName{
+	font-weight:bold;
+	vertical-align:top;
+}
+.PostsUserName a{
+	color:#222222;
+	font-size:13px;
+	text-decoration:underline;
+	line-height:110%;
+	font-weight:bold;
+}
+.PostsUserName a:hover{
+	text-decoration:none;
+}
+.PostsUserName {
+	white-space:nowrap;
+}
+.PostsUserName .PostsLeftTop {
+	width:190px;
+	margin:9px 3px 10px 5px;
+	padding:0;
+	overflow:hidden;
+}
+.PostsUserName .PostsLeftTop img {
+	vertical-align:middle;
+}
+.PostsDateLink {
+	border-right:1px solid #FFFFFF;
+	vertical-align:middle;
+	color:#666666 !important;
+	font-size:13px;
+}
+.PostsDateLink .PostDate {
+	margin:0 0 0 7px;
+	float:left;
+	background:#DFE6EF url("../images/post_date.png") no-repeat left center;
+	padding:0 0 0 17px;
+	color:#222222;
+	font-size:12px;
+}
+.PostsDateLink .PostDate .PostDateTitle{
+	color:#0066CC;
+	font-weight:bold;
+	margin-right:3px;
+}
+.PostsDateLink .PostLink {
+	margin:0 0px 0 17px;
+	float:left;
+	color:#222222;
+	font-size:12px;
+}
+.PostsDateLink .PostLink  a{
+	color:#222222;
+	font-size:12px;
+	text-decoration:underline;
+}
+.PostsDateLink .PostLink  a:hover{
+	text-decoration:none;
+}
+.PostsDateLink .PostHide {
+	float:right;
+	margin:0 7px 0 0;
+}
+.PostsUserInfo, .PostsMainBlock {
+	background:#E4EAF2;
+	border-top:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+}
+
+.SearchAuthorDatePermalink {
+	border-right:1px solid #FFFFFF;
+	vertical-align:middle;
+	font-size:12px;
+}
+.SearchAuthorDatePermalink .AuthornameTitle {
+	font-weight:bold;
+	color:#000000;
+}
+.SearchAuthorDatePermalink .AuthornameSpan {
+	color:#AA0000;
+	font-weight:bold;
+}
+.SearchAuthorDatePermalink .AuthornameHref {
+	color:#AA0000;
+	font-weight:bold;
+	text-decoration:underline;
+}
+.SearchAuthorDatePermalink .AuthornameHref:hover {
+	text-decoration:none;
+}
+.SearchAuthorDatePermalink .Image {
+	vertical-align:middle;
+}
+.SearchDateTitle {
+	color:#0066CC;
+	font-weight:bold;
+}
+.SearchPostPermalink {
+	color:#222222;
+	font-size:12px;
+	text-decoration:underline;
+}
+.SearchPostPermalink:hover {
+	text-decoration:none;
+}
+.SearchPostContent {
+
+}
+.SearchForumTheme {
+
+}
+
+
+.PostsMainBlock {
+	vertical-align:top;
+	padding:10px;
+}
+.PostsMainBlock  .MainBlockAllDiv{
+	margin:10px 10px 37px 10px;
+	overflow:hidden;
+}
+.PostsMainBlock  .MainBlockPost {
+	font-family:Verdana,Arial,Helvetica,sans-serif !important;
+	font-size:12px;
+	margin:0;
+	padding:0;
+	color:#000000;
+	line-height:155%;
+}
+.PostsMainBlock  .MainBlockAttach{
+	margin:20px 0 0 0;
+	padding:9px 4px;
+	/* border-left:1px dashed #555555; */
+	border:1px solid #BCD0ED;
+	background:#DFE6EF;
+	font-size:13px;
+}
+.PostsMainBlock  .MainBlockAttach .AttachIconDiv{
+	background:url("../images/post_attach.png") no-repeat left center;
+	padding:4px 0 0 17px;
+	color:#0066CC;
+}
+.PostsMainBlock  .MainBlockAttach .AttachIconDiv a{
+	color:#0066CC;
+	text-decoration:underline;
+}
+.PostsMainBlock  .MainBlockAttach .AttachIconDiv a:hover{
+	text-decoration:none;
+}
+.PostsMainBlock  .MainBlockAttach .AttachInfo {
+	color:#222222;
+}
+.PostsMainBlock  .MainBlockAttach .AttachIcon{
+	vertical-align:middle;
+}
+.PostsMainBlock  .MainBlockAttach .FileAttachTitle{
+	color:#444444;
+	font-weight:bold;
+}
+.PostsMainBlock  .MainBlockAttach .FileAttachContent{
+	font-weight:normal;
+}
+.PostsMainBlock  .MainBlockSlogan{
+	margin:30px 0 0 0;
+	font-family:Verdana,Arial,Helvetica,sans-serif !important;
+	font-size:11px;
+	width:400px;
+	overflow:hidden;
+}
+.PostsMainBlock  .SpanHR{
+	font-family:Arial;
+	font-size:13px;
+	color:#555555;
+}
+
+
+.PostsUserInfo {
+	vertical-align:top;
+}
+.PostsUserInfo .NoRegistered {
+	margin:14px 5px 60px 11px;
+	padding:0;
+	font-weight:normal;
+	font-size:12px;
+}
+.PostsUserInfo .AvatarImg{
+	display:block;
+	border:0;
+    padding:0;
+	margin:10px 10px 0 10px;
+}
+.PostsUserInfo .UserGroupName{
+	margin:14px 5px 0 11px;
+	padding:0;
+	font-size:12px;
+}
+.PostsUserInfo  .UserGroupTitle{
+	font-weight:bold;
+	color:#555555;
+}
+.PostsUserInfo  .UserGroup{
+	font-weight:normal;
+}
+.PostsUserInfo .UserStatus{
+	margin:10px 10px 7px;
+	padding:0;
+	font-weight:normal;
+	font-size:12px;
+    width:110px;
+}
+.PostsUserInfo .UserNumPosts, .PostsUserInfo .UserNumThemes, .PostsUserInfo .UserRegistration {
+	margin:0px 0 0px 10px;
+	padding:0;
+	font-size:12px;
+	font-weight:normal;
+	color:#555555;
+}
+.PostsUserInfo .UserRegistration {
+	margin-bottom:40px;
+}
+.PostsUserInfo .UserNumPosts .NumPostsTitle, .PostsUserInfo .NumThemesTitle, .PostsUserInfo .UserRegistration .UserRegTitle{
+	font-weight:bold;
+}
+.PostsUserInfo .UserSex {
+	margin:0px 0 0 10px;
+	font-size:12px;
+	color:#555555;
+	font-weight:normal;
+}
+.PostsUserInfo .UserSex .UserSexTitleSpan {
+	font-weight:bold;
+}
+.PostsUserInfo .UserSex .UserSexSpan {
+	font-weight:normal;
+	text-transform:lowercase;
+}
+.PostsMainBlock {
+	border-right:1px solid #FFFFFF;
+}
+.PostsUserProfile, .PostsPanelString {
+	background:#D1DCEB;
+	/* border-bottom:1px solid #5176B5; */
+	border-top:1px solid #5176B5;
+	border-left:1px solid #FFFFFF;
+	vertical-align:middle;
+}
+.PostsUserProfile {
+	padding:5px 0;
+}
+.PostsPanelString {
+	padding:0;
+}
+.PostsPanelString .EditDateTitleSpan {
+	padding-left:15px;
+	font-size:12px;
+	color:#666666;
+	font-weight:bold;
+}
+.PostsPanelString .EditDateSpan {
+	font-size:12px;
+	color:#666666;
+	font-weight:normal;
+}
+.PostsPanelString .RightBottom {
+	width:100%;
+}
+.PostsPanelString .RightBottomTD {
+	padding:5px 0;
+}
+.PostsPanelString .Top {
+	padding:5px 0 5px 10px;
+	text-align:right;
+}
+.PostsPanelString .Top img {
+	vertical-align:middle;
+	margin:0 3px 0;
+}
+.PostButton {
+	background:url("../images/tile_sub.gif") repeat-x scroll left top #FFFFFF;
+	border:1px solid #8394B2;
+	margin:1px 0px 0 7px;
+	padding:0;
+	color:#FFFFFF;
+	font-weight:bold;
+	float:left;
+	/* border-radius:4px; */
+}
+.PostButton:hover {
+	border:1px solid #222;
+    background:#E4EAF2;
+}
+.PostButton img {
+	margin:3px 0px 0px 7px;
+}
+.PostsPanelString {
+	border-right:1px solid #FFFFFF;
+}
+.PostsTable {
+	border:1px solid #a9b4c8;
+}
+
+.AddThemePost {
+	height:24px;
+	border:1px solid #BCD0ED;
+	background:#FFFFFF url("../images/tr_bg.gif") repeat-x left top;
+	color:#FFFFFF;
+	font-size:14px;
+	font-weight:bold;
+}
+.AddThemePost  a{
+	color:#FFFFFF;
+	text-decoration:none;
+}
+.AddThemePost  a:hover{
+	text-decoration:underline;
+}
+.AddTheme {
+	width:125px;
+}
+.AddPost {
+	width:97px;
+}
+.AddThemePost  .AddThemeIcon {
+	margin:4px 3px 0 3px;
+	background:url("../images/add_theme.png") no-repeat left center;
+	padding-left:20px;
+}
+.AddThemePost  .AddPostIcon {
+	margin:4px 3px 0 3px;
+	background:url("../images/add_post.png") no-repeat left center;
+	padding-left:20px;
+}
+
+.BlockThemePost {
+	height:24px;
+	border:1px solid #AA0000;
+	background:#AA0000;
+	color:#FFFFFF;
+	font-size:14px;
+	font-weight:bold;
+}
+.BlockTheme {
+	width:130px;
+}
+.BlockPost {
+	width:125px;
+}
+.BlockThemePost  .BlockThemeIcon {
+	margin:4px 3px 0 3px;
+	background:url("../images/lock_small.png") no-repeat left center;
+	padding-left:20px;
+}
+.BlockThemePost  .BlockPostIcon {
+	margin:4px 3px 0 3px;
+	background:url("../images/lock_small.png") no-repeat left center;
+	padding-left:20px;
+}
+
+
+/*Forms*/
+.FormsTable {
+	table-layout:fixed;
+	width:100%;
+}
+.FormsTable .InpButton {
+	color:#222222;
+	font-size:12px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	border:1px solid #666;
+	background:#FFFFFF url(../images/button_bg.gif) repeat-x top left;
+	cursor:pointer;
+	height:22px;
+	padding:0 23px;
+}
+.FormsTable .Alert {
+	background:#FFCFC7;
+	color:#222222;
+	font-size:12px;
+	font-family:arial,helvetica,"lucida grande",verdana,sans-serif;
+	border:1px solid #666;
+	cursor:pointer;
+	height:22px;
+	padding:0 23px;
+}
+.FormsTable .InpButton:hover {
+	color:#AA0000;
+	border:1px solid #AA0000;
+}
+.FormsTable .Alert:hover {
+	border:1px solid #000000;
+}
+#.FormsTable .InpButton button:active { 
+	border:1px solid #000;
+}
+
+.FormsTable .FormTitleTD {
+	border-left:1px solid #ffffff;
+	border-top:0px solid #ffffff;
+	background:#E4EAF2;
+	padding:5px;
+	vertical-align:top;
+}
+.FormsTable .InputTitle {
+	color:#222222;
+	font-weight:bold;
+	font-size:13px;
+}
+.FormsTable .InputDescr {
+	color:#444444;
+	font-weight:normal;
+	font-size:12px;
+}
+.FormsTable .Important {
+	font-size:14px;
+	margin-left:2px;
+	color:#AA0000;
+}
+
+.FormsTable .AuthOther {
+	font-size:12px;
+	font-family:Arial,Verdana,sans-serif;
+}
+.FormsTable .AuthOther a {
+	color:blue;
+	text-decoration:underline;
+}
+.FormsTable .AuthOther a:hover {
+	text-decoration:none;
+}
+
+.FormsTable .AuthRemember {
+	font-size:12px;
+	font-family:Arial,Verdana,sans-serif;
+	margin:10px 0 0 0;
+	padding:0;
+}
+.FormsTable .AuthRemember input {
+	vertical-align:middle;
+	margin:0;
+	padding:0;
+}
+
+.FormsTable .FormInputTD {
+	border-right:1px solid #ffffff;
+	border-left:1px solid #ffffff;
+	border-top:0px solid #ffffff;
+	background:#E4EAF2;
+	padding:5px;
+	vertical-align:middle;
+}
+.FormsTable .AdditionalTD {
+	background:#E4EAF2;
+}
+.FormsTable .CenterTD {
+	background:#D1DCEB;
+	text-align:center;
+	border-top:1px solid #5176B5;
+}
+.FormsTable .AttachTitleTD {
+	padding:15px 5px 5px;
+}
+.FormsTable .CaptchaImage {
+	border:1px solid #5176B5;
+}
+.FormsTable .TextareaTitleTD, .FormsTable .TextareaTD {
+	border-top:0px solid #ffffff;
+}
+.FormsTable .Usual {
+	margin-left:3px;
+	color:#222222;
+	font-size:13px;
+}
+.FormsTable .MainBlockAttach{
+	margin:0px 10px 20px 0px;
+	padding:9px 9px;
+	border:1px solid #BCD0ED;
+	background:#DFE6EF;
+	font-size:13px;
+}
+.FormsTable .MainBlockAttach .AttachAddAction {
+	margin:0 0 5px 0;
+}
+.FormsTable  .MainBlockAttach .FileAttachTitle{
+	color:#222;
+	font-weight:bold;
+}
+.FormsTable  .MainBlockAttach .AttachIconDiv{
+	background:url("../images/post_attach.png") no-repeat left center;
+	padding:4px 0 0 17px;
+	/* color:#0066CC; */
+}
+.FormsTable .MainBlockAttach .AttachFileField {
+	margin:0 0 5px 0;
+}
+.FormsTable .MainBlockAttach .AttachExtensions {
+	margin:0 0 2px 0;
+}
+.FormsTable .InpEl {
+	outline:0;
+}
+.FormsTable .InpText {
+	font-size: 100%;
+	padding:2px 1px;
+}
+.FormsTable .InpTextarea {
+	resize:none;
+	overflow:auto;
+	font-size: 100%;
+	padding:1px;
+	font-family: verdana;
+}
+.FormsTable .MultipleSelect {
+	background:#FFF;
+	border:1px solid #62A3DB;
+	font-size:13px;
+	font-family:Arial, sans-serif;
+	padding:2px;
+}
+.FormsTable .InpText, .FormsTable .InpTextarea {
+	border:1px solid #62A3DB;
+	background:#ffffff;
+}
+.FormsTable .InpText:hover, .FormsTable .InpTextarea:hover {
+	border:1px solid #AA0000;
+}
+.FormsTable .InpText:focus, .FormsTable .InpTextarea:focus {
+	border:1px solid #AA0000;
+}
+.FormsTable .InpCheckbox {
+	
+}
+.FormsTable .RadioButtonClass {
+	margin:0;
+	padding:0;
+}
+.FormsTable .RadioClass {
+	line-height:150%;
+}
+.ErrorBlockDiv {
+	border:1px solid #de4040;
+	background:#F9E2E2;
+	padding:10px;
+}
+.ErrorBlockDiv .ErrorBlockTitle {
+	font-size:13px;
+	font-weight:normal;
+	color:#222222;
+}
+.ErrorBlockDiv .ErrorItemDiv {
+	font-weight:bold;
+	color:#222222;
+	padding-left:20px;
+	background:#F9E2E2 url(../images/error_item.png) no-repeat center left;
+	margin:3px 0px;
+}
+/*Forms*/
+
+/***Main TABLE***/
+
+
+
+/***Footer***/
+#Footer {
+	border:none;
+	min-width:765px;
+	height:30px;
+	background:#FFFFFF;
+	margin:0 auto;
+} 
+/***Footer***/
+
+/***Footer TABLE***/
+#FooterTable {
+	width:96%;
+	background:#FFFFFF;
+	margin:0 auto;
+	padding:0;
+}
+
+#FooterTD {
+	width:100%;
+	background:#FFFFFF;
+	text-align:center;
+	margin:0;
+	padding:0;
+	font-size:10px;
+	color:#333333;
+}
+#FooterTD a {
+	color:blue;
+	text-decoration:none;
+}
+#FooterTD a:hover{
+	text-decoration:underline;
+}
+/***Footer TABLE***/
+
+/***OTHER***/
+#Garant {
+	height:30px;
+	background:#FFFFFF;
+}
+#DelimiterDiv {
+	height:27px;
+	width:100%;
+}
+#AddDelimiterDiv {
+	height:23px;
+	width:100%;
+}
+#ThemeDelimiterDiv {
+	height:14px;
+	width:100%;
+}
+.BlockDelimiterDiv {
+	height:35px;
+	width:100%;
+}
+.OtherShowDelimiterDiv {
+	height:12px;
+	width:100%;
+}
+.AddAndPageDivider {
+	height:5px;
+	width:100%;
+}
+#BottomDelimiterDiv{
+	height:35px;
+	width:100%;
+}
+.AddAndPagesTable {
+	width:100%;
+	border:0;
+}
+.AddAndPagesTable .Right {
+	/* text-align:right; */
+	vertical-align:middle;
+}
+.AddAndPagesTable .Left {
+	text-align:left;
+	vertical-align:middle;
+}
+.PageTable {
+	font-size:13px;
+}
+.PageTable td {
+	border:1px solid #666666;
+	padding:2px 5px;
+	color:#222222;
+	background:#F0F5FA;
+}
+.PageTable a{
+	color:#222222;
+	text-decoration:underline;
+}
+.PageTable .PageDottes {
+	border:0;
+	padding:2px 1px;
+	font-weight:bold;
+}
+.PageTable .DottesDiv {
+	margin-bottom:-5px;
+}
+.PageTable .CurrentPage {
+	font-weight:bold;
+	background:#DFE6EF;
+}
+.NoThemes {
+	border:1px solid #BCD0ED;
+	background:#F0F5FA;
+	padding:5px;
+	margin:15px 0;
+}
+.ForumNoUpdates {
+	margin:10px;
+	font-size:13px;
+	color:#222222;
+	font-weight:bold;
+}
+.LoginOrRegister {
+	
+}
+.LoginOrRegister a {
+	color:blue;
+	text-decoration:underline;
+	font-weight:normal;
+}
+.NoURLs {
+	color:#AA0000;
+}
+.NoURLs a {
+	color:blue;
+	text-decoration:underline;
+	font-weight:normal;
+}
+.FAQSearchUl {
+	margin:5px 20px;
+	padding:0;
+	line-height:150%;
+	list-style-type:disc;
+	text-align:left;
+}
+.FAQSearchUl li {
+	margin:0 0 0 0px;
+	padding:0;
+	list-style-type:disc;
+	font-size:13px;
+}
+.SearchForumName {
+	color:#444;
+	font-weight:bold;
+	text-decoration:underline;
+}
+.SearchForumName:hover {
+	text-decoration:none;
+}
+.O {
+	font-size:14px;
+	font-weight:bold;
+}
+/***OTHER***/
+
+
+.OBB_BB_Code {
+	width:98%;
+	background-color:#FAFCFE;
+	border:1px solid #000;
+	padding:0;
+	color:Teal;
+	font:15px Verdana;
+}
+
+.OBB_BB_CodeHead {
+	background:blue;
+	color:white;
+	width:100%;
+	margin:0;
+	height:15px;
+	font-size:11px;
+}
+
+.OBB_BB_CodeBody {
+	white-space:pre;
+	margin:0;
+	padding:4px;
+	font-size:12px;
+	line-height:8px;
+	font-family:arial;
+	width:100%;
+}
+
+.OBB_BB_Quote {
+	width:98%;
+	background-color:#FAFCFE;
+	border:1px solid #000;
+	padding:0;
+	color:Teal;
+	font:15px Verdana;
+}
+
+.OBB_BB_QuoteHead {
+	background:blue;
+	color:white;
+	width:100%;
+	margin:0;
+	height:15px;
+	font-size:11px;
+}
+
+.OBB_BB_QuoteBody {
+	margin:0;
+	padding:4px;
+	width:100%;
+}
+
+/***BB Code***/
+.BBStndrt {
+
+}
+.BBStrong {
+	font-weight:bold;
+}
+.BBItalic {
+	font-style:italic;
+}
+.BBUnderl {
+	text-decoration:underline;
+}
+.BBStrike {
+	text-decoration: line-through;
+}
+.BBUrl {
+	color:blue;
+	text-decoration:underline;
+}
+.BBUrl:hover {
+	text-decoration:none;
+}
+.BBQuote {
+	border:1px dotted #000000;
+	margin:10px;
+	background:#ffffff;
+	overflow:hidden;
+}
+.BBQuote .Head {
+	margin:2px 4px;
+	padding:0 0 0 18px;
+	background:#ffffff url("../images/block_quote.gif") no-repeat left center;
+	font-size:11px;
+	color:#444444;
+}
+.BBQuote .Body {
+	margin:5px;
+}
+.BBSource {
+	border:1px dashed #000000;
+	margin:10px;
+	background:#ffffff;
+	overflow:hidden;
+	width:480px;
+}
+.BBSource .Head {
+	font-weight:bold;
+	color:#0066CC;
+	margin:2px 4px;
+	padding:0 0 0 18px;
+	border-bottom:1px dotted #222222;
+	background:#ffffff url("../images/block_code.png") no-repeat left center;
+}
+.BBSource .Body {
+	margin:3px;
+	font-size:13px;
+	font-family : Courier New, monospace ! important;
+	color:blue;
+	overflow-x:scroll;
+	overflow-y:auto;
+	max-height:270px;
+	white-space:pre;
+}
+.BBImg {
+	display:block;
+	border:0;
+	margin:1px;
+}
+.BBUl {
+	margin:5px 20px;
+	padding:0;
+	line-height:150%;
+	list-style-type:disc;
+	text-align:left;
+}
+.BBUl li {
+	margin:0 0 0 0px;
+	padding:0;
+	list-style-type:disc;
+}
+.bbcode_smiley {
+	display:inline;
+	border:0;
+}
+/***BB Code***/
+
+/***BBEDITOR***/
+#BBEditor_Container {
+	display:none;
+	margin:0;
+	padding:0;
+}
+
+#BBEditor_Container input[type=button]:active { 
+	border: 1px solid #FFFFFF; 
+}
+
+#BBEditor_Container .BBEditor_Hidden {
+	display:none;
+}
+
+#BBEditor_Container .BBEditor_ButtonsDiv {
+	margin:1px 1px 2px 0;
+	padding:0;
+}
+
+#BBEditor_Container .BBEditor_ButtonInput {
+	width:22px;
+	height:24px;
+	background-color:#E4EAF2;
+	margin:0;
+	padding:0;
+	border:0px solid #E4EAF2;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+}
+
+#BBEditor_Container  .Button {
+	background:#ffffff url("../images/bbc_fon.gif") repeat-x left top;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #bbb;
+	border-right:1px solid #bbb;
+	margin:1px 0px 0 1px;
+	padding:0;
+	color:#FFFFFF;
+	font-weight:bold;
+	float:left;
+	/* border-radius:4px; */
+}
+#BBEditor_Container  .Button:hover {
+	border:1px solid #666;
+	background:#ffffff;
+}
+#BBEditor_Container  .Button img {
+	margin:3px 0px 0px 7px;
+}
+
+#BBEditor_Container .BBEditor_Divider {
+	
+}
+
+#BBEditor_Container #BBEditor_Smiles {
+	background:#E4EAF2;
+	border:1px solid #E4EAF2;
+	width:75%;
+	padding:0;
+	margin:5px 0;
+}
+#BBEditor_Container img {
+	/* vertical-align:middle; */
+}
+
+#BBEditor_Container .BBEditor_ColorTD {
+	width:20px;
+	height:20px;
+	margin:0;
+	padding:0;
+}
+/***BBEDITOR***/
+
+/**DYNARCH CALENDAR**/
+.DynarchCalendar {
+  border: 1px solid #aaa;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  background: #e8e8e8;
+  font: 11px "lucida grande",tahoma,verdana,sans-serif;
+  line-height: 14px;
+  position: relative;
+  cursor: default;
+}
+
+.DynarchCalendar table {
+  border-collapse: collapse;
+  font: 11px "lucida grande",tahoma,verdana,sans-serif;
+  line-height: 14px;
+}
+
+.DynarchCalendar-topBar {
+  border-bottom: 1px solid #aaa;
+  background: #ddd;
+  padding: 5px 0 0 0;
+}
+
+table.DynarchCalendar-titleCont {
+  font-size: 130%; font-weight: bold;
+  color: #444;
+  text-align: center;
+  z-index: 9;
+  position: relative;
+  margin-top: -6px;
+}
+
+.DynarchCalendar-title div {
+  padding: 5px 17px;
+  text-shadow: 1px 1px 1px #777;
+}
+.DynarchCalendar-hover-title div {
+  background-color: #fff;
+  border: 1px solid #000;
+  padding: 4px 16px;
+  background-image: url("../images/Calendar/drop-down.gif");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+}
+.DynarchCalendar-pressed-title div {
+  border: 1px solid #000;
+  padding: 4px 16px;
+  background-color: #777;
+  color: #fff;
+  background-image: url("../images/Calendar/drop-up.gif");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+}
+
+.DynarchCalendar-bottomBar {
+  border-top: 1px solid #aaa;
+  background: #ddd;
+  padding: 2px;
+  position: relative;
+  text-align: center;
+}
+
+.DynarchCalendar-bottomBar-today {
+  padding: 2px 15px;
+}
+
+.DynarchCalendar-hover-bottomBar-today {
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 1px 14px;
+}
+.DynarchCalendar-pressed-bottomBar-today {
+  border: 1px solid #000;
+  background-color: #777;
+  color: #fff;
+  padding: 1px 14px;
+}
+
+.DynarchCalendar-body {
+  position: relative;
+  overflow: hidden;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.DynarchCalendar-first-col { padding-left: 5px; }
+.DynarchCalendar-last-col { padding-right: 5px; }
+
+.DynarchCalendar-animBody-backYear {
+  position: absolute;
+  top: -100%;
+  left: 0;
+}
+.DynarchCalendar-animBody-back {
+  position: absolute;
+  top: 5px;
+  left: -100%;
+}
+.DynarchCalendar-animBody-fwd {
+  position: absolute;
+  top: 5px;
+  left: 100%;
+}
+.DynarchCalendar-animBody-now {
+  position: absolute;
+  top: 5px;
+  left: 0;
+}
+.DynarchCalendar-animBody-fwdYear {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.DynarchCalendar-dayNames {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.DynarchCalendar-dayNames div { font-weight: bold; color: #444; text-shadow: 1px 1px 1px #777; }
+
+.DynarchCalendar-navBtn {
+  position: absolute;
+  top: 5px;
+  z-index: 10;
+}
+
+.DynarchCalendar-navBtn div {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  height: 15px;
+  width: 16px;
+  padding: 1px;
+}
+.DynarchCalendar-hover-navBtn div {
+  border: 1px solid #000;
+  padding: 0;
+  background-color: #fff;
+}
+.DynarchCalendar-navDisabled {
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+.DynarchCalendar-pressed-navBtn div {
+  border: 1px solid #000;
+  padding: 0;
+  background-color: #777;
+  color: #fff;
+}
+
+.DynarchCalendar-prevMonth {
+  left: 25px;
+}
+
+.DynarchCalendar-nextMonth {
+  left: 100%;
+  margin-left: -43px;
+}
+
+.DynarchCalendar-prevYear {
+  left: 5px;
+}
+
+.DynarchCalendar-nextYear {
+  left: 100%;
+  margin-left: -23px;
+}
+
+.DynarchCalendar-prevMonth div {
+  background-image: url("../images/Calendar/nav-left.gif");
+}
+
+.DynarchCalendar-nextMonth div {
+  background-image: url("../images/Calendar/nav-right.gif");
+}
+
+.DynarchCalendar-prevYear div {
+  background-image: url("../images/Calendar/nav-left-x2.gif");
+}
+
+.DynarchCalendar-nextYear div {
+  background-image: url("../images/Calendar/nav-right-x2.gif");
+}
+
+.DynarchCalendar-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+  overflow: hidden;
+  opacity: 0.85;
+  filter: alpha(opacity=85);
+}
+
+.DynarchCalendar-menu table td div {
+  text-align: center;
+  font-weight: bold;
+  padding: 3px 5px;
+}
+.DynarchCalendar-menu table td div.DynarchCalendar-menu-month {
+  width: 4em;
+  text-align: center;
+}
+.DynarchCalendar-menu table td div.DynarchCalendar-hover-navBtn {
+  border: 1px solid #000;
+  padding: 2px 4px;
+  background-color: #fff;
+  color: #000;
+}
+.DynarchCalendar-menu table td div.DynarchCalendar-pressed-navBtn {
+  border: 1px solid #000;
+  padding: 2px 4px;
+  background-color: #777;
+  color: #fff !important;
+}
+
+.DynarchCalendar-menu-year {
+  text-align: center;
+  font: 16px "lucida grande",tahoma,verdana,sans-serif;
+  font-weight: bold;
+}
+
+.DynarchCalendar-menu-sep {
+  height: 1px; font-size: 1px; line-height: 1px;
+  overflow: hidden;
+  border-top: 1px solid #888;
+  background: #fff;
+  margin-top: 4px; margin-bottom: 3px;
+}
+
+.DynarchCalendar-time td { font-weight: bold; font-size: 120%; }
+.DynarchCalendar-time-hour, .DynarchCalendar-time-minute { padding: 1px 3px; }
+.DynarchCalendar-time-down { background: url("../images/Calendar/time-down.png") no-repeat 50% 50%; width: 11px; height: 8px; opacity: 0.5; }
+.DynarchCalendar-time-up { background: url("../images/Calendar/time-up.png") no-repeat 50% 50%; width: 11px; height: 8px; opacity: 0.5; }
+.DynarchCalendar-time-sep { padding: 0 2px; }
+.DynarchCalendar-hover-time { background-color: #444; color: #fff; opacity: 1; }
+.DynarchCalendar-pressed-time { background-color: #000; color: #fff; opacity: 1; }
+.DynarchCalendar-time-am { padding: 1px; width: 2.5em; text-align: center; }
+
+/* body */
+
+.DynarchCalendar-hover-week { background-color: #ddd; }
+
+.DynarchCalendar-dayNames div, .DynarchCalendar-day, .DynarchCalendar-weekNumber {
+  width: 1.7em;
+  padding: 3px 4px;
+  text-align: center;
+}
+.DynarchCalendar-weekNumber {
+  border-right: 1px solid #aaa;
+  margin-right: 4px;
+  width: 2em !important;
+  padding-right: 8px !important;
+}
+
+.DynarchCalendar-day {
+  text-align: right; color: #222;
+}
+.DynarchCalendar-day-othermonth { color: #888; }
+.DynarchCalendar-weekend { color: #c22; }
+.DynarchCalendar-day-today { color: #00f; font-weight: bold; }
+
+.DynarchCalendar-day-disabled {
+  opacity: 0.5;
+  text-shadow: 2px 1px 1px #fff;
+}
+
+.DynarchCalendar-hover-date {
+  padding: 2px 3px;
+  background-color: #eef;
+  border: 1px solid #88c;
+  margin: 0 !important;
+  color: #000;
+}
+
+.DynarchCalendar-day-othermonth.DynarchCalendar-hover-date { border-color: #aaa; color: #888; }
+
+.DynarchCalendar-dayNames .DynarchCalendar-weekend { color: #c22; }
+.DynarchCalendar-day-othermonth.DynarchCalendar-weekend { color: #d88; }
+
+.DynarchCalendar-day-selected {
+  padding: 2px 3px;
+  margin: 1px;
+  background-color: #aaa;
+  color: #000 !important;
+}
+.DynarchCalendar-day-today.DynarchCalendar-day-selected { background-color: #999; }
+
+/* focus */
+
+.DynarchCalendar-focusLink {
+  position: absolute;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+.DynarchCalendar-focused {
+  border-color: #000;
+}
+
+.DynarchCalendar-focused .DynarchCalendar-topBar, .DynarchCalendar-focused .DynarchCalendar-bottomBar {
+  background-color: #ccc;
+  border-color: #336;
+}
+
+.DynarchCalendar-focused .DynarchCalendar-hover-week {
+  background-color: #ccc;
+}
+
+.DynarchCalendar-tooltip {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+}
+
+.DynarchCalendar-tooltipCont {
+  margin: 0 5px 0 5px;
+  border: 1px solid #aaa;
+  border-top: 0;
+  padding: 3px 6px;
+  background: #ddd;
+}
+
+.DynarchCalendar-focused .DynarchCalendar-tooltipCont {
+  background: #ccc;
+  border-color: #000;
+}
+
+@media print {
+  .DynarchCalendar-day-selected {
+    padding: 2px 3px;
+    border: 1px solid #000;
+    margin: 0 !important;
+  }
+}
+/**DYNARCH CALENDAR**/

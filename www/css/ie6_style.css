@@ -1,0 +1,50 @@
+/***Container DIV***/
+#Container {
+	width: expression(document.body.clientWidth > 765 ? "auto" : "765px");
+}
+/***Container DIV***/
+
+/***Main Table***/
+#HeaderTopMenuUL {
+	bottom:-5px;
+}
+#ShalomDiv #RSS {
+	margin:8px 0 0 9px;
+}
+#ShalomDiv #Welcome {
+	margin:8px 9px 0 0;
+}
+.OtherRightDiv .ForumJumpSelect {
+	margin-top:-14px;
+	padding:0;
+}
+.PostsDateLink .PostHide {
+	float:right;
+	margin:0 3px 0 0;
+}
+.PostsMainBlock  .MainBlockPost {
+
+}
+.FormsTable .InpButton {
+	padding:0px;
+}
+.FormsTable .Alert {
+	padding:0 13px;
+}
+#AddDelimiterDiv {
+	height:26px;
+}
+/***Main Table***/
+
+/***Footer DIV***/
+#Footer {
+	width: expression(document.body.clientWidth > 765 ? "auto" : "765px");
+} 
+/***Footer DIV***/
+
+/***Other***/
+#ThemeDelimiterDiv {
+	height:17px;
+	width:100%;
+}
+/***Other***/
