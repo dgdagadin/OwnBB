@@ -2138,7 +2138,7 @@ function OBB_Search_Highlight ($HighlightArray, $Text, $IsSimpleReplace) {
 
 		foreach ($HighlightArray as $key=>$val) {
 			if (!is_numeric ($val)) {
-				$Text = preg_replace ('/' . $val . '/ui', '<span style="color:red; background:yellow;">$0</span>', $Text);
+				$Text = preg_replace ('/' . $val . '/ui', '<span style="color:#AA0000; background:yellow;">$0</span>', $Text);
 			}
 		}
 

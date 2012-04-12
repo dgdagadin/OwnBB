@@ -830,8 +830,12 @@ img {
 
 .SearchAuthorDatePermalink {
 	border-right:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+	border-top:1px solid #FFFFFF;
 	vertical-align:middle;
 	font-size:12px;
+	padding:9px 5px 10px 5px;
+	background:#DFE6EF;
 }
 .SearchAuthorDatePermalink .AuthornameTitle {
 	font-weight:bold;
@@ -840,10 +844,12 @@ img {
 .SearchAuthorDatePermalink .AuthornameSpan {
 	color:#AA0000;
 	font-weight:bold;
+	margin-right:7px;
 }
 .SearchAuthorDatePermalink .AuthornameHref {
 	color:#AA0000;
 	font-weight:bold;
+	margin-right:10px;
 	text-decoration:underline;
 }
 .SearchAuthorDatePermalink .AuthornameHref:hover {
@@ -852,23 +858,59 @@ img {
 .SearchAuthorDatePermalink .Image {
 	vertical-align:middle;
 }
-.SearchDateTitle {
+.SearchAuthorDatePermalink .SearchDateTitle {
 	color:#0066CC;
 	font-weight:bold;
+	margin-left:2px;
 }
-.SearchPostPermalink {
+.SearchAuthorDatePermalink .SearchDateTime {
+	color:#222222;
+	font-weight:normal;
+	font-size:12px;
+	margin-left:3px;;
+}
+.SearchAuthorDatePermalink .SearchPostPermalink {
 	color:#222222;
 	font-size:12px;
 	text-decoration:underline;
 }
-.SearchPostPermalink:hover {
+.SearchAuthorDatePermalink .SearchPostPermalink:hover {
 	text-decoration:none;
 }
 .SearchPostContent {
-
+	background:#E4EAF2;
+	border:1px solid #FFFFFF;
+	border-bottom:0;
+	padding:20px 20px;
+	font-family:Verdana,Arial,Helvetica,sans-serif !important;
 }
 .SearchForumTheme {
-
+	border-right:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+	border-bottom:1px solid #FFFFFF;
+	border-top:1px solid #5176B5;
+	vertical-align:middle;
+	padding:0px;
+	background:#D1DCEB;
+}
+.SearchForumTheme .ForumThemeHref {
+	font-weight:normal;
+	color:#105CB6;
+	font-size:13px;
+	text-decoration:underline;
+}
+.SearchForumTheme .ForumThemeHref:hover {
+	text-decoration:none;
+	color:red;
+}
+.SearchForumTheme .ForumThemeSeparator {
+	font-weight:normal;
+	color:#000000;
+	font-size:13px;
+	margin:0 5px;
+}
+.SearchDivider {
+	background:#8394B2;
 }
 
 

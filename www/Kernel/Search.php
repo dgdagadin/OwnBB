@@ -617,71 +617,42 @@ $vvvv = microtime();
 					$SearchAuthorHrefStart = '<span class="AuthornameSpan">';
 					$SearchAuthorHrefEnd   = '</span>';
 				}
-				// if (Main_Strlen ($SearchUser) > 0 && OBB_SEARCH_HIGHLIGHT) {
-					// $UserName = preg_replace ('/(' . preg_quote ($SearchUser, "/") . ')/ui', '<font color="red">\1</font>', $UserName);
-				// }
+				//if (Main_Strlen ($SearchUser) > 0 && OBB_SEARCH_HIGHLIGHT) {
+				//$UserName = preg_replace ('/(' . preg_quote ($SearchUser, "/") . ')/ui', '<font color="red">\1</font>', $UserName);
+				//}
 				//$SearchUserName = '<span>' . $ForumLang['SearchThemeAuthor'] . '</span>:&nbsp;' . $SUserHrefS . '<span>' . $UserName . '</span>' . $SUserHrefS;
-				$SearchAuthorName = $SearchAuthorHrefStart . $AuthorName . $SearchAuthorHrefEnd;
+				$SearchFullAuthorName = $SearchAuthorHrefStart . $AuthorName . $SearchAuthorHrefEnd;
                 $SearchAuthorName = '<span class="AuthornameTitle">' . $ForumLang['SearchPostDate'] . ':</span>';
+				$SearchAuthorName .= '&nbsp;' . $SearchFullAuthorName;
 				//  --1)Автор сообщения - конец
 
 				//  --2)Дата сообщения
-				$SearchDateTime = Main_ConvertDate ($SPostDate, $ForumLang['DateArray']);
-				$SearchPostDate = '<img class="Image" alt="" title="" src="' . OBB_IMAGE_DIR . '/post_date.png" />';
-                $SearchPostDate = '<span class="PostDateTitle">' . $ForumLang['SearchPostDateTitle'] . ':</span>';
+				$SearchDateTime  = Main_ConvertDate ($SPostDate, $ForumLang['DateArray'], 'd.m.Y, H:i');
+				$SearchPostDate  = '<img class="Image" alt="" title="" src="' . OBB_IMAGE_DIR . '/post_date.png" />';
+                $SearchPostDate .= '<span class="SearchDateTitle">' . $ForumLang['SearchPostDateTitle'] . ':</span>';
 				$SearchPostDate .= '<span class="SearchDateTime">' . $SearchDateTime . '</span>';
 				//  --2)Дата сообщения - конец
 
 				//  --3)Ссылка на сообщение
-				$PostPermHref = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $SForumID . '&id_theme=' . $SThemeID . '&last_post=' . $SPostID . '#pid' . $SPostID);
-				$SearchPermalink = '';
+				$PostPermHref  = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $SForumID . '&id_theme=' . $SThemeID . '&last_post=' . $SPostID);
+				$PostPermHref .=  '#pid' . $SPostID;
+				$SearchPermalink = '<a class="SearchPostPermalink" href="' . $PostPermHref . '">' . $ForumLang['SearchPostPermalink'] . '</a>';
 				//  --3)ССылка на сообщение - конец
+
+				//  --4)Объединение автора сообщения, даты создания сообщения и постоянной ссылки на сообщение
+				$SearchPostTop = '  <div style="float:left;">
+										' . $SearchAuthorName . '
+										' . $SearchPostDate . '
+									</div>
+									<div style="float:right;">
+										' . $SearchPermalink . '
+									</div>';
+				//  --4)Объединение автора сообщения, даты создания сообщения и постоянной ссылки на сообщение - конец
 				//ВЕРХ - КОНЕЦ
 
-				//Формирование главных элементов блока с сообщением
-				//  --1.Дата сообщения
-				/* $SearchPostDate = '<span>' . $ForumLang['SearchPostDate'] . ':&nbsp;' . Main_ConvertDate ($SPostDate, $ForumLang['DateArray']) . '</span>'; */
-
-				//  --2.Ссылка на сообщение в теме
-				/* $PostPermHref = $SelfName . '?action=themeview&id_forum=' . $SForumID . '&id_theme=' . $SThemeID . '&last_post=' . $SPostID . '#pid' . $SPostID;
-				$SearchPostLink = '<a href="' . $PostPermHref . '"><span>' . $ForumLang['SearchPostLink'] . '</span></a>'; */
-
-				//  --3.Объединение даты сообщения и ссылки на сообщение в теме
-				/* $SearchTopOfBlock = '<tr>
-										<td colspan="2">
-											<div>' . $SearchPostDate . '&nbsp;&nbsp;&nbsp;' . $SearchPostLink . '</div>
-										</td>
-									</tr>'; */
-
-				//  --4.Форум, к кот. принадлежит сообщение
-				/* $ForumHref = $SelfName . '?action=forumview&id_forum=' . $SForumID;
-				$ForumName = Defence_HTMLSpecials ($SForumName);
-				$SearchForumLink = '<span>' . $ForumLang['SearchForumNameTitle'] . '</span>:&nbsp;<a href="' . $ForumHref . '"><span>' . $ForumName . '</span></a>'; */
-
-				//  -5.Тема, к которой принадлежит сообщение
-				/* $ThemeHref = $SelfName . '?action=themeview&id_forum=' . $SForumID . '&id_theme=' . $SThemeID;
-				$ThemeName = Defence_HTMLSpecials ($SThemeName);
-				$SearchThemeLink = '<span>' . $ForumLang['SearchThemeNameTitle2'] . '</span>:&nbsp;<a href="' . $ThemeHref . '"><span>' . $ThemeName . '</span></a>'; */
-
-				//  --6.Автор сообщения
-				/* $SUserHrefS = $SUserID > 0 ? '<a href="' . $SelfName . '?action=profile&user_id=' . $SUserID . '">' : '';
-				$SUserHrefS = $SUserID > 0 ? '</a>' : '';
-				$UserName = Defence_HTMLSpecials ($SUserName);
-				if (Main_Strlen ($SearchUser) > 0 && OBB_SEARCH_HIGHLIGHT) {
-					$UserName = preg_replace ('/(' . preg_quote ($SearchUser, "/") . ')/ui', '<font color="red">\1</font>', $UserName);
-				}
-				$SearchUserName = '<span>' . $ForumLang['SearchThemeAuthor'] . '</span>:&nbsp;' . $SUserHrefS . '<span>' . $UserName . '</span>' . $SUserHrefS; */
-
-				//  --7.Объединение форума,темы и автора
-				/* $SearchMiddle = '<div>
-									<div>' . $SearchForumLink . '</div>
-									<div>' . $SearchThemeLink . '</div>
-									<div>' . $SearchUserName  . '</div>
-								</div>'; */
-
-				//  --8.Текст сообщения
-				//  -- Парсинг сообщения
-				/* if (!OBB_GET_SEARCH_MESSAGE_CACHE) {
+				//СЕРЕДИНА
+				//  --1)Парсинг сообщения
+				if (!OBB_GET_SEARCH_MESSAGE_CACHE) {
 					if (OBB_BB_SEARCH_PARSE_ALLOWED) {
 						$AllowSmiles = OBB_ALLOW_SMILES && $SThemeSmiles == 'yes' && $SPostSmiles == 'yes';
 						$bbcode->SetEnableSmileys($AllowSmiles);
@@ -711,27 +682,74 @@ $vvvv = microtime();
 						}
 						//$SPostText = nl2br ($SPostText);
 					}
-				} */
+				}
+				//  --1)Парсинг сообщения - конец
 
-				//  -- Подсветка искомой фразы
-				/* if (Main_Strlen ($SearchTrueWord) > 0 && OBB_SEARCH_HIGHLIGHT && $SearchHighlight == 'yes') {
+				//  --2)Подсветка искомой фразы
+				if (Main_Strlen ($SearchTrueWord) > 0 && OBB_SEARCH_HIGHLIGHT && $SearchHighlight == 'yes') {
 					$SPostText = OBB_Search_Highlight ($HighlightArray, $SPostText, false);
-				} */
+				}
+				//  --2)Подсветка искомой фразы - конец
 
-				/* $SearchMain  = '<span>' . $ForumLang['SearchPost'] . ':</span>
-								<br />
-								<div class="SearchPostText">' . $SPostText . '</div>'; */
+				//  --3)Заключение сообщения в блок
+				$SearchPostText = $SPostText;
+				$SearchPostText = '<div class="SearchPostContentDiv">' . $SearchPostText . '</div>';
+				//  --3)Заключение сообщения в блок - конец
+				
+				//  --4)Объединение
+				$SearchPostMiddle = $SearchPostText;
+				//  --4)Объединение - конец
+				//СЕРЕДИНА - КОНЕЦ
 
-				//Объединение 7 и 8 пунктов
-				/* $SearchMain = '<tr>
-									<td>
-										' . $SearchMiddle . '
-										<br />
-										' . $SearchMain . '
-									</td>
-							   </tr>'; */
+				//НИЗ
+				//  --1)Ссылка на форум
+				$SearchForumLink = Defence_HTMLSpecials ($SelfName . '?action=forumview&id_forum=' . $SForumID);
+				$SearchForumName = $ForumName = Defence_HTMLSpecials ($SForumName);
+				$SearchForumHref = '<a class="ForumThemeHref" title="" href="' . $SearchForumLink . '">' . $SearchForumName . '</a>';
+				//  --1)Ссылка на форум - конец
 
-				//$SearchHTML .= '<table border="1">' . $SearchTopOfBlock . $SearchMain . '</table><br />';
+				//  --2)Ссылка на тему
+				$SearchThemeLink = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $SForumID . '&id_theme=' . $SThemeID);
+				$SearchThemeName = Defence_HTMLSpecials ($SThemeName);
+				$SearchThemeHref = '<a class="ForumThemeHref" title="" href="' . $SearchThemeLink . '">' . $SearchThemeName . '</a>';
+				//  --2)Ссылка на тему - конец
+
+				//  --3)Кнопка "Вверх"
+				$SearchTopButton = '<a title="' . $ForumLang['SearchTop'] . '" href="javascript:void(0);" onclick="scrollToTop();">
+										<img title="' . $ForumLang['SearchTop'] . '" style="vertical-align:middle;" alt="" src="' . OBB_IMAGE_DIR . '/top.png" />
+									</a>';
+				//  --3)Кнопка "Вверх" - конец
+
+				//  --4)Объединенне
+				$SearchPostBottom = '<table style="width:100%;" cellspacing="0" cellpadding="0" border="0">
+										<tr>
+											<td style="padding:5px 5px 5px 10px;">
+												' . $SearchForumHref . '<span class="ForumThemeSeparator">&gt;&gt;</span>' . $SearchThemeHref . '
+											</td>
+											<td style="padding:5px; width:30px; vertical-align:middle; text-align:center;">
+												' . $SearchTopButton . '
+											</td>
+										</tr>
+									</table>';
+				//НИЗ - КОНЕЦ
+
+				//РАЗДЕЛИТЕЛЬ
+				$SearchResultDivider = '<div style="height:12px;" class="SearchDivider"><!-- --></div>';
+				//РАЗДЕЛИТЕЛЬ - КОНЕЦ
+
+				//Оъединение в строку
+				$SearchHTML .= ' <tr>
+									<td class="SearchAuthorDatePermalink">' . $SearchPostTop . '</td>
+								</tr>';
+				$SearchHTML .= ' <tr>
+									<td class="SearchPostContent">' . $SearchPostMiddle . '</td>
+								</tr>';
+				$SearchHTML .= ' <tr>
+									<td class="SearchForumTheme">' . $SearchPostBottom . '</td>
+								</tr>';
+				$SearchHTML .= ' <tr>
+									<td>' . $SearchResultDivider . '</td>
+								</tr>';
 			}
 			$SearchHTML .= '</table>';
 		}
