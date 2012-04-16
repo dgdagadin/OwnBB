@@ -25,6 +25,9 @@ include (OBB_KERNEL_DIR . '/OwnBB.Transactions.Class.php');
 //Подключение файла языка
 include (OBB_LANGUAGE_DIR . '/Registration_' . $Config_Lang . '.php');
 
+//Массивы
+$ErrorArray = array ();
+
 //сейчас
 $Now = time ();
 
@@ -33,6 +36,7 @@ OBB_Main_UpdateOnlineInfo ($_SESSION['UserData'], $UserIP, '');
 
 $MainOutput = '';
 $RegistrationFirstStep = $ForumLang['Registration'] . ' - ' . $ForumLang['RegStepOne'];
+$RegistrationSecondStep = $ForumLang['Registration'] . ' - ' . $ForumLang['RegStepTwo'];
 $NavigArray = array (
 					array ($SelfName, $ForumLang['MainPage']),
 					array('', $RegistrationFirstStep)
@@ -65,20 +69,7 @@ switch ($RegAction) {
 			OBB_Main_Log ('No rulefile', OBB_ERROR_LOG_FILE);
 		}
 		$Rules = Main_GetCachedData ($RulesHTMLFile);
-		/* $MainOutput .= '<div>
-							<fieldset style="margin-left:30px; width:80%;">
-								<legend>' . $ForumLang['RegRules'] . '</legend>
-								' . $Rules . '
-							</fieldset>
-						</div>';
 
-		//Форма продолжения регистрации
-		$MainOutput .= '<form action="' . $SelfName . '?action=registration" method="GET">
-							<input type="hidden" name="action" value="registration">
-							<input type="hidden" name="r_stage" value="2">
-							<input type="checkbox" name="rules_agreement"> ' . $ForumLang['AgreeWithRules'] . '<br>
-							<input type="submit" value="' . $ForumLang['RegContinue'] . '">
-						</form>'; */
 		$MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">
 							<tr class="MainColumnRow">
 								<td style="border-bottom:1px solid #FFF !important;" colspan="1" class="MainColumnName">
@@ -95,12 +86,14 @@ switch ($RegAction) {
 									<table style="width:100%;" class="FormsTable" cellspacing="0" cellpadding="0" border="0">
 										<tr>
 											<td colspan="2" class="FormInputTD CenterTD">
-												<form action="' . $SelfName . '?action=registration" method="get">
-													<input type="hidden" name="action" value="registration" />
-													<input type="hidden" name="r_stage" value="2" />
-													<input style="padding:0; margin:0;" type="checkbox" name="rules_agreement" />
-													<span style="font-size:13px; color:#000; margin:0 15px 0 1px;">' . $ForumLang['AgreeWithRules'] . '</span>
-													<input class="InpButton" id="RegSubmit" type="submit" value="' . $ForumLang['RegContinue'] . '" />
+												<form style="padding:0; margin:0;" action="' . $SelfName . '?action=registration" method="get">
+													<div>
+														<input type="hidden" name="action" value="registration" />
+														<input type="hidden" name="r_stage" value="2" />
+														<input style="padding:0; margin:0;" type="checkbox" name="rules_agreement" />
+														<span style="font-size:13px; color:#000; margin:0 15px 0 1px;">' . $ForumLang['AgreeWithRules'] . '</span>
+														<input class="InpButton" id="RegSubmit" type="submit" value="' . $ForumLang['RegContinue'] . '" />
+													</div>
 												</form>
 											</td>
 										</tr>
@@ -155,9 +148,6 @@ switch ($RegAction) {
 
 		//если определен пост-массив
 		if (isset ($_POST['SendRegForm'])) {
-			//Массивы
-			$ErrorArray = array ();
-
 			//флаг аватара
 			if (OBB_ALLOW_AVATARS == TRUE && isset ($_FILES['RegAvatar']['name']) && $_FILES['RegAvatar']['name'] <> '') {
 				$AvatarFlag = '1';
@@ -481,7 +471,7 @@ switch ($RegAction) {
 				OBB_Main_Redirect ('?action=message');
 			}
 		}
-		
+
 		//календарь
 		$CalendarScript = '
 		<script type="text/javascript">//<![CDATA[
@@ -496,7 +486,31 @@ switch ($RegAction) {
 
 		//вывод полей пароля
 		if ($RegistrationType <> '1') {
-			$PasswordFields = '<div>
+			$PasswordLimit = OBB_Main_ReplaceSymbols ($ForumLang['RegLoginLimit'], array('min'=>OBB_MIN_PASSWORD_LENGTH, 'max'=>OBB_MAX_PASSWORD_LENGTH));
+			$PasswordFields = ' <tr>
+									<td style="padding-bottom:7px; width:175px;" class="FormTitleTD">
+										<div class="InputTitle">
+											' . $ForumLang['RegPasswordTitle'] . '<span class="Important">*</span>
+										</div>
+										<div class="InputDescr">
+											(' . $PasswordLimit . ')
+										</div>
+									</td>
+									<td style="padding-bottom:7px;" class="FormInputTD">
+										<input style="width:280px;" class="InpEl InpText" id="RegistrationPass" type="password" name="RegPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" />
+									</td>
+								</tr>
+								<tr>
+									<td style="padding-bottom:7px; width:175px;" class="FormTitleTD">
+										<div class="InputTitle">
+											' . $ForumLang['RegRepeatPasswordTitle'] . '<span class="Important">*</span>
+										</div>
+									</td>
+									<td style="padding-bottom:7px;" class="FormInputTD">
+										<input style="width:280px;" class="InpEl InpText" id="RegistrationRepeatPass" type="password" name="RegRepeatPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" />
+									</td>
+								</tr>';
+			/* $PasswordFields = '<div>
 								' . $ForumLang['RegPasswordTitle'] . ' (' . OBB_MIN_PASSWORD_LENGTH . '-' . OBB_MAX_PASSWORD_LENGTH . ' ' . $ForumLang['RegSymbolWord'] . ') *
 								<br />
 								<input id="RegistrationPass" type="password" name="RegPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="">
@@ -506,10 +520,62 @@ switch ($RegAction) {
 								' . $ForumLang['RegRepeatPasswordTitle'] . ' *<br />
 							<input id="RegistrationRepeatPass" type="password" name="RegRepeatPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="">
 							</div>
-							<br />';
+							<br />'; */
 		}
 		else {
 			$PasswordFields = '';
+		}
+
+		//аватар
+		if (OBB_ALLOW_AVATARS) {
+			//строка допустимых расширений (только картинки)
+			$ExtenArray = array ();
+			foreach ($FilesArray as $FilesKey=>$FilesValue) {
+				if ($FilesValue['image']) {
+					$Extension = $FilesValue['extension'];
+					$ExtenArray[] = $Extension;
+				}
+			}
+			$ExstensionString = '<span style="border-bottom:1px dotted #222;">' . $ForumLang['RegAvatarAllowed'] . '</span>:&nbsp;<span style="color:#444;">' . implode (', ', $ExtenArray) . '</span>';
+
+			$RegAvatar = '<tr>
+								<td style="width:175px;" class="FormTitleTD AttachTitleTD">
+									<div class="InputTitle">
+										' . $ForumLang['RegAvatar'] . '
+									</div>
+								</td>
+								<td class="FormInputTD">
+									<div class="MainBlockAttach">
+										<div class="AttachAddAction">
+											' . $ForumLang['RegAttachAdd'] . '
+										</div>
+										<div class="AttachFileField">
+											<input type="file" name="RegAvatar" />
+										</div>
+										<div class="AttachExtensions">
+											' . $ExstensionString . '
+											
+										</div>
+										<div class="AttachExtensions">
+											<span style="border-bottom:1px dotted #222;">' . $ForumLang['RegAvatarAllowedSize'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_AVATAR_SIZE . '&nbsp;' . $ForumLang['RegAvatarb'] . '</span>
+										</div>
+										<div class="AttachExtensions">
+											<span style="border-bottom:1px dotted #222;">' . $ForumLang['RegAvatarAllowedGabarits'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_AVATAR_WIDTH . '(' . $ForumLang['RegAvatarWidth'] . ')&nbsp;<strong>X</strong>&nbsp;' . OBB_MAX_AVATAR_HEIGHT . '(' . $ForumLang['RegAvatarHeight'] . ')</span>
+										</div>
+									</div>
+								</td>
+							</tr>';
+		}
+		else {
+			$RegAvatar = '';
+		}
+
+		//капча
+		if (OBB_CAPTCHA && OBB_REGISTRATION_CAPTCHA) {
+			$CaptchaBlock = Echo_CaptchaBlock2 ($ForumLang['CaptchaTitle'], $ForumLang['EnterCaptcha'], 'RegistrationCaptcha');
+		}
+		else {
+			$CaptchaBlock = '';
 		}
 
 		///*JS-массив*///
@@ -532,104 +598,148 @@ switch ($RegAction) {
 		$Title = OBB_Main_ReplaceSymbols ($ForumLang['Title']['Registration'], array('forumname'=>$Config_ForumName));
 
 		//верх
-		$MainOutput .= Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title, $JSParametersArray);
-		$MainOutput .= '<div>
-							<b>' . $ForumLang['Registration'] . ' - ' . $ForumLang['RegStepTwo'] . '</b>
-						</div>';
+		$MainOutput .= Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title, 'AddDelimiterDiv');
 
-		//если определены ошибки - выводим блок ошибок
-		if (isset ($ErrorArray)) {
-			$ErrorBlock = Echo_DisplayUserErrors ($ErrorArray, $ForumLang['RegErrors']['ErrorBlockTitle']);
+		//Multipart
+		if (OBB_ALLOW_AVATARS) {
+			$FormMultipart = ' enctype="multipart/form-data"';
 		}
 		else {
-			$ErrorBlock = '';
-		}
-		$MainOutput .= '<div id="ErrorBlockDiv">' . $ErrorBlock . '</div>';
-
-		//Главная форма регистрации
-		$MainOutput .= '<form id="RegistrationForm" action="' . $SelfName . '?action=registration&r_stage=2&rules_agreement=on" method="POST"' . (OBB_ALLOW_AVATARS == TRUE ? ' enctype="multipart/form-data"' : '') . '>';
-
-		//Логин
-		$MainOutput .= '<fieldset style="margin-left:30px; width:80%;">
-							<legend>' . $ForumLang['RegPersonMain'] . '</legend>
-							<div>'
-								. $ForumLang['RegLoginTitle'] . ' (' . OBB_MIN_LOGIN_LENGTH . '-' . OBB_MAX_LOGIN_LENGTH . ' ' . $ForumLang['RegSymbolWord'] . ') *
-								<br />
-								<input id="RegistrationLogin" type="text" name="RegLogin" maxlength="' . OBB_MAX_LOGIN_LENGTH . '" value="' . Defence_HTMLSpecials ($RegLogin) . '">
-							</div>
-							<br />';
-
-		//Пароль
-		$MainOutput .= $PasswordFields;
-
-		//Почтовый адрес
-		$MainOutput .= '<div>'
-							. $ForumLang['RegMailTitle'] . ' (' . OBB_MIN_MAIL_LENGTH . '-' . OBB_MAX_MAIL_LENGTH . ' ' . $ForumLang['RegSymbolWord'] . ') *
-							<br />
-							<input id="RegistrationMail" type="text" name="RegMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($RegMail) . '">
-						</div>
-						<br />
-						<div>'
-							. $ForumLang['RegRepeatMailTitle'] . ' *<br />
-							<input id="RegistrationRepeatMail" type="text" name="RegRepeatMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($RegRepeatMail) . '">
-						</div>
-						<br />';
-
-		//Пол
-		$MainOutput .= '<div>'
-							. $ForumLang['RegSexTitle'] . ' *
-							<br />
-							<input checked type="radio" name="RegSex" value="male">' . $ForumLang['RegSexMTitle'] . '
-							<input type="radio" name="RegSex" value="female">' . $ForumLang['RegSexFTitle'] . '
-						</div>
-						<br />';
-
-		//Дата рождения
-		$MainOutput .= '	<div>'
-								. $ForumLang['RegBirthDateTitle'] . ' *
-								<br />
-								<input id="RegistrationBirthDate" type="text" name="RegBirthDate" maxlength="10" value="' . Defence_HTMLSpecials ($RegBirthDate) . '">
-								<a id="CalendarIcon" href="javascript:void(0);"><img src="' . OBB_IMAGE_DIR . '/calendar.png" border="0" /></a>
-							</div>
-						</fieldset>';
-
-		//Аватар
-		if (OBB_ALLOW_AVATARS) {
-			$MainOutput .= '<fieldset style="margin-left:30px; width:80%;">
-								<legend>'
-									. $ForumLang['RegAvatar'] . '
-								</legend>
-								<div>'
-									. $ForumLang['RegTitleAvatar'] . ' (' . $ForumLang['RegMax'] . ' ' . OBB_MAX_AVATAR_SIZE . ' ' . $ForumLang['RegBytes'] . ')
-									<input type="file" name="RegAvatar">
-								</div>
-							</fieldset>';
+			$FormMultipart = '';
 		}
 
-		//Дополнительные опции - прятать емаил, получать письма
-		$MainOutput .= '<fieldset style="margin-left:30px; width:80%;">
-							<legend>' . $ForumLang['RegOther'] . '</legend>
-							<div>
-								<input type="checkbox" ' . (isset ($_POST['RegHideMail'])  ? 'checked ' : '') . 'name="RegHideMail">' . $ForumLang['RegHideMail'] . '<br />
-								<input type="checkbox" ' . (isset ($_POST['GetAdminMail']) ? 'checked ' : '') . 'name="GetAdminMail">' . $ForumLang['RegGetAdminMail'] . '<br />
-								<input type="checkbox" ' . (isset ($_POST['GetUserMail'])  ? 'checked ' : '') . 'name="GetUserMail">' . $ForumLang['RegGetUserMail'] . '
-							</div>
-						</fieldset>';
-
-		//капча
-		if (OBB_CAPTCHA && OBB_REGISTRATION_CAPTCHA) {
-			$MainOutput .= Echo_CaptchaBlock ($ForumLang['CaptchaTitle'], $ForumLang['EnterCaptcha'], 'RegistrationCaptcha');
+		//если определены ошибки - выводим блок ошибок
+		if (sizeof ($ErrorArray) > 0) {
+			$ErrorListBlock = '<div class="ErrorBlockDiv">
+									<div class="ErrorBlockTitle">' . $ForumLang['RegErrors']['ErrorBlockTitle'] . ':</div>';
+			foreach ($ErrorArray as $Key=>$Value) {
+				$ErrorListBlock .= '<div class="ErrorItemDiv">' . $Value . '</div>';
+			}
+			$ErrorListBlock .= ' </div>
+								<div style="height:15px;"><!-- --></div>';
 		}
+		else {
+			$ErrorListBlock = '';
+		}
+		$MainOutput .= $ErrorListBlock;
+        
+		//переменные описания
+		$LoginDescription = OBB_Main_ReplaceSymbols ($ForumLang['RegLoginLimit'], array('min'=>OBB_MIN_LOGIN_LENGTH, 'max'=>OBB_MAX_LOGIN_LENGTH));
+		$MailDescription  = OBB_Main_ReplaceSymbols ($ForumLang['RegMailLimit'],  array('min'=>OBB_MIN_MAIL_LENGTH,  'max'=>OBB_MAX_MAIL_LENGTH));
+		$BirthDescription = $ForumLang['RegBirthLimit'];
 
-		//кнопка, хидден
-		$MainOutput .= '<div id="SubmitButtonDiv">';
-		$MainOutput .= '<input id="RegistrationSubmit" type="submit" name="RegSubmit" value="' . $ForumLang['RegContinue'] . '" />';
-		$MainOutput .= '</div>';
-		$MainOutput .= '<input type="hidden" name="SendRegForm" value="1" />';
-		$MainOutput .= '<input type="reset" value="' . $ForumLang['Reset'] . '" />';
-		$MainOutput .= '</form>';
-		$MainOutput .= $CalendarScript;
-		$MainOutput .= '<div>* - ' . $ForumLang['RegFootnote'] . '</div>';
+		//форма регистрации
+		$RegActionString = $ForumLang['Registration'] . ' - ' . $ForumLang['RegStepTwo'];
+		$ActionURL = Defence_HTMLSpecials ($SelfName . '?action=registration&r_stage=2&rules_agreement=on');
+		$MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">
+							<tr class="MainColumnRow">
+								<td style="border-bottom:1px solid #FFF !important;" colspan="1" class="MainColumnName"><span>' . $RegActionString . '</span></td>
+							</tr>
+							<tr class="ForumMainTR">
+								<td style="padding:0;">
+									<form style="padding:0; margin:0;" id="RegistrationForm" action="' . $ActionURL . '" method="post"' . $FormMultipart . '>
+										<table style="width:100%;" class="FormsTable" cellspacing="0" cellpadding="0" border="0">
+											<tr>
+												<td style="padding-bottom:7px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegLoginTitle'] . '<span class="Important">*</span>
+													</div>
+													<div class="InputDescr">
+														(' . $LoginDescription . ')
+													</div>
+												</td>
+												<td style="padding-bottom:7px;" class="FormInputTD">
+													<input style="width:280px;" class="InpEl InpText" id="RegistrationLogin" type="text" name="RegLogin" maxlength="' . OBB_MAX_LOGIN_LENGTH . '" value="' . Defence_HTMLSpecials ($RegLogin) . '" />
+											  </td>
+											</tr>
+											' . $PasswordFields . '
+											<tr>
+												<td style="padding-bottom:7px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegMailTitle'] . '<span class="Important">*</span>
+													</div>
+													<div class="InputDescr">
+														(' . $LoginDescription . ')
+													</div>
+												</td>
+												<td style="padding-bottom:7px;" class="FormInputTD">
+													<input style="width:280px;" class="InpEl InpText" id="RegistrationMail" type="text" name="RegMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($RegMail) . '" />
+												</td>
+											</tr>
+											<tr>
+												<td style="padding-bottom:7px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegRepeatMailTitle'] . '<span class="Important">*</span>
+													</div>
+												</td>
+												<td style="padding-bottom:7px;" class="FormInputTD">
+													<input style="width:280px;" class="InpEl InpText" id="RegistrationRepeatMail" type="text" name="RegRepeatMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($RegRepeatMail) . '" />
+												</td>
+											</tr>
+											<tr>
+												<td style="padding-top:9px; padding-bottom:12px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegSexTitle'] . '<span class="Important">*</span>
+													</div>
+												</td>
+												<td style="padding-bottom:12px;" class="FormInputTD">
+													<input checked="checked" type="radio" name="RegSex" value="male" />&nbsp;' . $ForumLang['RegSexMTitle'] . '
+													&nbsp;
+													<input type="radio" name="RegSex" value="female" />&nbsp;' . $ForumLang['RegSexFTitle'] . '
+												</td>
+											</tr>
+											<tr>
+												<td style="padding-bottom:12px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegBirthDateTitle'] . '<span class="Important">*</span>
+													</div>
+													<div class="InputDescr">
+														(' . $BirthDescription . ')
+													</div>
+												</td>
+												<td style="padding-bottom:12px;" class="FormInputTD">
+													<input style="width:130px;" class="InpEl InpText" id="RegistrationBirthDate" type="text" name="RegBirthDate" maxlength="10" value="' . Defence_HTMLSpecials ($RegBirthDate) . '" />
+													<a id="CalendarIcon" href="javascript:void(0);"><img style="vertical-align:middle;" title="" alt="" src="' . OBB_IMAGE_DIR . '/calendar.png" /></a>
+												</td>
+											</tr>
+											<tr>
+												<td style="padding-bottom:12px; width:175px;" class="FormTitleTD">
+													<div class="InputTitle">
+														' . $ForumLang['RegOther'] . '
+													</div>
+												</td>
+												<td style="padding-bottom:14px; padding-bottom" class="FormInputTD">
+													<input type="checkbox" ' . (isset ($_POST['RegHideMail'])  ? 'checked="checked" ' : '') . 'name="RegHideMail" />'  . $ForumLang['RegHideMail']     . '<br />
+													<input type="checkbox" ' . (isset ($_POST['GetAdminMail']) ? 'checked="checked" ' : '') . 'name="GetAdminMail" />' . $ForumLang['RegGetAdminMail'] . '<br />
+													<input type="checkbox" ' . (isset ($_POST['GetUserMail'])  ? 'checked="checked" ' : '') . 'name="GetUserMail" />'  . $ForumLang['RegGetUserMail']  . '
+												</td>
+											</tr>
+											' . $RegAvatar    . '
+											' . $CaptchaBlock . '
+											<tr>
+												<td style="border-top:1px solid #FFFFFF;" colspan="2" class="FormInputTD AdditionalTD">
+													<span class="Important">*</span> - ' . $ForumLang['RegImportantFields'] . '
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2" class="FormInputTD CenterTD">
+													<input type="hidden" name="SendRegForm" value="1" />
+													<div id="SubmitButtonDiv">
+														<input class="InpButton" id="RegistrationSubmit" type="submit" name="RegSubmit" value="' . $ForumLang['RegContinue'] . '" />
+														<input class="InpButton" type="reset" value="' . $ForumLang['RegReset'] . '" />
+													</div>
+												</td>
+											</tr>
+										</table>
+									</form>
+								</td>
+							</tr>
+							<tr>
+								<td class="ForumsTableBottom" colspan="1">
+									<div><!-- --></div>
+								</td>
+							</tr>
+						</table>' . $CalendarScript;
 
 		//Футер форума
 		$MainOutput .= Echo_PrintFoot ();
@@ -673,11 +783,13 @@ switch ($RegAction) {
 				$ActFile = sha1 ($UserID);
 				if (!file_exists (OBB_ACTIVATION_DIR . '/' . $ActFile)) {
 					$ActivateArray[] = $ForumLang['ActErrors']['WrongKey'];
-				}		
+				}
 				else {
 					$ActivateKey = $_GET['activate_key'];
 					$RealKey = trim (file_get_contents (OBB_ACTIVATION_DIR . '/' . $ActFile));
-					if ($RealKey <> $ActivateKey) $ActivateArray[] = $ForumLang['ActErrors']['WrongKey'];
+					if ($RealKey <> $ActivateKey) {
+						$ActivateArray[] = $ForumLang['ActErrors']['WrongKey'];
+					}
 				}
 			}
 		}
@@ -750,13 +862,11 @@ switch ($RegAction) {
 			//заголовок страницы
 			$Title = OBB_Main_ReplaceSymbols ($ForumLang['Title']['Registration'], array('forumname'=>$Config_ForumName));
 
-			$MainOutput  = Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title);
-			$MainOutput .= $MainNav;
-			$MainOutput .= '<div>
-								<b>' . $ForumLang['Registration'] . ' - ' . $ForumLang['RegStepThree'] . '</b>
-							</div>';
-			$MainOutput .= Echo_DisplayUserErrors ($ActivateArray, $ForumLang['ActErrors']['ErrorBlockTitle']);
-			$MainOutput .= Echo_PrintFoot ();
+			$PathToMVC = OBB_MVC_DIR . '/RegistrationConfirmError_html_tpl.php';
+			ob_start ();
+			include ($PathToMVC);
+			$MainOutput = ob_get_contents ();
+			ob_end_clean ();
 		}
 
 		break;

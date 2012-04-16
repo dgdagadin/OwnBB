@@ -1253,7 +1253,7 @@ function Echo_CaptchaBlock2 ($CaptchaTitle, $EnterPaptchaWord, $CaptchaInputID =
 	$InputSize   = $NumLetters < 1 ? 1 : $NumLetters;
 	$CaptchaRand = rand (1000, 9999);
 	$Result = ' <tr>
-					<td style="width:160px;" class="FormTitleTD">
+					<td style="" class="FormTitleTD">
 						<div class="InputTitle">
 							' . $CaptchaTitle . '
 						</div>
@@ -1263,7 +1263,7 @@ function Echo_CaptchaBlock2 ($CaptchaTitle, $EnterPaptchaWord, $CaptchaInputID =
 					</td>
 				</tr>
 				<tr>
-					<td style="width:160px;" class="FormTitleTD">
+					<td style="" class="FormTitleTD">
 						<div class="InputTitle">
 							' . $EnterPaptchaWord . '<span class="Important">*</span>
 						</div>
