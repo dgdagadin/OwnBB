@@ -1,6 +1,7 @@
 <?php
 
 //Регистрация
+$ForumLang['RegAttachAdd'] = 'Выберите файл для прикрепления';
 $ForumLang['Registration'] = 'Регистрация';
 $ForumLang['RegStepOne'] = 'шаг первый';
 $ForumLang['RegStepTwo'] = 'шаг второй';
@@ -8,18 +9,29 @@ $ForumLang['RegStepThree'] = 'активация';
 $ForumLang['RegRules'] = 'Правила регистрации';
 $ForumLang['AgreeWithRules'] = 'Я принимаю правила';
 $ForumLang['RegContinue'] = 'Продолжить регистрацию';
+$ForumLang['RegReset'] = 'Очистить форму';
 $ForumLang['RegPersonMain'] = 'Персональные данные';
 $ForumLang['RegSymbolWord'] = 'символов';
-$ForumLang['RegLoginTitle'] = 'Логин';
+$ForumLang['RegLoginTitle'] = 'Имя пользователя';
+$ForumLang['RegLoginLimit'] = '{min} - {max} символов';
+$ForumLang['RegMailLimit'] = '{min} - {max} символов';
+$ForumLang['RegPasswordLimit'] = '{min} - {max} символов';
 $ForumLang['RegMailTitle'] = 'Электронная почта';
 $ForumLang['RegRepeatMailTitle'] = 'Повторите электронную почту';
-$ForumLang['RegPasswordTitle'] = 'Пароль';
+$ForumLang['RegPasswordTitle'] = 'Введите пароль';
 $ForumLang['RegRepeatPasswordTitle'] = 'Повторите пароль';
-$ForumLang['RegSexTitle'] = 'Пол';
+$ForumLang['RegSexTitle'] = 'Выберите ваш пол';
 $ForumLang['RegSexMTitle'] = 'Мужской';
 $ForumLang['RegSexFTitle'] = 'Женский';
 $ForumLang['RegBirthDateTitle'] = 'Дата рождения';
-$ForumLang['RegAvatar'] = 'Аватар';
+$ForumLang['RegBirthLimit'] = 'в формате дд.мм.гггг';
+$ForumLang['RegAvatar'] = 'Загрузите ваш аватар';
+$ForumLang['RegAvatarAllowed'] = 'Допустимые расширения';
+$ForumLang['RegAvatarAllowedSize'] = 'Допустимый размер аватара';
+$ForumLang['RegAvatarAllowedGabarits'] = 'Допустимые габариты аватара';
+$ForumLang['RegAvatarb'] = 'Байт';
+$ForumLang['RegAvatarWidth'] = 'ширина';
+$ForumLang['RegAvatarHeight'] = 'высота';
 $ForumLang['RegTitleAvatar'] = 'Загрузите картинку';
 $ForumLang['RegMax'] = 'максимум';
 $ForumLang['RegBytes'] = 'байт';
@@ -30,8 +42,9 @@ $ForumLang['RegGetUserMail'] = 'Получать письма от пользо�
 $ForumLang['RegFootnote'] = 'Поля, обязательные для заполнения';
 $ForumLang['RegMailThemeUser'] = 'Регистрация на форуме';
 $ForumLang['RegMailThemeAdmin'] = 'Регистрация нового пользователя на форуме';
+$ForumLang['RegImportantFields'] = 'Поля, обязательные для заполнения';
 	//ошибки регистрации//
-$ForumLang['RegErrors'] = array ('ErrorBlockTitle'    => 'Ошибки при регистрации',
+$ForumLang['RegErrors'] = array ('ErrorBlockTitle'   => 'Ошибки при регистрации',
 								'RegEmptyMail'       => 'Не заполнено поле почты',
 								'RegEmptyLogin'      => 'Не заполнено поле логина',
 								'RegEmptyRepeatMail' => 'Не заполнено поле повтора почты',
@@ -58,9 +71,9 @@ $ForumLang['RegErrors'] = array ('ErrorBlockTitle'    => 'Ошибки при р
 	//ошибки активации
 	$ForumLang['ActErrors'] = array ();
 	$ForumLang['ActErrors']['ErrorBlockTitle'] = 'Ошибки при активации';
-	$ForumLang['ActErrors']['NoUser'] = 'Ошибка активации - пользователь не зарегистрирован';
-	$ForumLang['ActErrors']['WrongKey'] = 'Ошибка активации - неверный ключ активации';
-	$ForumLang['ActErrors']['AlreadyActivated'] = 'Ошибка активации - пользователь уже активирован';
+	$ForumLang['ActErrors']['NoUser'] = 'Пользователь не зарегистрирован';
+	$ForumLang['ActErrors']['WrongKey'] = 'Неверный ключ активации';
+	$ForumLang['ActErrors']['AlreadyActivated'] = 'Пользователь уже активирован';
 	$ForumLang['ActErrors']['WrongActivationDate'] = 'Неверная дата активации';
 	//ошибки активации
 //Регистрация - конец
