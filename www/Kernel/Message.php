@@ -14,12 +14,6 @@ $ChangeArray = array ();
 
 //сообщение
 $Message = strtolower ($_SESSION['Message']);
-var_dump($_SESSION);
-//Начинаем присвоение
-//Начало присвоения - доктайп и хеды 
-$MainOutput  = '<!DOCTYPE html>';
-$MainOutput .= '<html style="height:100%;"><head><meta content="text/html; charset=utf-8" http-equiv=Content-Type /></head>'; 
-$MainOutput .= '<body style="height:100%;">';
 
 //основная часть
 switch ($Message) {
@@ -136,25 +130,11 @@ if (sizeof ($ChangeArray) > 0) {
 	}
 }
 
-//Вывод в браузер
-$MessageBox = '<table style="height:100%;width:100%;">
-			   <tr>
-			   <td style="height:100%;width:100%;text-align:center;vertical-align:center;">
-			   <a href="' . $RedirectURL . '">' . $InfoBox . '</a>
-			   </td></tr>
-			   </table>';
-
-//окно сообщения
-/* $MainOutput .= '<script type="text/javascript">
-				function locate(){
-					document.location.href="' . $SelfName . $RedirectURL . '";
-				}
-				setTimeout("locate()", 10000)
-				</script>' . $MessageBox; */
-				$MainOutput .= $MessageBox;
-
-$MainOutput .= '</body>';
-$MainOutput .= '</html>';
+$PathToMVC = OBB_MVC_DIR . '/Message_html_tpl.php';
+ob_start ();
+include ($PathToMVC);
+$MainOutput = ob_get_contents ();
+ob_end_clean ();
 
 //Вывод в браузер
 Main_ShowStandartHeader ();
