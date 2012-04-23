@@ -1142,7 +1142,7 @@ img {
 .BlockThemePost {
 	height:24px;
 	border:1px solid #AA0000;
-	background:#AA0000;
+	background:#AA0000 url("../images/alert_bg.gif") repeat-x left center;
 	color:#FFFFFF;
 	font-size:14px;
 	font-weight:bold;
