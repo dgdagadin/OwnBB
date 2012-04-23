@@ -203,32 +203,6 @@ $MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="
 						</td>
 					</tr>
 				</table>';
-/* $MainOutput .= '<div>
-					<b>' . $ForumLang['ForgotPassTitle'] . '</b>
-				</div>
-				' . $ForgotErrors . '
-				<form id="ForgotForm" name="ForgotForm" action="' . $SelfName . '?action=forgot" method="POST">
-					<div>
-						<span>' . $ForumLang['ForgotPassLogin'] . '</span>
-						<input id="ForgotLoginID" type="text" name="ForgotLogin" value="" />
-					</div>
-					<br />
-					<div>
-						<span>' . $ForumLang['ForgotPassMail'] . '</span>
-						<input id="ForgotMailID" type="text" name="ForgotMail" value="" />
-						<br />
-						<span>
-							<small>' . $ForumLang['ForgotPassMailNotice'] . '</small>
-						</span>
-					</div>
-					<br />
-					<div>
-						<input type="hidden" name="PassForgot" value="1" />
-						<div id="SubmitButtonDiv">
-							<input id="ForgotSubmit" type="submit" value="' . $ForumLang['ForgotPassSubmit'] . '" />
-						</div>
-					</div>
-				</form>'; */
 
 //Футер форума
 $MainOutput .= Echo_PrintFoot ();
