@@ -472,7 +472,8 @@ img {
 	padding:0 0 0 21px;
 }
 .ForumIconTD {
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#CFDAE7;
 	text-align:center;
 	vertical-align:middle;
 	border-left:1px solid #FFFFFF;
@@ -483,7 +484,8 @@ img {
 	vertical-align:middle;
 	border-left:1px solid #FFFFFF;
 	border-top:1px solid #FFFFFF;
-	background:#E4EAF2;
+	/* background:#E4EAF2; */
+	background:#d9e0ea;
 }
 .ForumNameTD .OnlineImg {
 	vertical-align:middle;
@@ -638,7 +640,8 @@ img {
 }
 .RSSIconTD {
 	border-top:1px solid #FFFFFF;
-	background:#E4EAF2;
+	/* background:#E4EAF2; */
+	background:#d9e0ea;
 	vertical-align:bottom;
 	text-align:left;
 }
@@ -653,7 +656,8 @@ img {
 	color:#222222;
 	border-left:1px solid #FFFFFF;
 	border-top:1px solid #FFFFFF;
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#CFDAE7;
 	vertical-align:middle;
 	text-align:center;
 }
@@ -661,7 +665,8 @@ img {
 	border-left:1px solid #FFFFFF;
 	border-right:1px solid #FFFFFF;
 	border-top:1px solid #FFFFFF;
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#CFDAE7;
 	padding: 5px 1px 5px 9px;
 	text-align:left;
 	vertical-align:top;

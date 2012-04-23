@@ -480,7 +480,7 @@ function OBB_Main_ShowError ($ErrorCode, $ErrorStatus, $ErrorsArray, $ReplaceArr
 			}
 		}
 
-		$MainOutput  = '<!DOCTYPE html>
+		/* $MainOutput  = '<!DOCTYPE html>
 						<html style="height:100%;">
 							<head>
 								<meta content="text/html; charset=utf-8" http-equiv=Content-Type />
@@ -500,7 +500,12 @@ function OBB_Main_ShowError ($ErrorCode, $ErrorStatus, $ErrorsArray, $ReplaceArr
 									</tr>
 								</table>
 							</body>
-						</html>';
+						</html>'; */
+
+		ob_start ();
+		include (OBB_MVC_DIR . '/Error_html_tpl.php');
+		$MainOutput = ob_get_contents ();
+		ob_end_clean ();
 
 		echo $MainOutput;
 	}
