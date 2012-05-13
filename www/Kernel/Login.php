@@ -40,7 +40,9 @@ $AuthError = array ();
 
 //переменная редиректа
 //  --старая версия
-/* if (!isset ($_POST['AuthRedirectURL'])) {
+$RedirectURL = 'http://' . $HostName . $SelfName;
+$RedirectURLPattern = '/http:\/\/' . preg_quote ($HostName, "/") . preg_quote ($SelfName, "/") . '(?:\?action=[_a-z]{3-10}(?:&[_a-z]{2,20}=(.*?))*)?/ui';
+if (!isset ($_POST['AuthRedirectURL'])) {
 	if (isset ($_SERVER['HTTP_REFERER'])) {
 		if (preg_match ($RedirectURLPattern, $_SERVER['HTTP_REFERER'], $matches)) {
 			$RedirectURL = $_SERVER['HTTP_REFERER'];
@@ -55,12 +57,11 @@ else {
 	if (preg_match ($RedirectURLPattern, $_POST['AuthRedirectURL'])) {
 		$RedirectURL = $_POST['AuthRedirectURL'];
 	}
-} */
+}
 
 //  --получение переменной редиректа
-$RedirectURL = 'http://' . $HostName . $SelfName;
-$RedirectURLPattern = '/http:\/\/' . preg_quote ($HostName, "/") . preg_quote ($SelfName, "/") . '(?:\?action=[_a-z]{3-10}(?:&[_a-z]{2,20}=(.*?))*)?/ui';
-if (!isset ($_POST['AuthRedirectURL']) || Main_Strlen ($_POST['AuthRedirectURL']) < 1) {
+//  --новая версия - ОТЛОЖИТЬ НА ПОТОМ
+/* if (!isset ($_POST['AuthRedirectURL']) || Main_Strlen ($_POST['AuthRedirectURL']) < 1) {
 	if (isset ($NoAccess)) {
 		if (isset ($_SERVER['REQUEST_URI'])) {
 			$_SERVICE_REDIRECT = 'http://' . $HostName . $_SERVER['REQUEST_URI'];
@@ -88,8 +89,9 @@ if (preg_match ($RedirectURLPattern, $_SERVICE_REDIRECT, $matches)) {
 	if (!isset ($matches[1][0]) || Main_Strtolower ($matches[1][0]) == 'message' || Main_Strlen ($matches[1][0]) < 1) {
 		$_SERVICE_REDIRECT = 'http://' . $HostName . $SelfName;
 	}
-}
+} */
 //переменная редиректа - КОНЕЦ
+//  --новая версия - ОТЛОЖИТЬ НА ПОТОМ
 
 //обработка
 if (isset ($_POST['login'])) {
@@ -229,7 +231,7 @@ if (isset ($_POST['login'])) {
 
 			//перенаправление
 			$_SESSION['Message']  = 'auth_sucess';
-			$_SESSION['Redirect'] = str_replace ('http://' . $HostName . $SelfName, '', $_SERVICE_REDIRECT);
+			$_SESSION['Redirect'] = str_replace ('http://' . $HostName . $SelfName, '', $RedirectURL);
 			$URL = '?action=message';
 			OBB_Main_Redirect ($URL);
 		}
@@ -332,7 +334,7 @@ $MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="
 												<input class="InpButton" id="LoginSubmit" name="SendAuthForm" type="submit" value="' . $ForumLang['AuthTitle'] . '" />
 												<input class="InpButton" type="reset" value="' . $ForumLang['AuthReset'] . '" />
 											</div>
-											<input type="hidden" name="AuthRedirectURL" value="' . Defence_HTMLSpecials ($_SERVICE_REDIRECT) . '" />
+											<input type="hidden" name="AuthRedirectURL" value="' . Defence_HTMLSpecials ($RedirectURL) . '" />
 											<input type="hidden" name="login" value="1" />
 										</td>
 									</tr>

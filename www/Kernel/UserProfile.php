@@ -24,7 +24,7 @@ if ($_SESSION['UserData']['UserType'] <> 'admin') {
 if (!isset ($_GET['user_id']) || !ctype_digit ($_GET['user_id'])) {
 	OBB_Main_ShowError ('profile_wrong_user_id', 'STANDART', $ForumLang['Errors']);
 }
-$UserID = intval ($_GET['user_id']); 
+$UserID = intval ($_GET['user_id']);
 
 //Проверка на существование пользователя
 $SQL = 'SELECT 1 FROM users WHERE UserID = ' . $UserID;
@@ -59,8 +59,8 @@ if ($_SESSION['UserData']['UserType'] == 'admin') {
 }
 else if ($_SESSION['UserData']['UserType'] <> 'guest') {
 	if (
-		OBB_EDIT_PROFILE && 
-		$UserGroups_Permissions['EditUserProfile'] && 
+		OBB_EDIT_PROFILE &&
+		$UserGroups_Permissions['EditUserProfile'] &&
 		($UserID == intval ($_SESSION['UserData']['UserID']))
 	) {
 		$CanEditProfile = TRUE;
@@ -97,7 +97,7 @@ OBB_Main_UpdateOnlineInfo ($_SESSION['UserData'], $UserIP, $CurAction);
 
 //Запрос пользователя (великий))
 $UserDataSQL = 'SELECT users.UserLogin AS Login,
-					users.GroupID AS GroupID, 
+					users.GroupID AS GroupID,
 					users.UserSlogan AS Slogan,
 					users.UserMail AS Mail,
 					users.UserMailHid AS MailHid,
@@ -117,7 +117,7 @@ $UserDataSQL = 'SELECT users.UserLogin AS Login,
 					users.GroupID AS GroupID,
 					users.UserIsActivate AS IsActivated,
 					users.UserAvatar AS Avatar,
-					user_bans.UserBanTime AS UBanTime, 
+					user_bans.UserBanTime AS UBanTime,
 					user_bans.UserBanPeriod AS UBanPeriod,
 					user_activity.UserLastLogin AS LastLogin,
 					user_activity.UserLastAction AS LastAction,
@@ -170,21 +170,10 @@ else {
 }
 
 //Флаг аватара
-//  --если вошедший админ и редактируемый алмин
-//  --если вошедший админ и у редактируемого есть права
-//  --если вошедший и редактируемый - один пользователь и у него есть права
+//  --если вошедший админ
+//  --если разрешены аватары на форуме
 $AvatarFlag = false;
-if (
-	$CanEditProfile   && 
-	OBB_ALLOW_AVATARS && 
-	(
-		OBB_Main_IsAdminGroup ($ProfileGroupID) || 
-		(
-			!OBB_Main_IsAdminGroup ($ProfileGroupID) && 
-			$CurrentPermissions['AvatarsAllowed']
-		)
-	)
-) {
+if ($CanEditProfile && OBB_ALLOW_AVATARS) {
 	$AvatarFlag = TRUE;
 }
 
@@ -263,7 +252,7 @@ $ProfileNoUseAvatar = $CanEditProfile && isset ($_POST['ProfileNoUseAvatar']) &&
 if (isset ($_POST['EditProfile']) && $CanEditProfile) {
 	//ПРОВЕРКА
 	//  --1)капча
-	if ($CanEditProfile && $_SESSION['UserData']['UserType'] <> 'admin' && $UserGroups_Permissions['CaptchaEditProfile']) {
+	if ($CanEditProfile && $_SESSION['UserData']['UserType'] <> 'admin' && $UserGroups_Permissions['CaptchaEditProfile'] && OBB_CAPTCHA) {
 		$CaptchaChech = Defence_CheckCaptcha ('CaptchaImg');
 		if (is_string ($CaptchaChech)) {
 			$ProfileEditError[] = $ForumLang['UserProfileErrors'][$CaptchaChech];
@@ -449,7 +438,7 @@ if (isset ($_POST['EditProfile']) && $CanEditProfile) {
 
 		//  --2.Великий запрос редактирования пользователя :)
 		$EditProfileSQL = 'UPDATE users
-						SET 
+						SET
 							UserSlogan = \'' . Defence_EscapeString ($Config_DBType, $ProfileSloganVar) . '\',
 							UserMail = \'' . Defence_EscapeString ($Config_DBType, $ProfileMailVar) . '\',
 							' . $PasswordSQL . '
@@ -550,9 +539,9 @@ $NavigArray = array (
 ///*JS-массив*///
 	if ($CanEditProfile) {
 		if (
-			$CanEditProfile && 
-			$_SESSION['UserData']['UserType'] <> 'admin' && 
-			$UserGroups_Permissions['CaptchaEditProfile'] && 
+			$CanEditProfile &&
+			$_SESSION['UserData']['UserType'] <> 'admin' &&
+			$UserGroups_Permissions['CaptchaEditProfile'] &&
 			OBB_CAPTCHA
 		) {
 			$JSIsCaptcha = TRUE;
@@ -599,16 +588,22 @@ $CurrentTitle = $CanEditProfile ? 'ProfileEdit' : 'ProfileWatch';
 $Title = OBB_Main_ReplaceSymbols ($ForumLang['Title'][$CurrentTitle], array('forumname'=>$Config_ForumName,'user'=>$ProfileLogin));
 
 //верх
-$MainOutput .= Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title);
+$MainOutput .= Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title, 'AddDelimiterDiv');
 
-//ошибки
-if (sizeof ($ProfileEditError)) {
-	$ErrorBlock = Echo_DisplayUserErrors ($ProfileEditError, $ForumLang['UserProfileErrors']['ErrorBlockTitle']);
+//вывод ошибок
+if (sizeof ($ProfileEditError) > 0) {
+	$ErrorListBlock = '<div class="ErrorBlockDiv">
+							<div class="ErrorBlockTitle">' . $ForumLang['UserProfileErrors']['ErrorBlockTitle'] . ':</div>';
+	foreach ($ProfileEditError as $Key=>$Value) {
+		$ErrorListBlock .= '<div class="ErrorItemDiv">' . $Value . '</div>';
+	}
+	$ErrorListBlock .= '</div>
+						<div style="height:15px;"><!-- --></div>';
 }
 else {
-	$ErrorBlock = '';
+	$ErrorListBlock = '';
 }
-$MainOutput .= '<div id="ErrorBlockDiv">' . $ErrorBlock . '</div>';
+$MainOutput .= $ErrorListBlock;
 
 //обшая информвция
 $UserIsOnline = $ProfileIsOnline == 'yes' ? $ForumLang['UserProfileOnline'] : $ForumLang['UserProfileOffline'];
@@ -619,103 +614,20 @@ else {
 	$ActionString = $ForumLang['UserProfileLastVisit'] . ' ' . Main_ConvertDate ($ProfileLastLogin, $ForumLang['DateArray'], 'd.m.Y') . ' ' . $ForumLang['UserProfileIn'] . ' ' . Main_ConvertDate ($ProfileLastLogin, $ForumLang['DateArray'], 'H:i');
 }
 
-//Вспомогательные
-$Star         = $CanEditProfile  ? '<font color="red">*</font>' : '';
-$DoHid        = $CanEditProfile  ? '<span>' . $ForumLang['UserProfileHidden']   . '</span>' : '';
-$IsEmpty      = !$CanEditProfile ? '<i>'    . $ForumLang['UserProfileEmpty']    . '</i>' : '';
-$NotAvailable = !$CanEditProfile ? '<i>'    . $ForumLang['UserProfileNotAvail'] . '</i>' : '';
-
-//форма
-$MultyPart  = OBB_ALLOW_AVATARS == TRUE && $CanEditProfile == TRUE ? ' enctype="multipart/form-data"' : '';
-$FormStart  = $CanEditProfile ? '<form id="ProfileForm" name="ProfileForm" action="' . $SelfName . '?action=profile&user_id=' . $UserID . '" method="POST"' . $MultyPart . '>' : '';
-$FormEnd    = $CanEditProfile ? '</form>' : '';
-$EditButton = $CanEditProfile ? '<br /><div id="SubmitButtonDiv"><input id="ProfileSubmit" type="submit" value="' . $ForumLang['UserProfileSubmit'] . '"></div>' : '';
-$HiddenVar  = $CanEditProfile ? '<input type="hidden" name="EditProfile" value="1">' : '';
-
-//Данные пользователя
-//1.Персональная информация
-if ($CanEditProfile) {
-	//календарь
-	$CalendarScript = '
-	<script type="text/javascript">//<![CDATA[
-	  Calendar.setup({
-		inputField : "ProfileBirthDate",
-		trigger    : "CalendarIcon",
-		onSelect   : function() { this.hide() },
-		showTime   : 12,
-		dateFormat : "%d.%m.%Y"
-	  });
-	//]]></script>';
-
-	//иконка календаря
-	$CalendarIcon = '<a id="CalendarIcon" href="javascript:void(0);"><img src="' . OBB_IMAGE_DIR . '/calendar.png" border="0" /></a>';
-
-	//  -страна, город, д.р., домашняя страница
-	$PersonalCountry = '<input id="ProfileCountry"   type="text" name="ProfileCountry" maxlength="'  . OBB_MAX_COUNTRY_LENGTH   . '" value="' . Defence_HTMLSpecials ($ProfileCountryVar) . '">';
-	$PersonalCity    = '<input id="ProfileCity"      type="text" name="ProfileCity"    maxlength="'  . OBB_MAX_CITY_LENGTH      . '" value="' . Defence_HTMLSpecials ($ProfileCityVar)    . '">';
-	$PersonalBirth   = '<input id="ProfileBirthDate" type="text" name="ProfileBirth" maxlength="10"' .                            ' value="' . Defence_HTMLSpecials ($ProfileBirthVar)    . '">';
-	$PersonalSite    = '<input id="ProfileSite"      type="text" name="ProfileSite" maxlength="'     . OBB_MAX_HOME_SITE_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileSiteVar)    . '">';
-
-	//  -девиз
-	$PersonalSlogan  = '';
-	$PersonalSlogan .= Echo_BBEditor ($Parameters);
-	$PersonalSlogan .= '<textarea id="ProfileSlogan" name="ProfileSlogan" cols="30" rows="3">' . Defence_HTMLSpecials ($ProfileSloganVar) . '</textarea>';
-
-	//  -пол
-	$MaleChecked   = $ProfileSexVar == 'male'   ? ' checked' : '';
-	$FemaleChecked = $ProfileSexVar == 'female' ? ' checked' : '';
-	$PersonalMale   = '<input type="radio"' . $MaleChecked   . ' name="ProfileSex" value="male"  >&nbsp;' . $ForumLang['UserProfileMale'];
-	$PersonalFemale	= '<input type="radio"' . $FemaleChecked . ' name="ProfileSex" value="female">&nbsp;' . $ForumLang['UserProfileFemale'];
-	$PersonalSex    = '<span>' . $PersonalMale . $PersonalFemale . '</span>';
-}
-else {
-	//календарь
-	$CalendarScript = '';
-
-	//  -д.р.
-	$PersonalBirth = Defence_HTMLSpecials ($ProfileBirth);
-
-	//иконка календаря
-	$CalendarIcon = '';
-
-	//  -страна, город, девиз
-	$PersonalCountry = !OBB_Main_IsEmpty ($ProfileCountry) ? Defence_HTMLSpecials ($ProfileCountry) : $IsEmpty;
-	$PersonalCity    = !OBB_Main_IsEmpty ($ProfileCity)    ? Defence_HTMLSpecials ($ProfileCity)    : $IsEmpty;
-	if (!OBB_Main_IsEmpty ($ProfileSlogan)) {
-		if (OBB_BB_PARSE_ALLOWED) {
-			$PersonalSlogan = $signature_bb->parse ($ProfileSlogan);
-			//$PersonalSlogan = $Slogan;
-		}
-		else {
-			$PersonalSlogan = Defence_HTMLSpecials ($ProfileSlogan);
-		}
-		$PersonalSlogan = nl2br ($PersonalSlogan);
-	}
-	else {
-		$PersonalSlogan = $IsEmpty;
-	}
-
-	//  -домашняя страница
-	$UserSite     = Defence_HTMLSpecials ($ProfileSite);
-	$PersonalSite = !OBB_Main_IsEmpty ($UserSite) ? '<a target="_blank" href="' . $UserSite . '">' . $UserSite . '</a>' : $IsEmpty;
-
-	//  -пол
-	$PersonalSex = $ProfileSex == 'male' ? $ForumLang['UserProfileMale'] : $ForumLang['UserProfileFemale'];
-	$PersonalSex = '<span>' . $PersonalSex . '</span>';
-}
-
-//2.Данные форума
-//  -группа, статус, к-во тем, сообщений, номер пользователя 
+//Данные форума
+//  -группа, статус, к-во тем, сообщений, номер пользователя
 $StatisticsGroup  = '<span style="color:#' . $UserGroupArr[$ProfileGroupID]['Color'] . ';">' . $UserGroupArr[$ProfileGroupID]['Description'] . '</span>';
-$StatisticsStat   = '<span>' . Echo_GetUserStatus ($ProfileNumPosts, OBB_NUM_POSTS_IN_STATUS, OBB_MAX_STATUS, OBB_IMAGE_DIR) . '</span>';
-$StatisticsNum    = '<span>' . $UserID    . '</span>';
+$IsUserAdminGroup = OBB_Main_IsAdminGroup ($ProfileGroupID);
+$UserStatusPosts = $IsUserAdminGroup ? OBB_MAX_STATUS*OBB_NUM_POSTS_IN_STATUS : $ProfileNumPosts;
+$StatisticsStat   = Echo_GetUserStatus ($UserStatusPosts, OBB_NUM_POSTS_IN_STATUS, OBB_MAX_STATUS, OBB_IMAGE_DIR);
+$StatisticsNum    = '<span>' . $UserID . '</span>';
 if (intval ($ProfileNumThemes) < 1) {
 	$ProfileNumThemes = $ForumLang['UserProfileNoThemes'];
 	$ShowAllThemes = '';
 }
 else {
 	$ProfileNumThemes = intval ($ProfileNumThemes);
-	$ShowAllThemes = '&nbsp;&nbsp;<span><a href="javascript:void(0);" onclick="findUserThemes();">' . $ForumLang['UserProfileAllThemes'] . '</a></span>';
+	$ShowAllThemes = '&nbsp;&nbsp;<span><a style="color:blue;" href="javascript:void(0);" onclick="findUserThemes();">' . $ForumLang['UserProfileAllThemes'] . '</a></span>';
 }
 if (intval ($ProfileNumPosts) < 1) {
 	$ProfileNumPosts = $ForumLang['UserProfileNoPosts'];
@@ -723,147 +635,16 @@ if (intval ($ProfileNumPosts) < 1) {
 }
 else {
 	$ProfileNumPosts = intval ($ProfileNumPosts);
-	$ShowAllPosts  = '<span><a href="javascript:void(0);" onclick="findUserPosts();">' . $ForumLang['UserProfileAllPosts']  . '</a></span>';
+	$ShowAllPosts  = '&nbsp;&nbsp;<span><a style="color:blue;" href="javascript:void(0);" onclick="findUserPosts();">' . $ForumLang['UserProfileAllPosts']  . '</a></span>';
 }
 $StatisticsThemes = '<span>' . $ProfileNumThemes . '</span>';
 $StatisticsPosts  = '<span>' . $ProfileNumPosts  . '</span>';
 
-//  -дата регистрации
+//дата регистрации
 $UserRegDate = Main_ConvertDate ($ProfileRegDate, $DateArray, 'full');
 $UserRegArr  = explode (',', $UserRegDate);
 $UserRegDate = $UserRegArr[0] . ', ' . $UserRegArr[1];
 $StatisticsReg = '<span>' . $UserRegDate . '</span>';
-
-//3.Контактные данные
-if ($CanEditProfile) {
-	//  -аська, телефоны
-	$ContactsICQ     = '<input id="ProfileICQ"   type="text" name="ProfileICQ" maxlength="9" value="' . Defence_HTMLSpecials ($ProfileICQVar)  . '">';
-	$ContactsPhone   = '<input id="ProfilePhone" type="text" name="ProfilePhone"  value="' . Defence_HTMLSpecials ($ProfilePhoneVar)  . '">';
-	$ContactsMobile  = '<input id="ProfileMobile" type="text" name="ProfileMobile" value="' . Defence_HTMLSpecials ($ProfileMobileVar) . '">';
-
-	//  -эл. почта
-	$HidChecked    = $ProfileMailHiddenVar == 'yes' ? ' checked' : '';
-	$ContactIsHid  = '<input' . $HidChecked . ' type="checkbox" name="ProfileHidMail">';
-	$ContactsEMail = '<input id="ProfileMail" type="text" name="ProfileMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileMailVar) . '">';
-
-	//  -отсыл письма админом
-	$AdmMailCheck    = $ProfileAdminMailVar == 'yes' ? ' checked' : '';
-	$TextAdmMail     = $ForumLang['UserProfileAdmMail'];
-	$ContactsAdmMail = '<input' . $AdmMailCheck . ' type="checkbox" name="ProfileAdmMail">';
-
-	//  -отсыл письма пользователями
-	$OthMailCheck    = $ProfileOtherMailVar == 'yes' ? ' checked' : '';
-	$TextOthMail     = $ForumLang['UserProfileOthMail'];
-	$ContactsOthMail = '<input' . $OthMailCheck . ' type="checkbox" name="ProfileOthMail">';
-
-	//  -пароль
-	//  -ПРИМЕЧАНИЕ: пароль может изменять ТОЛЬКО ВЛАДЕЛЕЦ профиля
-	if ($ProfileOwner) {
-		$PasswordDiv = '<br />
-						<div>
-							<span>' . $ForumLang['UserProfilePassword'] . '</span>
-							<br />
-							<span><input id="ProfilePass" type="password" name="ProfilePassword"   maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" /></span>
-							<br />
-							<span>' . $ForumLang['UserProfilePassRepeat'] . '</span>
-							<br />
-							<span><input id="ProfileRepeatPass" type="password" name="ProfilePassRepeat" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" /></span>
-						</div>';
-	}
-	else {
-		$PasswordDiv = '';
-	}
-
-	//  -обобщение
-	$ContactsComMail = '<br />
-						<div>
-							<span>' . $ForumLang['UserProfileMailOpts'] . '</span>
-							<br />
-							<span>' . $ContactsAdmMail . '</span>&nbsp;<span>' . $TextAdmMail . '</span>
-							<br />
-							<span>' . $ContactsOthMail . '</span>&nbsp;<span>' . $TextOthMail . '</span>
-						</div>';
-}
-else {
-	//  -аська, телефоны
-	$ContactsICQ     = !OBB_Main_IsEmpty ($ProfileICQ)    ? Defence_HTMLSpecials ($ProfileICQ)     : $IsEmpty;
-	$ContactsPhone   = !OBB_Main_IsEmpty ($ProfilePhone)  ? Defence_HTMLSpecials ($ProfilePhone)   : $IsEmpty;
-	$ContactsMobile  = !OBB_Main_IsEmpty ($ProfileMobile) ? Defence_HTMLSpecials ($ProfileMobile)  : $IsEmpty;
-
-	//  -эл. почта
-	$HidChecked      = '';
-	$ContactIsHid    = '';
-	if ($ProfileMailHidden == 'yes') {
-		$ContactsEMail = $NotAvailable;
-	}
-	else {
-		$ContactsEMail = !OBB_Main_IsEmpty ($ProfileMail) ? Defence_HTMLSpecials ($ProfileMail) : $IsEmpty;
-	}
-
-	//  -отсыл эл. писем админом и пользователем
-	$TextAdmMail     = '';
-	$TextOthMail     = '';
-	$ContactsAdmMail = '';
-	$ContactsOthMail = '';
-	$ContactsComMail = '';
-
-	//  -пароль
-	$PasswordDiv = '';
-}
-
-//4.Аватар
-if (!OBB_Main_IsEmpty ($ProfileAvatar) && file_exists (OBB_AVATAR_DIR . '/' . $UserID . '.' . $ProfileAvatar)) {
-	if ($CanEditProfile && $AvatarFlag) {
-		$AvatarDoNot = '<span><input type="checkbox" name="ProfileNoUseAvatar"></span>&nbsp;<span>' . $ForumLang['UserProfileAvatarDel'] . '</span>';
-	}
-	else {
-		$AvatarDoNot = '';
-	}
-	$AvatarImage = '<span><img src="' . OBB_AVATAR_DIR . '/' . $UserID . '.' . $ProfileAvatar . '" border="0" /></span>';
-}
-else {
-	$AvatarDoNot = '';
-	$NoAvatarPhrase = $ProfileOwner ? $ForumLang['UserProfileOwnerNoAvatar'] : $ForumLang['UserProfileNoAvatar'];
-	$AvatarImage = '<span>' . $NoAvatarPhrase . '</span>';
-}
-
-//  -форма загрузки нового аватара
-if ($CanEditProfile && $AvatarFlag) {
-	$AvatarLoadForm = '<span>
-						' . $ForumLang['UserProfileAvatarNew'] . '
-					</span>
-					<br />
-					<span>
-						<input type="file" name="ProfileAvatar" />
-					</span>';
-}
-else {
-	$AvatarLoadForm = '';
-}
-
-//  -объединение
-$AvatarAll = '<br />
-			<div class="Avatar" id="Avatar">
-				<div>
-					<b>' . $ForumLang['UserProfileAvatar'] . '</b>
-				</div>
-				<div>
-					<div>
-						' . $AvatarImage . '
-						&nbsp;
-						' . $AvatarDoNot . '
-					</div>
-					<br />
-					<div>
-						' . $AvatarLoadForm . '
-					<div>
-				</div>
-			</div>';
-
-
-if (!OBB_ALLOW_AVATARS) {
-	$AvatarAll = '';
-}
 
 //админские элементы
 if ($_SESSION['UserData']['UserType'] == 'admin' && OBB_SHOW_ADMIN_ELEMENTS && !OBB_Main_IsAdminGroup ($ProfileGroupID)) {
@@ -880,180 +661,725 @@ else {
 	$AdminElements = '';
 }
 
-//Начало вывода данных
-$MainOutput .= '<tr>
-					<td>
-						<div id="SearchHiddenForm" name="SearchHiddenForm" style="display:none;">
-							<form id="UserSearchFormID" name="UserSearchFormID" action="' . $SelfName . '?action=search&search_build=1" method="POST">
-								<input type="hidden" name="SearchWord" value="" />
-									<input type="hidden" name="SearchMethod" value="1" />
-									<input type="hidden" name="SearchUser" value="' . $ProfileLogin . '" />
-									<input checked type="checkbox" name="SearchFullUser" />
-									<input type="hidden" name="SearchSortBy" value="1" />
-									<input type="hidden" name="SearchSortHow" value="2" />
-									<input id="ProfileSearchMethodIn" type="hidden" name="SearchMethodIn" value="" />
-									<input type="hidden" name="search" value="1" />
-									<input type="checkbox" name="SearchHighlight" />
-							</form>
-						</div>
+//hidden form
+$HiddenActionURL = Defence_HTMLSpecials ($SelfName . '?action=search&search_build=1');
+$HiddenForm = '<div id="SearchHiddenForm" style="display:none;">
+					<form id="UserSearchFormID" action="' . $HiddenActionURL . '" method="post">
 						<div>
-							<div>
-								<b>' . Defence_HTMLSpecials ($ProfileLogin) . '</b>
-								' . $AdminElements . '
-							</div>
-							<div>
-								<span>' . $UserIsOnline . '</span>
-								<br />
-								<span>' . $ActionString . '</span>
-							</div>
-						</div>';
+							<input type="hidden" name="SearchWord" value="" />
+							<input type="hidden" name="SearchMethod" value="1" />
+							<input type="hidden" name="SearchUser" value="' . $ProfileLogin . '" />
+							<input checked="checked" type="checkbox" name="SearchFullUser" />
+							<input type="hidden" name="SearchSortBy" value="1" />
+							<input type="hidden" name="SearchSortHow" value="2" />
+							<input id="ProfileSearchMethodIn1" type="hidden" name="SearchMethodIn" value="" />
+							<input type="hidden" name="search" value="1" />
+							<input type="checkbox" name="SearchHighlight" />
+						</div>
+					</form>
+				</div>';
 
-$MainOutput .= $FormStart;
-
-//Персональные данные
-$MainOutput .= '		<br />
-						<div class="Personals" id="Personals">
-							<div>
-								<b>' . $ForumLang['UserProfilePersonals'] . '</b>
-							</div>
-							' . $PasswordDiv . '
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileBirth'] . '</span>' . $Star . '
-								<br />
-								<span>' . $PersonalBirth . '</span>' . $CalendarIcon . '
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileSex'] . '</span>' . $Star . '
-								<br />
-								<span>' . $PersonalSex . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileWWW'] . '</span>
-								<br />
-								<span>' . $PersonalSite . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileSlogan'] . '</span>
-								<br />
-								<span>' . $PersonalSlogan . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileCountry'] . '</span>
-								<br />
-								<span>' . $PersonalCountry . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileCity'] . '</span>
-								<br />
-								<span>' . $PersonalCity . '</span>
-							</div>
-						</div>';
-
-//Данные форума
-$MainOutput .= '		<br />
-						<div class="ForumStatistics" id="ForumStatistics">
-							<div>
-								<b>' . $ForumLang['UserProfileStatistics'] . '</b>
-							</div>
-							<div>
-								<span>' . $ForumLang['UserProfileGroup'] . '</span>
-								<br />
-								<span>' . $StatisticsGroup . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileStatus'] . '</span>
-								<br />
-								<span>' . $StatisticsStat . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileRegDate'] . '</span>
-								<br />
-								<span>' . $StatisticsReg . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileNumber'] . '</span>
-								<br />
-								<span>' . $StatisticsNum . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileThemes'] . '</span>
-								<br />
-								<span>' . $StatisticsThemes . '</span>&nbsp;' . $ShowAllThemes . '
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfilePosts'] . '</span>
-								<br />
-								<span>' . $StatisticsPosts . '</span>&nbsp;' . $ShowAllPosts . '
-							</div>
-						</div>';
-
-//Контактная информация
-$MainOutput .= '		<br />
-						<div class="Contacts" id="Contacts">
-							<div>
-								<b>' . $ForumLang['UserProfileContacts'] . '</b>
-							</div>
-							<div>
-								<span>' . $ForumLang['UserProfileMail'] . $Star . '</span>
-								<br />
-								<span>' . $ContactsEMail . '</span>' . $ContactIsHid . '&nbsp;' . $DoHid . '
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileICQ'] . '</span>
-								<br />
-								<span>' . $ContactsICQ . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfilePhone'] . '</span>
-								<br />
-								<span>' . $ContactsPhone . '</span>
-							</div>
-							<br />
-							<div>
-								<span>' . $ForumLang['UserProfileMobile'] . '</span>
-								<br />
-								<span>' . $ContactsMobile . '</span>
-							</div>
-						</div>';
-
-//Аватар
-$MainOutput .= $AvatarAll;
-
-//Опции получения писем
-$MainOutput .= $ContactsComMail;
-
-//Капча
-if (
-	$CanEditProfile && 
-	$_SESSION['UserData']['UserType'] <> 'admin' && 
-	$UserGroups_Permissions['CaptchaEditProfile'] && 
-	OBB_CAPTCHA
-) {
-	$MainOutput .= Echo_CaptchaBlock ($ForumLang['CaptchaTitle'], $ForumLang['EnterCaptcha'], 'ProfileCaptcha');
+//common user information
+//  --online/offline
+if ($ProfileIsOnline == 'yes') {
+	$Image = 'online';
+	$OnlineStatus = $ForumLang['UserProfileOnline'];
+	$ActionArray  = $ForumLang['UserActions'];
+	$ActionString = '<span class="OnlineActivityOn">' . $ActionArray[$ProfileLastAction] . '</span>';
 }
+else {
+	$Image = 'offline';
+	$OnlineStatus = $ForumLang['UserProfileOffline'];
+	$DatePattern = 'd.m.Y';
+	$ConvertDate = Main_ConvertDate ($ProfileLastLogin, $ForumLang['DateArray'], $DatePattern);
+	$ConvertDate = $ConvertDate;
+	$TimePattern = 'H:i';
+	$ConvertTime = Main_ConvertDate ($ProfileLastLogin, $ForumLang['DateArray'], $TimePattern);
+	$ConvertTime = $ConvertTime;
+	$DateTimeLogin = $ConvertDate . ' ' . $ForumLang['UserProfileIn'] . ' ' . $ConvertTime;
+	$ActionString = '<span class="OnlineActivityOff">' . $ForumLang['UserProfileLastAction'] . ' - <span class="OnlineActivityTime">' . $DateTimeLogin . '</span></span>';
+}
+$UserActivity  = '<img style="vertical-align:middle;" class="OnlineImg" title="' . $OnlineStatus . '" alt="" src="' . OBB_IMAGE_DIR . '/' . $Image . '.png" />';
+$UserActivity .= '&nbsp;<span style="font-weight:normal !important;" class="OnlineActivity">' . $ActionString . '</span>';
 
-$MainOutput .= $HiddenVar;
-$MainOutput .= $EditButton;
-$MainOutput .= $FormEnd;
+//  --output
+$CommonUserInfo = '<tr>
+						<td style="width:200px;" class="ForumCharter">
+							<span class="ThemesTitle">' . $ForumLang['UserProfileStatistics'] . '</span>
+						</td>
+						<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
+							<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileCommonClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileCommonImgID\');"><img id="ProfileCommonImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; border-top:1px solid #FFFFFF; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileLogin'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top; border-top:1px solid #FFFFFF;" class="FormInputTD">
+							' . Defence_HTMLSpecials ($ProfileLogin) . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileGroup'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							' . $StatisticsGroup . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileRegDate'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							' . $StatisticsReg . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileNumber'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							' . $StatisticsNum . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileThemes'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							<span>' . $StatisticsThemes . '</span>&nbsp;' . $ShowAllThemes . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfilePosts'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							<span>' . $StatisticsPosts . '</span>&nbsp;' . $ShowAllPosts . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:6px; vertical-align:middle; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileStatus'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+							' . $StatisticsStat . '
+						</td>
+					</tr>
+					<tr class="ProfileCommonClassHide">
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:middle; width:200px;" class="FormTitleTD">
+							<div class="InputTitle">
+								' . $ForumLang['UserProfileActivity'] . '
+							</div>
+						</td>
+						<td style="padding-bottom:14px; vertical-align:top;" class="FormInputTD">
+							' . $UserActivity . '
+						</td>
+					</tr>';
 
-$MainOutput .= $CalendarScript;
+if ($CanEditProfile) {
+	//календарь
+	$CalendarScript = '
+	<script type="text/javascript">//<![CDATA[
+	  Calendar.setup({
+		inputField : "ProfileBirthDate",
+		trigger    : "CalendarIcon",
+		onSelect   : function() { this.hide() },
+		showTime   : 12,
+		dateFormat : "%d.%m.%Y"
+	  });
+	//]]></script>';
 
-//конец вывода данных
-$MainOutput .= '	</td>
-				</tr>';
+	//multipart
+	$MultyPart  = OBB_ALLOW_AVATARS == TRUE && $CanEditProfile == TRUE ? ' enctype="multipart/form-data"' : '';
+
+	//checkings
+	$HidChecked    = $ProfileMailHiddenVar == 'yes' ? ' checked="checked"' : '';
+	$AdmMailCheck  = $ProfileAdminMailVar  == 'yes' ? ' checked="checked"' : '';
+	$OthMailCheck  = $ProfileOtherMailVar  == 'yes' ? ' checked="checked"' : '';
+	$MaleChecked   = $ProfileSexVar == 'male'   ? ' checked="checked"' : '';
+	$FemaleChecked = $ProfileSexVar == 'female' ? ' checked="checked"' : '';
+
+	//Password
+	if ($ProfileOwner) {
+		$TopBorder = '';
+		$PasswordBlock = '<tr class="ProfilePersonalsClassHide">
+							<td style="border-top:1px solid #FFF; padding-bottom:7px; width:200px;" class="FormTitleTD">
+								<div class="InputTitle">
+									' . $ForumLang['UserProfilePassword'] . '<span class="Important">*</span>
+								</div>
+								<div class="InputDescr">
+									(' . OBB_Main_ReplaceSymbols ($ForumLang['UserPasswordLimit'], array('min'=>OBB_MIN_PASSWORD_LENGTH, 'max'=>OBB_MAX_PASSWORD_LENGTH)) . ')
+								</div>
+							</td>
+							<td style="border-top:1px solid #FFF; padding-bottom:7px;" class="FormInputTD">
+								<input style="width:280px;" class="InpEl InpText" id="ProfilePass" type="password" name="ProfilePassword" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" />
+							</td>
+						</tr>
+						<tr class="ProfilePersonalsClassHide">
+							<td style="padding-bottom:7px; width:200px;" class="FormTitleTD">
+								<div class="InputTitle">
+									' . $ForumLang['UserProfilePassRepeat'] . '<span class="Important">*</span>
+								</div>
+							</td>
+							<td style="padding-bottom:7px;" class="FormInputTD">
+								<input style="width:280px;" class="InpEl InpText" id="ProfileRepeatPass" type="password" name="ProfilePassRepeat" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" />
+							</td>
+						</tr>';
+	}
+	else {
+		$TopBorder = 'border-top:1px solid #FFF; ';
+		$PasswordBlock = '';
+	}
+
+	//Avatar
+	if ($AvatarFlag) {
+		//расширения
+		$ExtenArray = array ();
+		foreach ($FilesArray as $FilesKey=>$FilesValue) {
+			$Extension = $FilesValue['extension'];
+			$IsImage   = $FilesValue['image'];
+			if ($IsImage) {
+				$ExtenArray[] = $Extension;
+			}
+		}
+		$ExstensionString = '<span style="border-bottom:1px dotted #222;">' . $ForumLang['UserProfileAvatarsAllowed'] . '</span>:&nbsp;<span style="color:#444;">' . implode (', ', $ExtenArray) . '</span>';
+
+		if (!OBB_Main_IsEmpty ($ProfileAvatar) && file_exists (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar)) {
+			$ProfileAvatarSize = filesize (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar);
+			$SizeArr   = Main_ShowSize ($ProfileAvatarSize);
+			$FileUnit  = $SizeArr['Unit'];
+			$FileSize  = $SizeArr['Size'];
+			$UnitLoc = $ForumLang['UserProfileAttach'.$FileUnit];
+			$AvatarSizeString = $FileSize . '&nbsp;' . $UnitLoc;
+
+			$ProfileAvatarGabaritsArray = getimagesize (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar);
+			$ProfileAvatarWidth  = $ProfileAvatarGabaritsArray[0];
+			$ProfileAvatarHeight = $ProfileAvatarGabaritsArray[1];
+			$AvatarGabaritsString = '&nbsp;' . $ProfileAvatarWidth . 'x' . $ProfileAvatarHeight;
+
+			$CurrentAvatarBlock = '<div class="ExistingAttachDiv">
+										<div style="margin-bottom:10px;" class="FileAttachTitle">
+											' . $ForumLang['UserProfileCurrentAvatar'] . '
+										</div>
+										<div>
+											<img alt="" title="" src="' . OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar . '" />
+										</div>
+										<div style="margin-top:5px; margin-bottom:19px;">
+											<span class="AttachInfo">' . $AvatarSizeString . ',&nbsp;' . $AvatarGabaritsString . '</span><span style="margin-left:17px;"><input type="checkbox" name="ProfileNoUseAvatar" /></span><span>' . $ForumLang['UserProfileAvatarDel'] . '</span>
+										</div>
+									</div>';
+		}
+		else {
+			$CurrentAvatarBlock = '';
+		}
+
+		$AvatarFullBlock = '<tr>
+								<td style="width:200px;" class="ForumCharter">
+									<span class="ThemesTitle">' . $ForumLang['UserProfileAvatarTitle'] . '</span>
+								</td>
+								<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
+									<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileAvatarClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileAvatarImgID\');"><img id="ProfileAvatarImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+								</td>
+							</tr>
+							<tr class="ProfileAvatarClassHide">
+								<td style="border-top:1px solid #FFF; padding-bottom:7px; width:200px;" class="FormTitleTD">
+									<div class="InputTitle">
+										' . $ForumLang['UserProfileAvatar'] . '
+									</div>
+								</td>
+								<td style="border-top:1px solid #FFF; padding-bottom:7px;" class="FormInputTD">
+									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
+										' . $CurrentAvatarBlock . '
+										<div class="AttachAddAction">
+											<strong>' . $ForumLang['UserProfileAvatarNew'] . '</strong>
+										</div>
+										<div class="AttachFileField">
+											<input type="file" name="ProfileAvatar" />
+										</div>
+										<div class="AttachExtensions">
+											' . $ExstensionString . '
+										</div>
+										<div class="AttachExtensions">
+											<span style="border-bottom:1px dotted #222;">' . $ForumLang['UserProfileAvatarAllowedSize'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_AVATAR_SIZE . '&nbsp;' . $ForumLang['UserProfileAttachb'] . '</span>
+										</div>
+										<div class="AttachExtensions">
+											<span style="border-bottom:1px dotted #222;">' . $ForumLang['UserProfileAvatarAllowedGabarits'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_AVATAR_WIDTH . '(' . $ForumLang['UserProfileAvatarhWidth'] . ')&nbsp;<strong>X</strong>&nbsp;' . OBB_MAX_AVATAR_WIDTH . '(' . $ForumLang['UserProfileAvatarhHeight'] . ')</span>
+										</div>
+									</div>
+								</td>
+							</tr>';
+	}
+	else {
+		$AvatarFullBlock = '';
+	}
+
+	//Капча
+	if ($_SESSION['UserData']['UserType'] <> 'admin' && $UserGroups_Permissions['CaptchaEditProfile'] && OBB_CAPTCHA) {
+		$CaptchaBlock  = '<tr>
+							<td style="border-bottom:1px solid #FFF; width:200px;" class="ForumCharter">
+								<span class="ThemesTitle">' . $ForumLang['UserProfileCaptchaTitle'] . '</span>
+							</td>
+							<td style="border-bottom:1px solid #FFF; text-align:right; vertical-align:middle;" class="ForumCharter">
+								&nbsp;
+							</td>
+						</tr>';
+		$CaptchaBlock .= Echo_CaptchaBlock2 ($ForumLang['CaptchaTitle'], $ForumLang['EnterCaptcha'], 'ProfileCaptcha');
+	}
+	else {
+		$CaptchaBlock = '';
+	}
+
+	//Action
+	$ActionURL = Defence_HTMLSpecials ($SelfName . '?action=profile&user_id=' . $UserID);
+
+	//Start outputting
+	$MainOutput .= $HiddenForm;
+	$MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">
+						<tr class="MainColumnRow">
+							<td style="font-size:13px;" colspan="1" class="MainColumnName"><span>' . $NavigProfile . '</span></td>
+						</tr>
+						<tr class="ForumMainTR">
+							<td style="padding:0;">
+								<form style="padding:0; margin:0;" id="ProfileForm" action="' . $ActionURL . '" method="post"' . $MultyPart . '>
+									<table style="width:100%;" class="FormsTable" cellspacing="0" cellpadding="0" border="0">
+										' . $CommonUserInfo . '
+										<tr>
+											<td style="width:200px;" class="ForumCharter">
+												<span class="ThemesTitle">' . $ForumLang['UserProfilePersonals'] . '</span>
+											</td>
+											<td style="text-align:right; vertical-align:middle;" class="ForumCharter">
+												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfilePersonalsClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfilePersonalsImgID\');"><img id="ProfilePersonalsImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+											</td>
+										</tr>
+										' . $PasswordBlock . '
+										<tr class="ProfilePersonalsClassHide">
+											<td style="' . $TopBorder . 'padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileBirth'] . '<span class="Important">*</span>
+												</div>
+												<div class="InputDescr">
+													(' . $ForumLang['UserProfileBirthLimit'] . ')
+												</div>
+											</td>
+											<td style="' . $TopBorder . 'padding-bottom:7px;" class="FormInputTD">
+												<input style="width:130px;" class="InpEl InpText" id="ProfileBirthDate" type="text" name="ProfileBirth" maxlength="10" value="' . Defence_HTMLSpecials ($ProfileBirthVar) . '" />
+												<a id="CalendarIcon" href="javascript:void(0);"><img style="vertical-align:middle;" title="" alt="" src="' . OBB_IMAGE_DIR . '/calendar.png" /></a>
+											</td>
+										</tr>
+										<tr class="ProfilePersonalsClassHide">
+											<td style="padding-top:9px; padding-bottom:12px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileSex'] . '<span class="Important">*</span>
+												</div>
+											</td>
+											<td style="padding-bottom:12px;" class="FormInputTD">
+												<input type="radio"' . $MaleChecked   . ' name="ProfileSex" value="male" />&nbsp;' . $ForumLang['UserProfileMale'] . '
+												&nbsp;
+												<input type="radio"' . $FemaleChecked . ' name="ProfileSex" value="female" />&nbsp;' . $ForumLang['UserProfileFemale'] . '
+											</td>
+										</tr>
+										<tr class="ProfilePersonalsClassHide">
+											<td style="padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileWWW'] . '<span class="Important">*</span>
+												</div>
+												<div class="InputDescr">
+													(' . OBB_Main_ReplaceSymbols ($ForumLang['UserProfileWWWLimit'], array('min'=>OBB_MIN_HOME_SITE_LENGTH,'max'=>OBB_MAX_HOME_SITE_LENGTH)) . ')
+												</div>
+											</td>
+											<td style="padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileSite" type="text" name="ProfileSite" maxlength="' . OBB_MAX_HOME_SITE_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileSiteVar) . '" />
+											</td>
+										</tr>
+										<tr class="ProfilePersonalsClassHide">
+											<td style="width:200px; vertical-align:top;" class="FormTitleTD">
+												<br /><br />
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileSlogan'] . '
+												</div>
+												<div class="InputDescr">
+													(' . OBB_Main_ReplaceSymbols ($ForumLang['UserProfileSloganLimit'], array('max'=>OBB_MAX_SLOGAN_LENGTH)) . ')
+												</div>
+											</td>
+											<td class="FormInputTD TextareaTD">
+												' . Echo_BBEditor ($Parameters) . '
+												<div>
+													<textarea style="width:400px;" class="InpEl InpTextarea" id="ProfileSlogan" name="ProfileSlogan" onfocus="initInsertions(\'ProfileForm\', \'ProfileSlogan\');" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" cols="87" rows="5">' . Defence_HTMLSpecials ($ProfileSloganVar) . '</textarea>
+												</div>
+												<div style="height:15px;"><!-- --></div>
+											</td>
+										</tr>
+										<tr class="ProfilePersonalsClassHide">
+											<td style="padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileCountry'] . '
+												</div>
+												<div class="InputDescr">
+													(' . OBB_Main_ReplaceSymbols ($ForumLang['UserProfileCountryLimit'], array('min'=>OBB_MIN_COUNTRY_LENGTH,'max'=>OBB_MAX_COUNTRY_LENGTH)) . ')
+												</div>
+											</td>
+											<td style="padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileCountry" type="text" name="ProfileCountry" maxlength="' . OBB_MAX_COUNTRY_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileCountryVar) . '" />
+											</td>
+										</tr>
+										<tr class="ProfilePersonalsClassHide">
+											<td style="padding-bottom:15px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileCity'] . '
+												</div>
+												<div class="InputDescr">
+													(' . OBB_Main_ReplaceSymbols ($ForumLang['UserProfileCityLimit'], array('min'=>OBB_MIN_CITY_LENGTH,'max'=>OBB_MAX_CITY_LENGTH)) . ')
+												</div>
+											</td>
+											<td style="padding-bottom:15px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileCity" type="text" name="ProfileCity" maxlength="' . OBB_MAX_CITY_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileCityVar) . '" />
+											</td>
+										</tr>
+										<tr>
+											<td style="width:200px;" class="ForumCharter">
+												<span class="ThemesTitle">' . $ForumLang['UserProfileContacts'] . '</span>
+											</td>
+											<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
+												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileContactsClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileContactsImgID\');"><img id="ProfileContactsImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="border-top:1px solid #FFFFFF; padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileMail'] . '<span class="Important">*</span>
+												</div>
+												<div class="InputDescr">
+													(' . OBB_Main_ReplaceSymbols ($ForumLang['UserProfileMailLimit'], array('min'=>OBB_MIN_MAIL_LENGTH,'max'=>OBB_MAX_MAIL_LENGTH)) . ')
+												</div>
+											</td>
+											<td style="border-top:1px solid #FFFFFF; padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileMail" type="text" name="ProfileMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileMailVar) . '" />
+												&nbsp;&nbsp;
+												<input' . $HidChecked . ' type="checkbox" name="ProfileHidMail" />' . $ForumLang['UserProfileHidden'] . '
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileICQ'] . '
+												</div>
+											</td>
+											<td style="padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileICQ" type="text" name="ProfileICQ" maxlength="9" value="' . Defence_HTMLSpecials ($ProfileICQVar) . '" />
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-top:12px; padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfilePhone'] . '
+												</div>
+											</td>
+											<td style="padding-top:10px; padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfilePhone" type="text" name="ProfilePhone"  value="' . Defence_HTMLSpecials ($ProfilePhoneVar) . '" />
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-top:12px; padding-bottom:7px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileMobile'] . '
+												</div>
+											</td>
+											<td style="padding-top:10px; padding-bottom:7px;" class="FormInputTD">
+												<input style="width:280px;" class="InpEl InpText" id="ProfileMobile" type="text" name="ProfileMobile" value="' . Defence_HTMLSpecials ($ProfileMobileVar) . '" />
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-top:10px; padding-bottom:14px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileMailOpts'] . '
+												</div>
+											</td>
+											<td style="padding-top:10px; padding-bottom:14px;" class="FormInputTD">
+												<input' . $AdmMailCheck . ' type="checkbox" name="ProfileAdmMail" />'  . $ForumLang['UserProfileAdmMail'] . '<br />
+												<input' . $OthMailCheck . ' type="checkbox" name="ProfileOthMail" />'  . $ForumLang['UserProfileOthMail'] . '<br />
+											</td>
+										</tr>
+										' . $AvatarFullBlock . '
+										' . $CaptchaBlock    . '
+										<tr>
+											<td style="border-top:1px solid #FFFFFF; border-top:1px solid #FFFFFF;" colspan="2" class="FormInputTD AdditionalTD">
+												<span class="Important">*</span> - ' . $ForumLang['UserProfileImportantFields'] . '
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2" class="FormInputTD CenterTD">
+												<input type="hidden" name="EditProfile" value="1" />
+												<div id="SubmitButtonDiv">
+													<input class="InpButton" id="ProfileSubmit" type="submit" value="' . $ForumLang['UserProfileSubmit'] . '" />
+													<input class="InpButton" type="button" value="' . $ForumLang['UserProfileReset'] . '" />
+												</div>
+											</td>
+										</tr>
+									</table>
+								</form>
+							</td>
+						</tr>
+						<tr>
+							<td class="ForumsTableBottom" colspan="1">
+								<div><!-- --></div>
+							</td>
+						</tr>
+					</table>' . $CalendarScript;
+}
+else {
+	//Вспомогательные
+	$IsEmpty      = '<span style="font-style:italic; color:#444444;">' . $ForumLang['UserProfileEmpty'] . '</span>';
+	$NotAvailable = '<span style="font-style:italic; color:#AA0000;">' . $ForumLang['UserProfileNotAvail'] . '</span>';
+
+	//birth date
+	$PersonalBirth = Defence_HTMLSpecials ($ProfileBirth);
+
+	//пол
+	$PersonalSex = $ProfileSex == 'male' ? $ForumLang['UserProfileMale'] : $ForumLang['UserProfileFemale'];
+	$PersonalSex = '<span>' . $PersonalSex . '</span>';
+
+	//домашняя страница
+	$UserSite     = Defence_HTMLSpecials ($ProfileSite);
+	$PersonalSite = !OBB_Main_IsEmpty ($UserSite) ? '<a style="color:blue;" href="' . $UserSite . '">' . $UserSite . '</a>' : $IsEmpty;
+
+	//страна, город, девиз
+	$PersonalCountry = !OBB_Main_IsEmpty ($ProfileCountry) ? Defence_HTMLSpecials ($ProfileCountry) : $IsEmpty;
+	$PersonalCity    = !OBB_Main_IsEmpty ($ProfileCity)    ? Defence_HTMLSpecials ($ProfileCity)    : $IsEmpty;
+	if (!OBB_Main_IsEmpty ($ProfileSlogan)) {
+		if (OBB_BB_PARSE_ALLOWED) {
+			$PersonalSlogan = $signature_bb->parse ($ProfileSlogan);
+			//$PersonalSlogan = $Slogan;
+		}
+		else {
+			$PersonalSlogan = Defence_HTMLSpecials ($ProfileSlogan);
+		}
+		$PersonalSlogan = nl2br ($PersonalSlogan);
+	}
+	else {
+		$PersonalSlogan = $IsEmpty;
+	}
+
+	//электронная почта
+	if ($ProfileMailHidden == 'yes') {
+		$ContactsEMail = $NotAvailable;
+	}
+	else {
+		$ContactsEMail = !OBB_Main_IsEmpty ($ProfileMail) ? Defence_HTMLSpecials ($ProfileMail) : $IsEmpty;
+	}
+
+	//аська, телефоны
+	$ContactsICQ     = !OBB_Main_IsEmpty ($ProfileICQ)    ? Defence_HTMLSpecials ($ProfileICQ)     : $IsEmpty;
+	$ContactsPhone   = !OBB_Main_IsEmpty ($ProfilePhone)  ? Defence_HTMLSpecials ($ProfilePhone)   : $IsEmpty;
+	$ContactsMobile  = !OBB_Main_IsEmpty ($ProfileMobile) ? Defence_HTMLSpecials ($ProfileMobile)  : $IsEmpty;
+
+	//аватар
+	if (OBB_ALLOW_AVATARS) {
+		if (!OBB_Main_IsEmpty ($ProfileAvatar) && file_exists (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar)) {
+			$ProfileAvatarSize = filesize (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar);
+			$SizeArr   = Main_ShowSize ($ProfileAvatarSize);
+			$FileUnit  = $SizeArr['Unit'];
+			$FileSize  = $SizeArr['Size'];
+			$UnitLoc = $ForumLang['UserProfileAttach'.$FileUnit];
+			$AvatarSizeString = $FileSize . '&nbsp;' . $UnitLoc;
+
+			$ProfileAvatarGabaritsArray = getimagesize (OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar);
+			$ProfileAvatarWidth  = $ProfileAvatarGabaritsArray[0];
+			$ProfileAvatarHeight = $ProfileAvatarGabaritsArray[1];
+			$AvatarGabaritsString = '&nbsp;' . $ProfileAvatarWidth . 'x' . $ProfileAvatarHeight;
+
+			$CurrentAvatar = '<div style="margin-top:5px;" class="ExistingAttachDiv">
+								<div>
+									<img alt="" title="" src="' . OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar . '" />
+								</div>
+								<div style="margin-top:5px; margin-bottom:19px;">
+									<span class="AttachInfo">' . $AvatarSizeString . ',&nbsp;' . $AvatarGabaritsString . '</span>
+								</div>
+							</div>';
+		}
+		else {
+			$CurrentAvatar = '<span>' . $ForumLang['UserProfileNoAvatar'] . '</span>';
+		}
+		$AvatarFullBlock =  '<tr>
+								<td style="width:200px;" class="ForumCharter">
+									<span class="ThemesTitle">' . $ForumLang['UserProfileAvatarTitle'] . '</span>
+								</td>
+								<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
+									<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileAvatarClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileAvatarImgID\');"><img id="ProfileAvatarImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+								</td>
+							</tr>
+							<tr class="ProfileAvatarClassHide">
+								<td style="border-top:1px solid #FFF; padding-bottom:7px; width:200px;" class="FormTitleTD">
+									<div class="InputTitle">
+										' . $ForumLang['UserProfileShowAvatarTitle'] . '
+									</div>
+								</td>
+								<td style="border-top:1px solid #FFF; padding-bottom:7px; padding-top:0;" class="FormInputTD">
+									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
+										' . $CurrentAvatar . '
+									</div>
+								</td>
+							</tr>';
+	}
+	else {
+		$AvatarFullBlock = '';
+	}
+
+	//Start outputting
+	$MainOutput .=  $HiddenForm .
+					'<table style="width:100%;" class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">
+						<tr class="MainColumnRow">
+							<td style="" colspan="1" class="MainColumnName"><span>' . $NavigProfile . '</span></td>
+						</tr>
+						<tr class="ForumMainTR">
+							<td style="padding:0;">
+								<table style="width:100%;" class="FormsTable" cellspacing="0" cellpadding="0" border="0">
+									' . $CommonUserInfo  . '
+									<tr>
+										<td style="width:200px;" class="ForumCharter">
+											<span class="ThemesTitle">' . $ForumLang['UserProfilePersonals'] . '</span>
+										</td>
+										<td style="text-align:right; vertical-align:middle;" class="ForumCharter">
+											<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfilePersonalsClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfilePersonalsImgID\');"><img id="ProfilePersonalsImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="border-top:1px solid #FFF; padding-bottom:7px; width:200px;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileBirth'] . '
+											</div>
+										</td>
+										<td style="border-top:1px solid #FFF; padding-bottom:7px;" class="FormInputTD">
+											<span>' . $PersonalBirth . '</span>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="padding-top:11px; padding-bottom:12px; width:200px;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileSex'] . '
+											</div>
+										</td>
+										<td style="padding-top:11px; padding-bottom:12px;" class="FormInputTD">
+											<span>' . $PersonalSex . '</span>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="padding-bottom:7px; width:200px;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileWWW'] . '
+											</div>
+										</td>
+										<td style="padding-bottom:7px;" class="FormInputTD">
+											<span>' . $PersonalSite . '</span>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="padding-top:16px; width:200px; vertical-align:top;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileSlogan'] . '
+											</div>
+										</td>
+										<td style="padding-top:16px;" class="FormInputTD TextareaTD">
+											<div>
+												' . $PersonalSlogan . '
+											</div>
+											<div style="height:15px;"><!-- --></div>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="padding-bottom:18px; width:200px;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileCountry'] . '
+											</div>
+										</td>
+										<td style="padding-bottom:18px;" class="FormInputTD">
+											<span>' . $PersonalCountry . '</span>
+										</td>
+									</tr>
+									<tr class="ProfilePersonalsClassHide">
+										<td style="padding-bottom:18px; width:200px;" class="FormTitleTD">
+											<div class="InputTitle">
+												' . $ForumLang['UserProfileCity'] . '
+											</div>
+										</td>
+										<td style="padding-bottom:18px;" class="FormInputTD">
+											' . $PersonalCity . '
+										</td>
+									</tr>
+									<tr>
+										<td style="width:200px;" class="ForumCharter">
+											<span class="ThemesTitle">' . $ForumLang['UserProfileContacts'] . '</span>
+										</td>
+										<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
+											<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileContactsClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileContactsImgID\');"><img id="ProfileContactsImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+										</td>
+									</tr>
+									<tr class="ProfileContactsClassHide">
+											<td style="border-top:1px solid #FFFFFF; padding-bottom:16px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileMail'] . '
+												</div>
+											</td>
+											<td style="border-top:1px solid #FFFFFF; padding-bottom:16px;" class="FormInputTD">
+												' . $ContactsEMail . '
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-bottom:9px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileICQ'] . '
+												</div>
+											</td>
+											<td style="padding-bottom:9px;" class="FormInputTD">
+												' . $ContactsICQ . '
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-top:12px; padding-bottom:12px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfilePhone'] . '
+												</div>
+											</td>
+											<td style="padding-top:10px; padding-bottom:12px;" class="FormInputTD">
+												' . $ContactsPhone . '
+											</td>
+										</tr>
+										<tr class="ProfileContactsClassHide">
+											<td style="padding-top:12px; padding-bottom:15px; width:200px;" class="FormTitleTD">
+												<div class="InputTitle">
+													' . $ForumLang['UserProfileMobile'] . '
+												</div>
+											</td>
+											<td style="padding-top:10px; padding-bottom:15px;" class="FormInputTD">
+												' . $ContactsMobile . '
+											</td>
+										</tr>
+									' . $AvatarFullBlock . '
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="ForumsTableBottom" colspan="1">
+								<div><!-- --></div>
+							</td>
+						</tr>
+					</table>';
+}
 
 //Футер форума
 $MainOutput .= Echo_PrintFoot ();

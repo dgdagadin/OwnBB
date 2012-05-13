@@ -33,17 +33,17 @@
 
 	<!-- цвета -->
 	<div id="BBEditor_Color" class="BBEditor_Hidden">
+<?php if (sizeof ($ColorsArray) > 0) { ?>
 		<table class="BBEditor_ColorTable" cellspacing="0" cellpadding="0">
 			<tr class="BBEditor_ColorTR">
-<?php if (sizeof ($ColorsArray) > 0) { ?>
 <?php 	foreach ($ColorsArray as $key=>$value) { ?>
 				<td class="BBEditor_ColorTD" style="background:<?php echo $value; ?>;">
 					<a onclick="addTagColor ('<?php echo $FormID; ?>', '<?php echo $TextareaID; ?>', '<?php echo $value; ?>')" style="height:0;" href="javascript:void(0);"><img alt="" src="<?php echo OBB_IMAGE_DIR; ?>/spacer.gif" style="border:0; width:20px; height:20px;" /></a>
 				</td>
 <?php 	} ?>
-<?php } ?>
 			</tr>
 		</table>
+<?php } ?>
 	</div>
 	<!-- цвета - конец -->
 
