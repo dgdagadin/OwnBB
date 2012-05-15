@@ -19,6 +19,7 @@ $ForumLang['ToolsMailDescription'] = 'Длина письма не должна 
 $ForumLang['ToolsEnterLetterBody'] = 'Для того, чтобы отправить письмо пользователю "<b>{username}</b>", введите содержимое письма';
 $ForumLang['ToolsImportantFields'] = 'поля, обязательные для заполнения';
 $ForumLang['MailSubmit'] = 'Отправить письмо';
+$ForumLang['ToolsMail'] = array('AdminReport'=>'Жалоба на сообщение', 'ToUserMail'=>'Письмо от пользователя "{username}" в {date}');
 $ForumLang['ToolErrors']['ReportErrorTitle'] = 'При отправке жалобы возникли ошибки';
 $ForumLang['ToolErrors']['MailErrorTitle'] = 'Ошибки';
 $ForumLang['ToolErrors']['ReportBadReasonLength'] = 'Размер причины жалобы на сообщение не должен быть пустой или быть более {max} символов';

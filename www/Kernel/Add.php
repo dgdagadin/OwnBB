@@ -8,7 +8,8 @@ if (!isset ($VALIDATION) || $VALIDATION <> '1') {
 
 //подключение
 include (OBB_KERNEL_DIR . '/Service.php');
-include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+//include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+include (OBB_KERNEL_DIR . '/OwnBB.SendMail.php');
 include (OBB_KERNEL_DIR . '/OwnBB.CheckUpload.class.php');
 include (OBB_KERNEL_DIR . '/OwnBB.Transactions.Class.php');
 include (OBB_KERNEL_DIR . '/OwnBB.BBCode.php');
@@ -166,7 +167,7 @@ switch ($Label) {
 		//проверка, заблокирован ли форум
 		if ($ForumBlock == 'yes') {
 			OBB_Main_ShowError ('add_forum_block', 'STANDART', $ForumLang['Errors']);
-		}      
+		}
 
 		//добавляем ли сообщение или тему
 		$IsPostAdding = isset ($_GET['id_theme']) && ctype_digit ($_GET['id_theme']);
@@ -255,7 +256,7 @@ switch ($Label) {
 				$IsThemeImportant = 'yes';
 			}
 		}
-		
+
 		//  --содержимое переменной $PostContent - PostText
 		$PostContentVar = '';
 		if (isset ($_POST['PostContent'])) {
@@ -361,7 +362,7 @@ switch ($Label) {
 					$AddErrorArray[] = $GuestMailErrorText;
 				}
 			}
-		   
+
 			//  --4)Название темы - если добавляем тему
 			if (!$IsPostAdding) {
 				if ($ThemeNameVar == '') {
@@ -403,7 +404,7 @@ switch ($Label) {
 				if (isset ($_FILES['FileAttach']['name']) && $_FILES['FileAttach']['name'] <> '') {
 					$FileDataArray = $_FILES['FileAttach'];
 					$AttachObject = new OwnBB_CheckUpload ($FilesArray, OBB_MAX_ATTACH_SIZE, OBB_MAX_IMAGE_WIDTH, OBB_MAX_IMAGE_HEIGHT);
-				   
+
 					$AttachArray = $AttachObject->FullCheckOfUpload ($FileDataArray);
 					$IsTrue = $AttachArray['IsTrue'];
 					if ($IsTrue == FALSE) {
@@ -714,11 +715,32 @@ switch ($Label) {
 
 				//(13)Письмо администратору
 				if ($Config_Mail['AdminMail'] == TRUE) {
-					$AddMailer = new OwnBB_Mailer ($Config_Mail);
+					//$AddMailer = new OwnBB_Mailer ($Config_Mail);
 					$LetterAdminName = $Config_Mail['FromName'];
 					$LetterAdminMail = $Config_Mail['FromMail'];
+
+					//МАССИВ ОТПРАВИТЕЛЯ ПИСЬМА
+					$LetterSenderArray = array('address'=>$LetterAdminMail,'name'=>$LetterAdminName);
+
+					//МАССИВ ПОЛУЧАТЕЛЯ ПИСЬМА
+					$LetterGetterArray = array('address'=>$LetterAdminMail,'name'=>$LetterAdminName);
+
+					//ТЕМА ПИСЬМА
+					if (!$IsPostAdding) {
+						$LetterSubject = $ForumLang['AddMail']['AddMailTheme'];
+					}
+					else {
+						$LetterSubject = $ForumLang['AddMail']['AddMailPost'];
+					}
+
+					//ТЕЛО ПИСЬМА
+					//  --дата
 					$LetterDate = Main_ConvertDate ($Now, array(), 'd.m.Y, H:i');
+
+					//  --имя форума
 					$LetterForumName = $ForumName;
+
+					//  --ID и логин пользователя
 					if ($_SESSION['UserData']['UserType'] <> 'guest') {
 						$LetterUserName = $_SESSION['UserData']['UserName'];
 						$LetterUserID = $_SESSION['UserData']['UserID'];
@@ -727,17 +749,22 @@ switch ($Label) {
 						$LetterUserName = $GuestLoginVar;
 						$LetterUserID = intval (0);
 					}
+
+					//  --статус пользователя
 					$LetterUserStatus = $_SESSION['UserData']['UserType'];
+
+					//  --ссылка на сайт форума
 					$SiteAddress = 'http://' . $HostName . $SelfName;
 
-					//если добавляем тему
+					//  --детали тела письма
+					//  --1)если добавляем тему
 					if (!$IsPostAdding) {
 						$FileGetContents = 'AdminMailAddTheme';
 						$LetterThemeName = $ThemeNameVar;
 						$LetterThemeID = $ThemeInsertId;
 						$FilePutContents = 'Admin_ThemeAdd' . $LetterThemeID;
 					}
-					//если добавляем сообщение
+					//  --2)если добавляем сообщение
 					else {
 						$FileGetContents = 'AdminMailAddPost';
 						$LetterThemeName = $ThemeName;
@@ -745,6 +772,7 @@ switch ($Label) {
 						$FilePutContents = 'Admin_PostAdd' . $LastPostId;
 					}
 
+					//  --генерация тела письма
 					$AdminLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/' . $FileGetContents . '.html');
 					$AdminLetter = str_replace ('{forumname}'  , $LetterForumName, $AdminLetter);
 					$AdminLetter = str_replace ('{username}'   , $LetterUserName, $AdminLetter);
@@ -756,9 +784,16 @@ switch ($Label) {
 					if ($IsPostAdding) {
 						$AdminLetter = str_replace ('{postid}', $LastPostId, $AdminLetter);
 					}
+					//ТЕЛО ПИСЬМА - КОНЕЦ
 
-					#$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-					file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents . '.html', $AdminLetter);
+					//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+					if (OBB_MAIL_DEBUG == false) {
+						//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
+						OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+					}
+					else {
+						file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents . '.html', $AdminLetter);
+					}
 				}
 
 				//(14Редирект
@@ -774,7 +809,7 @@ switch ($Label) {
 				$_SESSION['Redirect'] = $Redirect;
 				$_SESSION['Message']  = $Message;
 				$URL = '?action=message';
-				OBB_Main_Redirect ($URL);
+				exit;//OBB_Main_Redirect ($URL);
 			}
 		}
 
@@ -841,7 +876,7 @@ switch ($Label) {
 										</div>
 										<div class="AttachExtensions">
 											' . $ExstensionString . '
-											
+
 										</div>
 										<div class="AttachExtensions">
 											<span style="border-bottom:1px dotted #222;">' . $ForumLang['AddAttachAllowedSize'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_ATTACH_SIZE . '&nbsp;' . $ForumLang['AddAttachb'] . '</span>
@@ -863,12 +898,12 @@ switch ($Label) {
 									<input class="InpCheckbox" type="checkbox"' . $CheckedThemeIsImportant . ' name="ThemeIsImportant" />
 									<span class="Usual">' . $ForumLang['AddThemeIsImportant'] . '</span>
 								</div>';
-			
+
 		}
 		else {
 			$ThemeIsImportant = '';
 		}
-		
+
 		//иконка темы - ПЕРЕДЕЛАТЬ ВПОСЛЕДСТВИЕ!!!
 		if (!$IsPostAdding) {
 			$ThemeIcons = '';
@@ -991,7 +1026,7 @@ switch ($Label) {
 									),
 							'ColorsArray'=>array ('#000000', '#610B38', '#DF0101', '#8A4B08',
 												  '#FF8000', '#0B610B', '#01DF01', '#01DFD7',
-												  '#08088A', '#2E2EFE', '#7401DF', '#DF01D7', 
+												  '#08088A', '#2E2EFE', '#7401DF', '#DF01D7',
 												  '#585858', '#BDBDBD', '#D0A9F5', '#A9D0F5'),
 							'TextareaName'=>'PostContent',
 							'TextareaID'=>'PostContent',
@@ -1093,7 +1128,7 @@ switch ($Label) {
 			$Permissions_ErrorFlag = $_SESSION['UserData']['UserType'] == 'guest' ? 'NO_ACCESS' : 'STANDART';
 
 			//  --проверка на полный запрет редактирования сообщений
-			if (!OBB_EDIT_POSTS) {                   
+			if (!OBB_EDIT_POSTS) {
 				OBB_Main_ShowError ('common_no_access', $Permissions_ErrorFlag, $ForumLang['Errors']);
 			}
 
@@ -1493,22 +1528,49 @@ switch ($Label) {
 
 				//(8)Письмо администратору
 				if ($Config_Mail['AdminMail'] == TRUE) {
-					$AddMailer = new OwnBB_Mailer ($Config_Mail);
+					//$AddMailer = new OwnBB_Mailer ($Config_Mail);
 					$LetterAdminName = $Config_Mail['FromName'];
 					$LetterAdminMail = $Config_Mail['FromMail'];
+
+					//МАССИВ ОТПРАВИТЕЛЯ
+					$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//МАССИВ ПОЛУЧАТЕЛЯ
+					$LetterGetterArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//ТЕМА ПИСЬМА
+					$LetterSubject = $ForumLang['AddMail']['EditMailPost'];
+
+					//ТЕЛО ПИСЬМА
+					//  --дата письма
 					$LetterDate = Main_ConvertDate ($Now, array(), 'd.m.Y, H:i');
+
+					//  --имя форума
 					$LetterForumName = $ForumName;
+
+					// --логин пользователя, редактировавшего пост
 					$LetterUserName = $_SESSION['UserData']['UserName'];
+
+					//  --ИД ользователя, редактировавшего пост
 					$LetterUserID = $_SESSION['UserData']['UserID'];
+
+					//  --тип пользователя, редактировавшего пост
 					$LetterUserStatus = $_SESSION['UserData']['UserType'];
+
+					//  --ссылка на файт форума
 					$SiteAddress = 'http://' . $HostName . $SelfName;
 
-					$FileGetContents = 'AdminMailEditPost';
+					//  --имя редактируемой темы
 					$LetterThemeName = $EditThemeName;
-					$LetterThemeID = $IdTheme;
-					$FilePutContents = 'Admin_PostEdit' . $IdPost;
 
+					//  --ИД редактируемой темы
+					$LetterThemeID = $IdTheme;
+
+					//  --получение тела письма
+					$FileGetContents = 'AdminMailEditPost';
 					$AdminLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/' . $FileGetContents . '.html');
+
+					//  --замена элементов тела письма
 					$AdminLetter = str_replace ('{forumname}'  , $LetterForumName, $AdminLetter);
 					$AdminLetter = str_replace ('{username}'   , $LetterUserName, $AdminLetter);
 					$AdminLetter = str_replace ('{userid}'     , $LetterUserID, $AdminLetter);
@@ -1517,9 +1579,17 @@ switch ($Label) {
 					$AdminLetter = str_replace ('{themeid}'    , $LetterThemeID, $AdminLetter);
 					$AdminLetter = str_replace ('{themename}'  , $LetterThemeName, $AdminLetter);
 					$AdminLetter = str_replace ('{postid}'     , $IdPost, $AdminLetter);
+					//ТЕЛО ПИСЬМА - КОНЕЦ
 
-					#$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-					file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents . '_' . microtime () .'.html', $AdminLetter);
+					//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+					if (OBB_MAIL_DEBUG == false) {
+						//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+						OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+					}
+					else {
+						$FilePutContents = 'Admin_PostEdit' . $IdPost;
+						file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents . '.html', $AdminLetter);
+					}
 				}
 
 				//(9)Редирект
@@ -1567,7 +1637,7 @@ switch ($Label) {
 									),
 							'ColorsArray'=>array ('#000000', '#610B38', '#DF0101', '#8A4B08',
 												  '#FF8000', '#0B610B', '#01DF01', '#01DFD7',
-												  '#08088A', '#2E2EFE', '#7401DF', '#DF01D7', 
+												  '#08088A', '#2E2EFE', '#7401DF', '#DF01D7',
 												  '#585858', '#BDBDBD', '#D0A9F5', '#A9D0F5'),
 							'TextareaName'=>'PostContent',
 							'TextareaID'=>'PostContent',
@@ -1701,7 +1771,7 @@ switch ($Label) {
 											</div>
 											<div class="AttachExtensions">
 												' . $ExstensionString . '
-												
+
 											</div>
 											<div class="AttachExtensions">
 												<span style="border-bottom:1px dotted #222;">' . $ForumLang['AddAttachAllowedSize'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_ATTACH_SIZE . '&nbsp;' . $ForumLang['AddAttachb'] . '</span>
@@ -1814,24 +1884,24 @@ switch ($Label) {
 
 		//дополнительные проверки
 		//  --запрос на сообщение
-		$SQL = 'SELECT 
+		$SQL = 'SELECT
 					themes.ThemeName AS TName,
 					posts.UserID AS PUserID,
 					post_files.PostFileExt AS PFileExt,
 					post_files.PostFileName AS PFileName,
 					post_files.PostFileSize AS PFileSize,
 					post_files.PostFileType AS PFileType
-				FROM 
+				FROM
 					posts
-				LEFT JOIN 
+				LEFT JOIN
 					post_files ON posts.PostID = post_files.PostID
-				LEFT JOIN 
+				LEFT JOIN
 					themes ON posts.ThemeID = themes.ThemeID
-				WHERE 
+				WHERE
 					posts.ThemeID = \'' . $IdTheme . '\'
-					AND 
+					AND
 					posts.ForumID = \'' . $IdForum . '\'
-					AND 
+					AND
 					posts.PostID = \'' . $IdPost . '\'';
 		$Query = DB_Query($Config_DBType, $SQL, $ForumConnection);
 		if (!$Query) {
@@ -1878,7 +1948,7 @@ switch ($Label) {
 		//если нажато подтверждение удаления - удаление сообщения
 		if (isset ($_POST['delete'])) {
 			//массив возможных значений кнопки подтверждения удаления
-			$ConfirmDeleteArray = array ($OKDelete, $CancelDelete);
+			//$ConfirmDeleteArray = array ($OKDelete, $CancelDelete);
 			$ConfirmDelete = isset ($_POST['ConfirmDelete']) && $_POST['ConfirmDelete'] == 'OK' ? $_POST['ConfirmDelete'] : 'NOT_OK';
 
 			//Если нажата кнопка подтверждения удаления
@@ -1931,13 +2001,13 @@ switch ($Label) {
 				if (file_exists ($DeleteAttachPath)) {
 					unlink ($DeleteAttachPath);
 				}
-			   
+
 				//(7)Удаление кэша поста
 				$DeleteCachePath = OBB_CACHE_DIR . '/PostsCache/forum_' . $IdForum . '/theme_' . $IdTheme . '/post_' . $IdPost;
 				if (file_exists ($DeleteCachePath)) {
 					unlink ($DeleteCachePath);
 				}
-			   
+
 				//(9)Изменение статистики темы
 				OBB_Main_UpdateThemeStatistics ($IdTheme);
 
@@ -1946,21 +2016,46 @@ switch ($Label) {
 
 				//(11)Письмо администратору
 				if ($Config_Mail['AdminMail'] == TRUE) {
-					$AddMailer = new OwnBB_Mailer ($Config_Mail);
+					//$AddMailer = new OwnBB_Mailer ($Config_Mail);
 					$LetterAdminName = $Config_Mail['FromName'];
 					$LetterAdminMail = $Config_Mail['FromMail'];
+
+					//массив отправителя
+					$LetterSenderArray = array ('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//массив получателя
+					$LetterGetterArray = array ('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//тема письма
+					$LetterSubject = $ForumLang['AddMail']['DeleteMailPost'];
+
+					//ТЕЛО ПИСЬМА
+					//  --date
 					$LetterDate = Main_ConvertDate ($Now, array(), 'd.m.Y, H:i');
+
+					//  --имя форума
 					$LetterForumName = $ForumName;
+
+					//  --логин пользователя, удалившего сообщение
 					$LetterUserName = $_SESSION['UserData']['UserName'];
+
+					//  --ИД пользователя, удалившего сообщение
 					$LetterUserID = $_SESSION['UserData']['UserID'];
+
+					//  --статус пользователя, удалившего сообщение
 					$LetterUserStatus = $_SESSION['UserData']['UserType'];
+
+					//  ссылка на сайт форума
 					$SiteAddress = 'http://' . $HostName . $SelfName;
 
-					$FileGetContents = 'AdminMailDeletePost';
+					//  --название темы, в кот. производится удаление
 					$LetterThemeName = $DeleteThemeName;
-					$LetterThemeID = $IdTheme;
-					$FilePutContents = 'Admin_PostDelete' . $IdPost;
 
+					//  --ИД темы, в кот. производится удаление
+					$LetterThemeID = $IdTheme;
+
+					//  --обработка тела письма
+					$FileGetContents = 'AdminMailDeletePost';
 					$AdminLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/' . $FileGetContents . '.html');
 					$AdminLetter = str_replace ('{forumname}'  , $LetterForumName, $AdminLetter);
 					$AdminLetter = str_replace ('{username}'   , $LetterUserName, $AdminLetter);
@@ -1970,9 +2065,17 @@ switch ($Label) {
 					$AdminLetter = str_replace ('{themeid}'    , $LetterThemeID, $AdminLetter);
 					$AdminLetter = str_replace ('{themename}'  , $LetterThemeName, $AdminLetter);
 					$AdminLetter = str_replace ('{postid}'     , $IdPost, $AdminLetter);
+					//ТЕЛО ПИСЬМА - КОНЕЦ
 
-					#$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-					file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents .'.html', $AdminLetter);
+					//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+					if (OBB_MAIL_DEBUG == false) {
+						//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
+						OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+					}
+					else {
+						$FilePutContents = 'Admin_PostDelete' . $IdPost;
+						file_put_contents (OBB_ERROR_MAIL_DIR . '/' . $FilePutContents .'.html', $AdminLetter);
+					}
 				}
 
 				//(12)Редирект
@@ -1980,7 +2083,7 @@ switch ($Label) {
 				$_SESSION['Message']  = 'delete_post';
 				$URL = '?action=message';
 				OBB_Main_Redirect ($URL);
-			   
+
 			}
 			//Если нажата кнопка отмены удаления - редирект к сообщению
 			else {

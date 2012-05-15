@@ -13,9 +13,10 @@ if (!defined ('NO_DEBUG')) {
 }
 
 //подключения
-include (OBB_KERNEL_DIR . '/OwnBB.Mail.Class.php');
+//include (OBB_KERNEL_DIR . '/OwnBB.Mail.Class.php');
 include (OBB_KERNEL_DIR . '/OwnBB.Captcha.class.php');
 include (OBB_KERNEL_DIR . '/Service.php');
+include (OBB_KERNEL_DIR . '/OwnBB.SendMail.php');
 
 //Подключение файла языка
 include (OBB_LANGUAGE_DIR . '/Tools_' . $Config_Lang . '.php');
@@ -58,20 +59,20 @@ if ($Label == 'report') {
 	}
 
 	//получение свойств поста
-	$SQL = 'SELECT 
-				posts.UserID AS RUserID, 
-				posts.ForumID AS RForumID, 
-				posts.ThemeID AS RThemeID, 
-				forums_list.ForumName AS RForumName, 
-				themes.ThemeName AS RThemeName, 
-				forums_list.ForumMinStatus AS FGroups 
-			FROM 
-				posts 
-			LEFT JOIN 
+	$SQL = 'SELECT
+				posts.UserID AS RUserID,
+				posts.ForumID AS RForumID,
+				posts.ThemeID AS RThemeID,
+				forums_list.ForumName AS RForumName,
+				themes.ThemeName AS RThemeName,
+				forums_list.ForumMinStatus AS FGroups
+			FROM
+				posts
+			LEFT JOIN
 				forums_list ON forums_list.ForumID = posts.PostID
-			LEFT JOIN 
+			LEFT JOIN
 				themes ON themes.ThemeID = posts.ThemeID
-			WHERE 
+			WHERE
 				PostID = \'' . $IDPost . '\'';
 	$Query = DB_Query($Config_DBType, $SQL, $ForumConnection);
 	if (!$Query) {
@@ -96,7 +97,7 @@ if ($Label == 'report') {
 	$ReportForumID = intval ($ReportForumID);
 	$ReportThemeID = intval ($ReportThemeID);
 
-	//проверка группы доступа к форуму    
+	//проверка группы доступа к форуму
 	if ($_SESSION['UserData']['UserType'] <> 'admin' && Access_CheckUserGroup ($ForumGroups) == FALSE) {
 		OBB_Main_ShowError ('common_no_report_group_access', 'STANDART', $ForumLang['Errors']);
 	}
@@ -108,7 +109,7 @@ if ($Label == 'report') {
 	$ReportErrorArray = array ();
 
 	//переменные
-	$ReportReason = isset ($_POST['ReportReason']) ? trim ($_POST['ReportReason']) : ''; 
+	$ReportReason = isset ($_POST['ReportReason']) ? trim ($_POST['ReportReason']) : '';
 
 	//если определен POST-массив
 	if (isset ($_POST['report'])) {
@@ -132,7 +133,7 @@ if ($Label == 'report') {
 
 		//если ошибок не обнаружено
 		if (sizeof ($ReportErrorArray) == 0) {
-			//подготовка переменных для вставки            
+			//подготовка переменных для вставки
 			$InsertDate     = time();
 			$InsertPostUser = $ReportUserID;
 			$InsertForumID  = $ReportForumID;
@@ -141,13 +142,13 @@ if ($Label == 'report') {
 			$InsertReason   = $ReportReason;
 
 			//добавление причины жалобы
-			$SQL = 'INSERT INTO reports 
-					(PostID, 
-					ReportDate, 
-					ReportPostUserID, 
-					ReportPostForumID, 
-					ReportPostThemeID, 
-					UserID, 
+			$SQL = 'INSERT INTO reports
+					(PostID,
+					ReportDate,
+					ReportPostUserID,
+					ReportPostForumID,
+					ReportPostThemeID,
+					UserID,
 					ReportReason)
 					VALUES
 					(\'' . $IDPost . '\',
@@ -164,9 +165,21 @@ if ($Label == 'report') {
 
 			//письмо администратору
 			if ($Config_Mail['AdminMail'] == TRUE) {
-				$RegMailer      = new OwnBB_Mailer ($Config_Mail);
 				$LetterTempPath = OBB_HTML_LANGUAGE_DIR;
+				$LetterAdminName = $Config_Mail['FromName'];
+				$LetterAdminMail = $Config_Mail['FromMail'];
 
+				//МАССИВ ОТПРАВИТЕЛЯ
+				$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+				//МАССИВ ПОЛУЧАТЕЛЯ
+				$LetterGetterArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+				//ТЕМА ПИСЬМА
+				$LetterSubject = $ForumLang['ToolsMail']['AdminReport'] . ' "' . $Config_ForumName . '"';
+
+				//ТЕЛО ПИСЬМА
+				//  --данные для реплейса
 				$MailReportID   = DB_LastID ($Config_DBType, $ForumConnection);
 				$MailPostID     = $IDPost;
 				$MailForumID    = $InsertForumID;
@@ -178,12 +191,8 @@ if ($Label == 'report') {
 				$MailUserName   = $_SESSION['UserData']['UserName'];
 				$MailUserStatus = $_SESSION['UserData']['UserType'];
 
-				$AdmTheme   = $ForumLang['ToolsMailReportAdmin'] . ' "' . $Config_ForumName . '"';
-				$AdminName  = $Config_Mail['FromName'];
-				$AdminMail  = $Config_Mail['FromMail'];
-
+				//  --генерация тела письма
 				$AdminLetter = file_get_contents ($LetterTempPath . '/AdminMailReportPost.html');
-
 				$AdminLetter = str_replace ('{postid}', $MailPostID, $AdminLetter);
 				$AdminLetter = str_replace ('{forumid}', $MailForumID, $AdminLetter);
 				$AdminLetter = str_replace ('{forumname}', $MailForumName, $AdminLetter);
@@ -194,9 +203,17 @@ if ($Label == 'report') {
 				$AdminLetter = str_replace ('{username}', $MailUserName, $AdminLetter);
 				$AdminLetter = str_replace ('{userstatus}', $MailUserStatus, $AdminLetter);
 				$AdminLetter = str_replace ('{reportid}', $MailReportID, $AdminLetter);
+				//ТЕЛО ПИСЬМА - КОНЕЦ
 
-				#$RegMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-				file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_ReportLog' . $MailPostID . '.html', $AdminLetter);
+				//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+				if (OBB_MAIL_DEBUG == false) {
+					//$RegMailer = new OwnBB_Mailer ($Config_Mail)
+					//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+					OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+				}
+				else {
+					file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_ReportLog' . $MailPostID . '.html', $AdminLetter);
+				}
 			}
 
 			//если ошибок нет - перенаправляем
@@ -329,7 +346,7 @@ if ($Label == 'report') {
 if ($Label == 'mail') {
 	//гостям не разрешено
 	if ($_SESSION['UserData']['UserType'] == 'guest') {
-		OBB_Main_ShowError ('', 'NO_ACCESS', $ForumLang['Errors']);	
+		OBB_Main_ShowError ('', 'NO_ACCESS', $ForumLang['Errors']);
 	}
 
 	//проверка на разрешение отсылать сообшение по почте
@@ -385,7 +402,7 @@ if ($Label == 'mail') {
 	//переменная редиректа
 	$RedirectURL = 'http://' . $HostName . $SelfName;
 	$RedirectURLPattern = '/http:\/\/' . preg_quote ($HostName, "/") . preg_quote ($SelfName, "/") . '(?:\?action=[_a-z]{3-10}(?:&[_a-z]{2,20}=(.*?))*)?/ui';
-	if (!isset ($_POST['MailRedirectURL'])) { 
+	if (!isset ($_POST['MailRedirectURL'])) {
 		if (isset ($_SERVER['HTTP_REFERER'])) {
 			if (preg_match ($RedirectURLPattern, $_SERVER['HTTP_REFERER'])) {
 				preg_match_all ('/\?action=(.*?)&/ui', $_SERVER['HTTP_REFERER'], $matches);
@@ -429,19 +446,30 @@ if ($Label == 'mail') {
 		//если ошибок нет
 		if (sizeof ($MailErrorArray) == 0) {
 			//отправка почты выбранному пользователю
-			$Mail           = new OwnBB_Mailer ($Config_Mail);
-			$LetterTempPath = OBB_LANGUAGE_DIR . '/HTMLTemplates/';
+			//МАССИВ ОТПРАВИТЕЛЯ
+			$LetterAdminName = $Config_Mail['FromName'];
+			$LetterAdminMail = $Config_Mail['FromMail'];
+			$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
 
+			//МАССИВ ПОЛУЧАТЕЛЯ
+			$LetterGetterArray = array('address'=>$UserMail, 'name'=>$UserName);
+
+			//ТЕМА ПИСЬМА
 			$MailDate = Main_ConvertDate (time(), '', $Format = 'd.m.y, H:i');
-			$MailTheme = OBB_Main_ReplaceSymbols ($ForumLang['ToolsMailTheme'], array('username'=>$FromUserName, 'date'=>$MailDate));
+			$LetterSubject = OBB_Main_ReplaceSymbols ($ForumLang['ToolsMail']['ToUserMail'], array('username'=>$FromUserName, 'date'=>$MailDate));
 
-			$ToName  = $UserName;
-			$ToMail  = $UserMail;
-
+			//ТЕЛО ПИСЬМА
 			$AdminLetter = $MailContentVar;
 
-			#$RegMailer->SendMail ($ToName, $ToMail, $MailTheme, $AdminLetter);
-			file_put_contents (OBB_ERROR_MAIL_DIR . '/User_SendMail' . time() . '.html', $AdminLetter);
+			//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+			if (OBB_MAIL_DEBUG == false) {
+				//$Mail = new OwnBB_Mailer ($Config_Mail);
+				//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+				OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+			}
+			else {
+				file_put_contents (OBB_ERROR_MAIL_DIR . '/User_SendMail' . time() . '.html', $AdminLetter);
+			}
 
 			//перенаправление
 			$_SESSION['Redirect'] = str_replace ('http://' . $HostName . $SelfName, '', $RedirectURL);
@@ -506,7 +534,7 @@ if ($Label == 'mail') {
 	else {
 		$CaptchaBlock = '';
 	}
-	
+
 	//описание ввода жалобы
 	$MailDescription = OBB_Main_ReplaceSymbols ($ForumLang['ToolsMailDescription'], array('max'=>OBB_MAIL_MAX_LETTER_LENGTH));
 
@@ -569,7 +597,7 @@ if ($Label == 'mail') {
 
 	//Футер форума
 	$MainOutput .= Echo_PrintFoot ();
-	
+
 	//вывод в браузер
 	Main_ShowStandartHeader ();
 	echo $MainOutput;
@@ -621,7 +649,7 @@ else if ($Label == 'smile') {
 
 	//Вывод смайлов
 	$MainOutput = '';
-	
+
 	foreach ($SmilesArray as $key=>$value) {
 		$SmileText = $value[0];
 		$SmileImg  = $value[1];
@@ -636,7 +664,7 @@ else if ($Label == 'smile') {
 
 	//Вывод смайлов
 	Main_ShowStandartHeader ();
-	echo $MainOutput;    
+	echo $MainOutput;
 }
 
 //правила форума

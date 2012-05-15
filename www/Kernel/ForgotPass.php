@@ -12,7 +12,8 @@ if ($_SESSION['UserData']['UserType'] <> 'guest') {
 }
 
 //подключения
-include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+//include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+include (OBB_KERNEL_DIR . '/OwnBB.SendMail.php');
 include (OBB_KERNEL_DIR . '/Service.php');
 
 //Подключение файла языка
@@ -92,40 +93,83 @@ if (isset ($_POST['PassForgot'])) {
 		}
 
 		//ОТПРАВКА ПИСЕМ
-		$ForgotMailer   = new OwnBB_Mailer ($Config_Mail);
+		//  --МАССИВ ОТПРАВИТЕЛЯ
+		$LetterAdminName = $Config_Mail['FromName'];
+		$LetterAdminMail = $Config_Mail['FromMail'];
+		$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+		//  --МАССИВ ПОЛУЧАТЕЛЯ
+		$LetterUserMail = $ForgotMail;
+		$LetterUserName = $ForgotLogin;
+		$LetterGetterArray = array('address'=>$LetterUserMail, 'name'=>$LetterUserName);
+
+		//  --ТЕМА ПИСЬМА
+		$LetterSubject = $ForumLang['ForgotMail']['ForgotUserMail'] . ' "' . $Config_ForumName . '"';
+
+		//$ForgotMailer   = new OwnBB_Mailer ($Config_Mail);
+
+		//  --ТЕЛО ПИСЬМА
+		//  ---дата
 		$AdmForgotDate  = Main_ConvertDate (time (), '', $Format = 'd.m.y, H:i');
 
-		//  -отправка пользователю
-		$UserLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/UserMailForgot.html');
-
+		//  ---логин и пароль
 		$ForgotName  = $ForgotLogin;
 		$ForgotPass  = $NewPassword;
-		$ForgotTheme = $ForumLang['ForgotUserMailTheme'] . ' "' . $Config_ForumName . '"';
+
+		//  ---адрес сайта форума
 		$ForgotSite  = 'http://' . $_SERVER['HTTP_HOST'];
+
+		//  ---название форума
 		$ForgotForum = $Config_ForumName;
 
+		//  ---замена данных
+		$UserLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/UserMailForgot.html');
 		$UserLetter = str_replace ('{username}',    $ForgotName,  $UserLetter);
 		$UserLetter = str_replace ('{password}',    $ForgotPass,  $UserLetter);
 		$UserLetter = str_replace ('{siteaddress}', $ForgotSite,  $UserLetter);
 		$UserLetter = str_replace ('{forumname}',   $ForgotForum, $UserLetter);
 
-		#$RegMailer->SendMail ($ForgotName, $ForgotMail, $ForgotTheme, $UserLetter);
-		file_put_contents (OBB_ERROR_MAIL_DIR . '/UserForgotPassLog' . $UserID . '.html', $UserLetter);
+		//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+		if (OBB_MAIL_DEBUG == false) {
+			OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $UserLetter);
+		}
+		else {
+			file_put_contents (OBB_ERROR_MAIL_DIR . '/UserForgotPassLog' . $UserID . '.html', $UserLetter);
+		}
 
 		//  -отправка админу
 		if ($Config_Mail['AdminMail'] == TRUE) {
-			$AdmTheme     = $ForumLang['ForgotAdminMailTheme'] . ' "' . $Config_ForumName . '"';
-			$AdminName    = $Config_Mail['FromName'];
-			$AdminMail    = $Config_Mail['FromMail'];
+			$LetterAdminName = $Config_Mail['FromName'];
+			$LetterAdminMail = $Config_Mail['FromMail'];
 
+			//МАССИВ ОТПРАВИТЕЛЯ
+			$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+			//МАССИВ ПОЛУЧАТЕЛЯ
+			$LetterGetterArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+			//ТЕМА ПИСЬМА
+			$LetterSubject = $ForumLang['ForgotMail']['ForgotAdminMail'] . ' "' . $Config_ForumName . '"';
+
+			//ТЕЛО ПИСЬМА
+			//  --дата
+			$AdminLetterDate = $AdmForgotDate;
+
+			//  --генерация
 			$AdminLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/AdminMailForgot.html');
-
 			$AdminLetter = str_replace ('{username}', $ForgotName,    $AdminLetter);
 			$AdminLetter = str_replace ('{userid}',   $UserID,        $AdminLetter);
 			$AdminLetter = str_replace ('{userdate}', $AdmForgotDate, $AdminLetter);
 
-			#$RegMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-			file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_ForgotPassLog' . $UserID . '.html', $AdminLetter);
+			//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+			if (OBB_MAIL_DEBUG == false) {
+				//$RegMailer->SendMail ($ForgotName, $ForgotMail, $ForgotTheme, $UserLetter);
+				//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+				OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+			}
+			else {
+				file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_ForgotPassLog' . $UserID . '.html', $AdminLetter);
+			}
 		}
 
 		//редирект

@@ -18,7 +18,8 @@ if (!OBB_ALLOW_REGISTRATION) {
 
 //подключение
 include (OBB_KERNEL_DIR . '/Service.php');
-include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+//include (OBB_KERNEL_DIR . '/OwnBB.Mail.class.php');
+include (OBB_KERNEL_DIR . '/OwnBB.SendMail.php');
 include (OBB_KERNEL_DIR . '/OwnBB.CheckUpload.class.php');
 include (OBB_KERNEL_DIR . '/OwnBB.Transactions.Class.php');
 
@@ -47,8 +48,8 @@ $RegStagesArray = array ('2','3');
 (isset ($_GET['r_stage']) && in_array ($_GET['r_stage'], $RegStagesArray)) ? $RegAction = $_GET['r_stage'] : $RegAction = '1';
 
 switch ($RegAction) {
-	//если не определена $_GET['agree'], вызываем правила 
-	case "1": 
+	//если не определена $_GET['agree'], вызываем правила
+	case "1":
 	default: {
 		//JS-массив
 		$JavaScriptArray = array (
@@ -267,11 +268,13 @@ switch ($RegAction) {
 
 				//пароль - генерация или введенный
 				if ($RegistrationType == '1') {
-					$UserPassword  = Main_GenerateRandString ('10', '1');
-					$CryptPassword = Main_Crypt ($UserPassword);
+					$UserPassword    = Main_GenerateRandString ('10', '1');
+					$PasswordForMail = $UserPassword;
+					$CryptPassword   = Main_Crypt ($UserPassword);
 				}
 				else {
 					$CryptPassword = Main_Crypt ($RegPass);
+					$PasswordForMail = $RegPass;
 				}
 
 				//создание уникальной записи для автологина - НЕУДАЧНО - ПЕРЕДЕЛАТЬ!!!
@@ -309,18 +312,18 @@ switch ($RegAction) {
 
 				//запрос - добавление в основную таблицу
 				$SQLInsUser = 'INSERT INTO users
-							(UserLogin, 
-							UserPassword, 
-							UserMail, 
-							UserMailHid, 
-							UserAdminMail, 
-							UserOtherMail, 
-							UserRegDate, 
-							UserSex, 
-							UserBirthDate, 
-							UserAvatar, 
-							UserIsActivate, 
-							GroupID, 
+							(UserLogin,
+							UserPassword,
+							UserMail,
+							UserMailHid,
+							UserAdminMail,
+							UserOtherMail,
+							UserRegDate,
+							UserSex,
+							UserBirthDate,
+							UserAvatar,
+							UserIsActivate,
+							GroupID,
 							UserAutoLogin)
 							VALUES
 							(\'' . Defence_EscapeString ($Config_DBType, $RegLogin) . '\',
@@ -345,7 +348,7 @@ switch ($RegAction) {
 			    $InsUserArray =   array (
 										'Operation'  => 'd',
 										'FieldArray' => array (),
-										'WhereArray' => array('UserID'=>array ('Value'=>$LastUserID, 'Type'=>'int')), 
+										'WhereArray' => array('UserID'=>array ('Value'=>$LastUserID, 'Type'=>'int')),
 										'TableName'  => 'users'
 										);
 				$Transaction->PrepareQueryToRollback ($InsUserArray);
@@ -355,10 +358,10 @@ switch ($RegAction) {
 				$CurAction = 'main_page';
 				$OnLine = 'no';
 				$SQLInsUserActivity = 'INSERT INTO user_activity
-									(UserID, 
-									UserLastLogin, 
-									UserLastAction, 
-									UserIsOnline, 
+									(UserID,
+									UserLastLogin,
+									UserLastAction,
+									UserIsOnline,
 									UserIPAddress)
 									VALUES
 									(\'' . $LastUserID . '\',
@@ -392,12 +395,12 @@ switch ($RegAction) {
 					$SQLUserStatArray = array (
 												'Operation'  => 'u',
 												'FieldArray' => array ('StatisticsValue'=>array ('Value'=>'', 'Flag'=>'decr', 'Type'=>'int')),
-												'WhereArray' => array('StatisticsKey'=>array ('Value'=>'1', 'Type'=>'int')), 
+												'WhereArray' => array('StatisticsKey'=>array ('Value'=>'1', 'Type'=>'int')),
 												'TableName'  => 'statistics'
 											);
 					$Transaction->PrepareQueryToRollback ($SQLUserStatArray);
 				}
-				
+
 				//добавление аватара
 				if ($AvatarFlag == '1') {
 					$Extension  = Main_Strtolower ($UserAvatar);
@@ -425,44 +428,97 @@ switch ($RegAction) {
 				$LetterTempPath = OBB_HTML_LANGUAGE_DIR . '/';
 				//  --отправка письма пользователю для подтверждения регистрации по почте
 				if ($RegistrationType <> '3') {
-					$RegMailer      = new OwnBB_Mailer ($Config_Mail);
+					//МАССИВ ОТПРАВИТЕЛЯ
+					$LetterAdminName = $Config_Mail['FromName'];
+					$LetterAdminMail = $Config_Mail['FromMail'];
+					$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
 
-					//  -письмо пользователю
+					//МАССИВ ПОЛУЧАТЕЛЯ
+					$LetterUserName = $RegLogin;
+					$LetterUserMail = $RegMail;
+					$LetterGetterArray = array('address'=>$LetterUserMail, 'name'=>$LetterUserName);
+
+					//ТЕМА ПИСЬМА
+					$LetterForumName = $Config_ForumName;
+					$LetterSubject = $ForumLang['RegMail']['UserMail'] . ' "' . $LetterForumName . '"';
+
+					//ТЕЛО ПИСЬМА
+					//  --ссылка на активацию пользователя
 					$UserHref = 'http://' . $HostName. $SelfName . '?action=registration&r_stage=3&user_id=' . $LastUserID . '&activate_key=' . $ActivateString;
+
+					//  --адрес сайта форума
 					$SiteAddress = 'http://' . $_SERVER['HTTP_HOST'];
+
+					//  --имя форума
 					$ForumName = $Config_ForumName;
-					$MailTheme = $ForumLang['RegMailThemeUser'] . ' "' . $ForumName . '"';
 
+					//  --генерация тела письма
 					$UserLetter = file_get_contents ($LetterTempPath . 'UserMailReg.html');
-
 					$UserLetter = str_replace ('{siteaddress}', $SiteAddress, $UserLetter);
-					$UserLetter = str_replace ('{forumname}', $Config_ForumName, $UserLetter);
-					$UserLetter = str_replace ('{username}', $RegLogin, $UserLetter);
-					$UserLetter = str_replace ('{password}', $UserPassword, $UserLetter);
-					$UserLetter = str_replace ('{userhref}', $UserHref, $UserLetter);
+					$UserLetter = str_replace ('{forumname}',   $Config_ForumName, $UserLetter);
+					$UserLetter = str_replace ('{username}',    $RegLogin, $UserLetter);
+					$UserLetter = str_replace ('{password}',    $PasswordForMail, $UserLetter);
+					$UserLetter = str_replace ('{userhref}',    $UserHref, $UserLetter);
+					//ТЕЛО ПИСЬМА - КОНЕЦ
 
-					#$RegMailer->SendMail ($RegLogin, $RegMail, $MailTheme, $UserLetter);
-					file_put_contents (OBB_ERROR_MAIL_DIR . '/UserRegLog' . $LastUserID . '.html', $UserLetter);
+					//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+					if (OBB_MAIL_DEBUG == false) {
+						//$RegMailer = new OwnBB_Mailer ($Config_Mail)
+						//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+						OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $UserLetter);
+					}
+					else {
+						file_put_contents (OBB_ERROR_MAIL_DIR . '/UserRegLog' . $LastUserID . '.html', $UserLetter);
+					}
 				}
 
 				//  -письмо администратору
 				if ($Config_Mail['AdminMail'] == TRUE) {
-					$AdmUserLogin = $RegLogin;
-					$AdmUserMail  = $RegMail;
-					$AdmUserID    = $LastUserID;
-					$AdmUserDate  = Main_ConvertDate (time (), '', $Format = 'd.m.y, H:i');
-					$AdminName    = $Config_Mail['FromName'];
-					$AdminMail    = $Config_Mail['FromMail'];
+					$LetterAdminName = $Config_Mail['FromName'];
+					$LetterAdminMail = $Config_Mail['FromMail'];
 
+					//МАССИВ ОТПРАВИТЕЛЯ
+					$LetterSenderArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//МАССИВ ПОЛУЧАТЕЛЯ
+					$LetterGetterArray = array('address'=>$LetterAdminMail, 'name'=>$LetterAdminName);
+
+					//ТЕМА ПИСЬМА
+					$LetterForumName = $Config_ForumName;
+					$LetterSubject = $ForumLang['RegMail']['AdminMail'] . ' "' . $LetterForumName . '"';
+
+					//ТЕЛО ПИСЬМА
+					//  --дата письма
+					$AdminUserDate = Main_ConvertDate (time (), '', $Format = 'd.m.y, H:i');
+
+					// --логин зарегистрировавшегося пользователя
+					$AdminUserLogin = $RegLogin;
+
+					//  --ИД ользователя, редактировавшего пост
+					$AdminUserID = $LastUserID;
+
+					//  --почта зарегистрировавшегося пользователя
+					$AdminUserMail = $RegMail;
+
+					//  --получение тела письма
 					$AdminLetter = file_get_contents ($LetterTempPath . 'AdminMailReg.html');
 
-					$AdminLetter = str_replace ('{username}', $AdmUserLogin, $AdminLetter);
-					$AdminLetter = str_replace ('{usermail}', $AdmUserMail, $AdminLetter);
-					$AdminLetter = str_replace ('{userid}', $AdmUserID, $AdminLetter);
-					$AdminLetter = str_replace ('{userdate}', $AdmUserDate, $AdminLetter);
+					//  --замена элементов тела письма
+					$AdminLetter = str_replace ('{username}', $AdminUserLogin, $AdminLetter);
+					$AdminLetter = str_replace ('{usermail}', $AdminUserMail,  $AdminLetter);
+					$AdminLetter = str_replace ('{userid}'  , $AdminUserID,    $AdminLetter);
+					$AdminLetter = str_replace ('{userdate}', $AdminUserDate,  $AdminLetter);
+					//ТЕЛО ПИСЬМА - КОНЕЦ
 
-					#$RegMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-					file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_UserRegLog' . $LastUserID . '.html', $AdminLetter);
+					//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+					if (OBB_MAIL_DEBUG == false) {
+						//$RegMailer = new OwnBB_Mailer ($Config_Mail)
+						//$AddMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);/
+						OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+					}
+					else {
+						file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_UserRegLog' . $LastUserID . '.html', $AdminLetter);
+					}
 				}
 
 				//перенаправление
@@ -554,7 +610,7 @@ switch ($RegAction) {
 										</div>
 										<div class="AttachExtensions">
 											' . $ExstensionString . '
-											
+
 										</div>
 										<div class="AttachExtensions">
 											<span style="border-bottom:1px dotted #222;">' . $ForumLang['RegAvatarAllowedSize'] . '</span>:&nbsp;<span style="color:#444;">' . OBB_MAX_AVATAR_SIZE . '&nbsp;' . $ForumLang['RegAvatarb'] . '</span>
@@ -622,7 +678,7 @@ switch ($RegAction) {
 			$ErrorListBlock = '';
 		}
 		$MainOutput .= $ErrorListBlock;
-        
+
 		//переменные описания
 		$LoginDescription = OBB_Main_ReplaceSymbols ($ForumLang['RegLoginLimit'], array('min'=>OBB_MIN_LOGIN_LENGTH, 'max'=>OBB_MAX_LOGIN_LENGTH));
 		$MailDescription  = OBB_Main_ReplaceSymbols ($ForumLang['RegMailLimit'],  array('min'=>OBB_MIN_MAIL_LENGTH,  'max'=>OBB_MAX_MAIL_LENGTH));
@@ -808,25 +864,25 @@ switch ($RegAction) {
 			$SQLArray   = array (
 			                     'Operation'  => 'u',
 								 'FieldArray' => array ('UserIsActivate'=>array ('Value'=>'no', 'Flag'=>'none', 'Type'=>'string')),
-								 'WhereArray' => array('UserID'=>array ('Value'=>$UserID, 'Type'=>'int')), 
+								 'WhereArray' => array('UserID'=>array ('Value'=>$UserID, 'Type'=>'int')),
 								 'TableName'  => 'users'
 								);
 			$Transaction->PrepareQueryToRollback ($SQLArray);
 
 			//запрос - статистика
-			$SQLUserStatistics = 'UPDATE 
-									statistics 
-								SET 
+			$SQLUserStatistics = 'UPDATE
+									statistics
+								SET
 									StatisticsValue=
 													(
-														SELECT 
-															COUNT(*) 
-														FROM 
-															users 
-														WHERE 
+														SELECT
+															COUNT(*)
+														FROM
+															users
+														WHERE
 															UserIsActivate = \'yes\'
-													) 
-								WHERE 
+													)
+								WHERE
 									StatisticsKey = \'1\'';
 			$UserStatQuery = DB_Query ($Config_DBType, $SQLUserStatistics, $ForumConnection);
 			if (!$UserStatQuery) {
@@ -837,7 +893,7 @@ switch ($RegAction) {
 			$SQLUserStatArray = array (
 										'Operation'  => 'u',
 										'FieldArray' => array ('StatisticsValue'=>array ('Value'=>'', 'Flag'=>'decr', 'Type'=>'int')),
-										'WhereArray' => array('StatisticsKey'=>array ('Value'=>'1', 'Type'=>'int')), 
+										'WhereArray' => array('StatisticsKey'=>array ('Value'=>'1', 'Type'=>'int')),
 										'TableName'  => 'statistics'
 									);
 			$Transaction->PrepareQueryToRollback ($SQLUserStatArray);

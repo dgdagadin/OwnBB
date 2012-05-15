@@ -9,6 +9,7 @@ $ForumLang['ForgotPassSubmit'] = 'Восстановить пароль';
 $ForumLang['ForgotPassReset'] = 'Очистить форму';
 $ForumLang['ForgotUserMailTheme'] = 'Восстановление пароля на форуме';
 $ForumLang['ForgotAdminMailTheme'] = 'Пользователь восстановил пароль на форуме';
+$ForumLang['ForgotMail'] = array('ForgotUserMail'=>'Восстановление пароля на форуме','ForgotAdminMail'=>'Пользователь восстановил пароль на форуме');
 $ForumLang['ForgotErrors'] = array ('UserNotExists'=>'Пользователь с таким логином и почтой не найден',
 									'EmptyLogin'=>'Не заполнено поле логина',
 									'EmptyMail'=>'Не заполнено поле электронной почты',

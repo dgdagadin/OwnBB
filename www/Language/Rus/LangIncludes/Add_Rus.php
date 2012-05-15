@@ -45,6 +45,10 @@ $ForumLang['AddDeleteCancel'] = 'Отмена';
 $ForumLang['AddDeleteConfirm'] = 'Вы действительно хотите удалить это сообщение';
 $ForumLang['AddDeletePermamently'] = 'Сообщение будет удалено НАВСЕГДА';
 $ForumLang['AddImportantFields'] = 'Поля, обязательные для заполнения';
+$ForumLang['AddMail'] = array('AddMailTheme'=>'Добавление новой темы',
+							  'AddMailPost'=>'Добавление нового сообщения',
+							  'EditMailPost'=>'Редактирование сообщения',
+							  'DeleteMailPost'=>'Удаление сообщения');
 $ForumLang['AddErrors'] = array ();
 $ForumLang['AddErrors']['EmptyLogin'] = 'Не заполнено поле логина';
 $ForumLang['AddErrors']['BadLoginLength'] = 'Длина логина должна составлять не менее {min} и не более {max} символов';
