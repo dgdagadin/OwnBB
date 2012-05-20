@@ -566,17 +566,6 @@ switch ($RegAction) {
 										<input style="width:280px;" class="InpEl InpText" id="RegistrationRepeatPass" type="password" name="RegRepeatPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="" />
 									</td>
 								</tr>';
-			/* $PasswordFields = '<div>
-								' . $ForumLang['RegPasswordTitle'] . ' (' . OBB_MIN_PASSWORD_LENGTH . '-' . OBB_MAX_PASSWORD_LENGTH . ' ' . $ForumLang['RegSymbolWord'] . ') *
-								<br />
-								<input id="RegistrationPass" type="password" name="RegPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="">
-							</div>
-							<br />
-							<div>
-								' . $ForumLang['RegRepeatPasswordTitle'] . ' *<br />
-							<input id="RegistrationRepeatPass" type="password" name="RegRepeatPass" maxlength="' . OBB_MAX_PASSWORD_LENGTH . '" value="">
-							</div>
-							<br />'; */
 		}
 		else {
 			$PasswordFields = '';
