@@ -367,8 +367,8 @@ while ($ThemesRow = DB_FetchAssoc ($Config_DBType, $ThemesListQuery)) {
 	}
 
 	$MainOutput .= '<tr>
-						<td class="ForumsTableBottom" colspan="' . $Colspan . '">
-							<div><!-- --></div>
+						<td class="ForumsTablePreBottom" colspan="' . $Colspan . '">
+							<div style="height:10px;"><!-- --></div>
 						</td>
 					</tr>';
 

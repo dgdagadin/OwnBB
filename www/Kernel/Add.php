@@ -809,7 +809,7 @@ switch ($Label) {
 				$_SESSION['Redirect'] = $Redirect;
 				$_SESSION['Message']  = $Message;
 				$URL = '?action=message';
-				exit;//OBB_Main_Redirect ($URL);
+				OBB_Main_Redirect ($URL);
 			}
 		}
 
@@ -1038,6 +1038,13 @@ switch ($Label) {
 							'ImagesPath'=>OBB_IMAGE_DIR . '/bbcodes',
 							'TextValue'=>Defence_HTMLSpecials ($PostContentVar));
 
+		if ($IsPostAdding) {
+			$AdSubmitValue = $ForumLang['AddSubmit'];
+		}
+		else {
+			$AdSubmitValue = $ForumLang['AddSubmitTheme'];
+		}
+							
 		//форма добавления
 		$MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">
 							<tr class="MainColumnRow">
@@ -1095,7 +1102,7 @@ switch ($Label) {
 												<td colspan="2" class="FormInputTD CenterTD">
 													<input type="hidden" name="add" value="1" />
 													<div id="SubmitButtonDiv">
-														<input class="InpButton" id="AddSubmit" type="submit" name="Adding"   value="' . $ForumLang['AddSubmit'] . '" />
+														<input class="InpButton" id="AddSubmit" type="submit" name="Adding"   value="' . $AdSubmitValue . '" />
 														<input class="InpButton" type="reset" name="Adding" value="' . $ForumLang['AddReset'] . '" />
 													</div>
 												</td>
