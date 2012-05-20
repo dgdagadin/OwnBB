@@ -36,6 +36,7 @@ $ForumLang['AddNoIcon'] = 'Нет';
 $ForumLang['AddMessage'] = 'Сообщение';
 $ForumLang['AddEditMessage'] = 'Редактировать сообщение';
 $ForumLang['AddSubmit'] = 'Добавить сообщение';
+$ForumLang['AddSubmitTheme'] = 'Добавить тему';
 $ForumLang['AddEdit'] = 'Редактировать сообщение';
 $ForumLang['AddReset'] = 'Очистить форму';
 $ForumLang['AddReAdd'] = 'Предварительный просмотр';
