@@ -58,12 +58,9 @@ $Title = OBB_Main_ReplaceSymbols ($ForumLang['Title']['Main'], array('forumname'
 //верх
 $MainOutput .= Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title);
 
-//Начало вывода форумов
-$MainOutput .= '<table class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">';
-
 if ($_SESSION['UserData']['UserType'] == 'admin' && OBB_SHOW_ADMIN_ELEMENTS) {
-	$AdminPanelHeaders = '<td class="MainColumnName" style="width:16px;">&nbsp;</td>
-						  <td class="MainColumnName" style="width:16px;">&nbsp;</td>';
+	$AdminPanelHeaders = '<td class="ForumCharter" style="border-left:0px solid #FFF; border-right:0px solid #FFF;width:16px;">&nbsp;</td>
+						  <td class="ForumCharter" style="width:16px;">&nbsp;</td>';
 }
 else {
 	$AdminPanelHeaders = '';
@@ -72,26 +69,20 @@ else {
 //получение colspan
 $CharterColspan = OBB_SHOW_ADMIN_ELEMENTS ? Echo_GetColspan (8, 6) : 6;
 
-//Вывод заголовков таблицы форумов
-$MainOutput .= '<tr class="MainColumnRow">
-					<td colspan="3"   class="MainColumnName"><span>'  . $ForumLang['ForumsTitle']    . '</span></td>
-					<td style="width:53px;"  class="MainColumnName"><span>'  . $ForumLang['NumThemesTitle'] . '</span></td>
-					<td style="width:70px;" class="MainColumnName"><span>'   . $ForumLang['NumPostsTitle']  . '</span></td>
-					<td style="width:350px;" class="MainColumnName"><span>'  . $ForumLang['UpdateTitle']    . '</span></td>
-					' . $AdminPanelHeaders . '
-				</tr>';
+//Main array
+$MainArray = array();
 
-//массив разделов
-$ChartersArray = array();
-$SQL = 'SELECT CharterID, CharterName FROM charters';
+//Getting charters
+$SQL = 'SELECT * FROM charters ORDER BY charters.CharterPosition, charters.CharterID';
 $Query = DB_Query ($Config_DBType, $SQL, $ForumConnection);
 if (!$Query) {
 	OBB_Main_Log ($SQL . "\r\n" . DB_Error ($Config_DBType), OBB_ERROR_LOG_FILE);
 }
 while ($Row = DB_FetchAssoc ($Config_DBType, $Query)) {
-	$ChartersID   = $Row['CharterID'];
-	$ChartersName = $Row['CharterName'];
-	$ChartersArray[$ChartersID] = $ChartersName;
+	$CharterID   = intval($Row['CharterID']);
+	$CharterName = $Row['CharterName'];
+	$Position    = $Row['CharterPosition'];
+	$MainArray[$CharterID] = array('Name'=>$CharterName);
 }
 
 //Если ошибок нет, делаем великий запрос форумов :)
@@ -117,12 +108,9 @@ if (!$ForumListQuery) {
 	OBB_Main_Log ($SQL . "\r\n" . DB_Error ($Config_DBType), OBB_ERROR_LOG_FILE);
 }
 
-//Если есть хоть один форум в таблице, цикл запроса форума
 if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 	while ($ForumListRow = DB_FetchAssoc ($Config_DBType, $ForumListQuery)) {
-		//для облегчения
 		$IDCharter   = $ForumListRow['IDCharter'];
-		$NameCharter = $ChartersArray[$IDCharter];
 		$IdForum     = $ForumListRow['IdForum'];
 		$NameForum   = $ForumListRow['NameForum'];
 		$Description = $ForumListRow['Description'];
@@ -135,164 +123,213 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 		$LastUpDate  = $ForumListRow['LastUpDate'];
 		$Block       = $ForumListRow['Block'];
 		$ThemeName   = $ForumListRow['THName'];
-
-		//Если ид категории не равен предыдущему, меняем флаг смены категории
-		if (!isset ($ChartChange) || $CurrentChart <> $IDCharter) {
-			$ChartChange = 1;
-		}
-
-		//1.Строка где написана новая категория
-		if ($ChartChange == 1) {
-			$ChartChange = 0;
-			$NewCharter = '<tr>
-								<td class="ForumCharter" colspan="' . $CharterColspan . '">
-									<div style="float:left;" class="ForumCharterBullet">' . $NameCharter . '</div>
+		
+		$ForumArray = array('IdForum'=>$IdForum,
+							'NameForum'=>$NameForum,
+							'Description'=>$Description,
+							'NumTh'=>$NumTh,
+							'NumP'=>$NumP,
+							'LastThID'=>$LastThID,
+							'LastPID'=>$LastPID,
+							'LastUID'=>$LastUID,
+							'LastUName'=>$LastUName,
+							'LastUpDate'=>$LastUpDate,
+							'Block'=>$Block,
+							'THName'=>$ThemeName);
+							
+		$MainArray[$IDCharter]['Forums'][] = $ForumArray;
+	}
+	
+	//массив
+	$MainOutputArray = array();
+	
+	//Вывод категорий и их форумов
+	foreach ($MainArray as $MainKey=>$MainValue) {
+		$CharterID    = $MainKey;
+		$CategoryName = $MainValue['Name'];
+		$ForumsArray  = $MainValue['Forums'];
+		
+		//инициализация строки
+		if (sizeof($ForumsArray) > 0) {
+			$OneCatString = '';
+			$OneCatString .= '<table class="MainForumsTable" cellpadding="0" cellspacing="0" border="0">';
+			$OneCatString .= '<tr class="MainColumnRow">
+								<td style="border-top:0px solid #FFF;" colspan="' . $CharterColspan . '"  class="MainColumnName">
+									<div style="float:left;">
+										<span>' . Defence_HTMLSpecials ($CategoryName) . '</span>
+									</div>
 									<div style="float:right;">
-										<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'Charter' . $IDCharter . '\',\'' . OBB_IMAGE_DIR . '\',\'Chrtr' . $IDCharter . '\');"><img id="Chrtr' . $IDCharter . '" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+										<a href="javascript:void(0);" onclick="javascript:hideCharterForums2(\'Charter' . $CharterID . '\',\'' . OBB_IMAGE_DIR . '\',\'Chrtr' . $CharterID . '\');"><img style="vertical-aling:middle;" id="Chrtr' . $CharterID . '" alt="" title="" src="' . OBB_IMAGE_DIR . '/cat_minimize.gif" /></a>
 									</div>
 								</td>
+							</tr>
+							<tr class="Charter' . $CharterID . '">
+								<td style="border-right:0px solid #FFF; border-left:0px solid #FFF;" colspan="3" class="ForumCharter">
+									<span style="padding-left:45px !important;" class="ThemesTitle">'  . $ForumLang['ForumsTitle']    . '</span>
+								</td>
+								<td style="border-right:0px solid #FFF; width:53px;" class="ForumCharter"><span>'  . $ForumLang['NumThemesTitle'] . '</span></td>
+								<td style="border-right:0px solid #FFF; width:70px;" class="ForumCharter"><span>'   . $ForumLang['NumPostsTitle']  . '</span></td>
+								<td style="border-right:0px solid #FFF;width:350px;" class="ForumCharter"><span>'  . $ForumLang['UpdateTitle']    . '</span></td>
+								' . $AdminPanelHeaders . '
 							</tr>';
-		}
-		else {
-			$NewCharter = '';
-		}
-
-		//2.Иконка форума
-		$ForumIcon = Echo_GetCharterIcon ($IDCharter, $Description);
-		
-		//3.Иконка степени блокировки форума
-		if ($Block == 'yes') {
-			$ForumBlockDiv = '<div class="ForumBlockDiv">' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '</div>';
-		}
-		else {
-			$ForumBlockDiv = '';
-		}
-
-		//4.Иконка RSS
-		$RSSIconHref = Defence_HTMLSpecials ($SelfName . '?action=rss&id_forum=' . $IdForum);
-		$RSSIcon = '<a href="' . $RSSIconHref . '">
-						<img alt="" title="RSS" src="' . OBB_IMAGE_DIR . '/rss_small.png" />
-					</a>';
-
-		//5.Ячейка с именем/описанием форума
-		$RSSForumCur = '<img class="RSSForumIcon" alt="RSS" title="RSS" src="' . OBB_IMAGE_DIR . '/rss_small.png" /><a class="CurRSSHref" href="' . $RSSIconHref . '">' . $ForumLang['RSSOfCurForum'] . '</a>';
-		$ForumNameHref = Defence_HTMLSpecials ($SelfName . '?action=forumview&id_forum=' . $IdForum);
-		$ForumName = '<div class="ForumNameDiv">
-						<a href="' . $ForumNameHref . '">' . $NameForum . '</a>' . $RSSForumCur . '
-					 </div>
-					  <div class="ForumDescriptionDiv">
-						' . $Description . '
-					  </div>' . $ForumBlockDiv;
-
-		//6.Ячейка с обновлением форума
-		//если к-во постов и тем не равно 0 (хотя это пока, после что-нить другое придумаю)
-		if ($ForumListRow['NumP'] > '0' && $ForumListRow['NumTh'] > '0') {
-			//6.1 Время обновления
-			if ($LastUpDate <> '') {
-				$UpdateTimeConvert = Main_ConvertDate ($LastUpDate, $ForumLang['DateArray']);
-				$UpdateTime = '<div class="UpdateTime">
-									<acronym class="UpdateAcr" title="' . $UpdateTimeConvert . '">' . $UpdateTimeConvert . '</acronym>
-								</div>';
-			}
-			else {
-				$UpdateTime = '';
-			}
-
-			//6.2 Пользователь-обновитель
-			if ($LastUName <> '') {
-				if ($LastUID > 0) {
-					$AuthorNameHref = Defence_HTMLSpecials ($SelfName . '?action=profile&user_id=' . $LastUID);
-					$UpdateAuthorName = '<a title="' . $LastUName . '" class="UpdateUserLink" href="' . $AuthorNameHref . '">' . Defence_HTMLSpecials ($LastUName) . '</a>';
+			
+			foreach ($ForumsArray as $ForumKey=>$ForumValue) {
+				//1.Присвоение
+				$IdForum     = $ForumValue['IdForum'];
+				$NameForum   = $ForumValue['NameForum'];
+				$Description = $ForumValue['Description'];
+				$NumTh       = $ForumValue['NumTh'];
+				$NumP        = $ForumValue['NumP'];
+				$LastThID    = $ForumValue['LastThID'];
+				$LastPID     = $ForumValue['LastPID'];
+				$LastUID     = $ForumValue['LastUID'];
+				$LastUName   = $ForumValue['LastUName'];
+				$LastUpDate  = $ForumValue['LastUpDate'];
+				$Block       = $ForumValue['Block'];
+				$ThemeName   = $ForumValue['THName'];
+				
+				//2.Иконка форума
+				$ForumIcon = Echo_GetCharterIcon ($IDCharter, $Description);
+				
+				//3.Иконка степени блокировки форума
+				if ($Block == 'yes') {
+					//$ForumBlockDiv = '<div class="ForumBlockDiv">' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '</div>';
+					$ForumBlockImage = '<img style="margin-right:3px; vertical-align:top;" alt="" title="' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '" src="' . OBB_IMAGE_DIR . '/lock_small.png" />';
 				}
 				else {
-					$UpdateAuthorName = '<span class="UpdateUserText" >' . Defence_HTMLSpecials ($LastUName) . '</span>';
+					//$ForumBlockDiv = '';
+					$ForumBlockImage = '';
 				}
-				$UserUpdate = '<div class="UpdateAuthor">
-									<span class="UpdateAuthorTitle">' . $ForumLang['UpdateAuthor'] . ':</span>&nbsp;' . $UpdateAuthorName . '
-								</div>';
-			}
-			else {
-				$UserUpdate = '';
-			}
 
-			//6.3 Тема обновления
-			if (Main_Strlen ($ThemeName) > 25) {
-				$LastThemeName = mb_substr ($ThemeName, 0, 24, 'UTF-8') . '...';
-			}
-			else {
-				$LastThemeName = $ThemeName;
-			}
+				//4.Иконка RSS
+				$RSSIconHref = Defence_HTMLSpecials ($SelfName . '?action=rss&id_forum=' . $IdForum);
+				$RSSIcon = '<a href="' . $RSSIconHref . '">
+								<img alt="" title="RSS" src="' . OBB_IMAGE_DIR . '/rss_small.png" />
+							</a>';
 
-			//6.4 Основные ссылки
-			$LastPostURLHref = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID . '&last_post=' . $LastPID);
-			$LastPostURL  = $LastPostURLHref . '#pid' . $LastPID;
-			$LastThemeURLHref = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID);
-			$LastThemeURL = $LastThemeURLHref;
-			$UpdateLastPost  = '<a title="' . $ForumLang['GotoLastPost'] . '" href="' . $LastPostURL  . '"><img alt="' . $ForumLang['GotoLastPost'] . '" src="' . OBB_IMAGE_DIR . '/last_post.gif" /></a>';
-			$ThemeNameHref = '<div class="UpdateThemeName">
-								' . $UpdateLastPost . '&nbsp;<a href="' . Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID) . '">' . Defence_HTMLSpecials ($LastThemeName) . '</a>
-							</div>';
+				//5.Ячейка с именем/описанием форума
+				$RSSForumCur = '<img class="RSSForumIcon" alt="RSS" title="RSS" src="' . OBB_IMAGE_DIR . '/rss_small.png" /><a class="CurRSSHref" href="' . $RSSIconHref . '">' . $ForumLang['RSSOfCurForum'] . '</a>';
+				$ForumNameHref = Defence_HTMLSpecials ($SelfName . '?action=forumview&id_forum=' . $IdForum);
+				$ForumName = '<div class="ForumNameDiv">
+								' . $ForumBlockImage . '<a href="' . $ForumNameHref . '">' . $NameForum . '</a>' . $RSSForumCur . '
+							 </div>
+							  <div class="ForumDescriptionDiv">
+								' . $Description . '
+							  </div>';
+
+				//6.Ячейка с обновлением форума
+				//если к-во постов и тем не равно 0 (хотя это пока, после что-нить другое придумаю)
+				if ($ForumValue['NumP'] > '0' && $ForumValue['NumTh'] > '0') {
+					//6.1 Время обновления
+					if ($LastUpDate <> '') {
+						$UpdateTimeConvert = Main_ConvertDate ($LastUpDate, $ForumLang['DateArray']);
+						$UpdateTime = '<div class="UpdateTime">
+											<acronym class="UpdateAcr" title="' . $UpdateTimeConvert . '">' . $UpdateTimeConvert . '</acronym>
+										</div>';
+					}
+					else {
+						$UpdateTime = '';
+					}
+
+					//6.2 Пользователь-обновитель
+					if ($LastUName <> '') {
+						if ($LastUID > 0) {
+							$AuthorNameHref = Defence_HTMLSpecials ($SelfName . '?action=profile&user_id=' . $LastUID);
+							$UpdateAuthorName = '<a title="' . $LastUName . '" class="UpdateUserLink" href="' . $AuthorNameHref . '">' . Defence_HTMLSpecials ($LastUName) . '</a>';
+						}
+						else {
+							$UpdateAuthorName = '<span class="UpdateUserText" >' . Defence_HTMLSpecials ($LastUName) . '</span>';
+						}
+						$UserUpdate = '<div class="UpdateAuthor">
+											<span class="UpdateAuthorTitle">' . $ForumLang['UpdateAuthor'] . ':</span>&nbsp;' . $UpdateAuthorName . '
+										</div>';
+					}
+					else {
+						$UserUpdate = '';
+					}
+
+					//6.3 Тема обновления
+					if (Main_Strlen ($ThemeName) > 25) {
+						$LastThemeName = mb_substr ($ThemeName, 0, 24, 'UTF-8') . '...';
+					}
+					else {
+						$LastThemeName = $ThemeName;
+					}
+
+					//6.4 Основные ссылки
+					$LastPostURLHref = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID . '&last_post=' . $LastPID);
+					$LastPostURL  = $LastPostURLHref . '#pid' . $LastPID;
+					$LastThemeURLHref = Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID);
+					$LastThemeURL = $LastThemeURLHref;
+					$UpdateLastPost  = '<a title="' . $ForumLang['GotoLastPost'] . '" href="' . $LastPostURL  . '"><img alt="' . $ForumLang['GotoLastPost'] . '" src="' . OBB_IMAGE_DIR . '/last_post.gif" /></a>';
+					$ThemeNameHref = '<div class="UpdateThemeName">
+										' . $UpdateLastPost . '&nbsp;<a href="' . Defence_HTMLSpecials ($SelfName . '?action=themeview&id_forum=' . $IdForum . '&id_theme=' . $LastThID) . '">' . Defence_HTMLSpecials ($LastThemeName) . '</a>
+									</div>';
+					
+					$UpdateForum = $ThemeNameHref . $UpdateTime . $UserUpdate;
+				}
+				else {
+					$UpdateForum = '<div class="ForumNoUpdates">' . $ForumLang['NoUpdates'] . '</div>';
+				}
+
+				if ($_SESSION['UserData']['UserType'] == 'admin' && OBB_SHOW_ADMIN_ELEMENTS) {
+					$AdminEditHref = Defence_HTMLSpecials ($SelfName . '?action=admin&adm=forum&fact=edit&fid=' . $IdForum);
+					$AdminDelHref  = Defence_HTMLSpecials ($SelfName . '?action=admin&adm=forum&fact=del&fid='  . $IdForum);
+					$AdminForumsPanel ='<td class="AdminShowFirst">
+											<a title="' . $ForumLang['ForumsEditForum']   . '" href="' . $AdminEditHref . '"><img title="' . $ForumLang['ForumsEditForum']   . '" alt="" src="' . OBB_IMAGE_DIR . '/admin_edit.png" /></a>
+										</td>
+										<td class="AdminShow">
+											<a title="' . $ForumLang['ForumsDeleteForum'] . '" href="' . $AdminDelHref  . '"><img title="' . $ForumLang['ForumsDeleteForum'] . '" alt="" src="' . OBB_IMAGE_DIR .  '/admin_delete.png" /></a>
+										</td>';
+				}
+				else {
+					$AdminForumsPanel = '';
+				}
+
+				//Вывод данных форума
+				$OneCatString .=   '<tr class="ForumMainTR Charter' . $CharterID . '">
+										<td class="ForumIconTD" style="width:40px;">
+											' . $ForumIcon . '
+										</td>
+										<td class="ForumNameTD InForumList">
+											' . $ForumName . '
+										</td>
+										<td style="width:26px;" class="RSSIconTD">
+											<!--' . $RSSIcon . '-->
+										</td>
+										<td class="ForumNumThemesTD">' . $NumTh . '</td>
+										<td class="ForumNumPostsTD">' . $NumP . '</td>
+										<td class="ForumUpdateTD">' . $UpdateForum . '</td>
+										' . $AdminForumsPanel . '
+									</tr>';
+
+				//Приплюсовывание статистических данных
+				$Stat_NumForums += 1;
+				$Stat_NumThemes += $NumTh;
+				$Stat_NumPosts  += $NumP;
+			}
 			
-			$UpdateForum = $ThemeNameHref . $UpdateTime . $UserUpdate;
-		}
-		else {
-			$UpdateForum = '<div class="ForumNoUpdates">' . $ForumLang['NoUpdates'] . '</div>';
-		}
-
-		if ($_SESSION['UserData']['UserType'] == 'admin' && OBB_SHOW_ADMIN_ELEMENTS) {
-			$AdminEditHref = Defence_HTMLSpecials ($SelfName . '?action=admin&adm=forum&fact=edit&fid=' . $IdForum);
-			$AdminDelHref  = Defence_HTMLSpecials ($SelfName . '?action=admin&adm=forum&fact=del&fid='  . $IdForum);
-			$AdminForumsPanel ='<td class="AdminShowFirst">
-									<a title="' . $ForumLang['ForumsEditForum']   . '" href="' . $AdminEditHref . '"><img title="' . $ForumLang['ForumsEditForum']   . '" alt="" src="' . OBB_IMAGE_DIR . '/admin_edit.png" /></a>
+			$OneCatString .= '<tr>
+								<td class="ForumsTablePreBottom" colspan="' . $CharterColspan . '">
+									<div><!-- --></div>
 								</td>
-								<td class="AdminShow">
-									<a title="' . $ForumLang['ForumsDeleteForum'] . '" href="' . $AdminDelHref  . '"><img title="' . $ForumLang['ForumsDeleteForum'] . '" alt="" src="' . OBB_IMAGE_DIR .  '/admin_delete.png" /></a>
-								</td>';
+							</tr>
+							<tr>
+								<td class="ForumsTableBottom" colspan="' . $CharterColspan . '">
+									<div><!-- --></div>
+								</td>
+							</tr>';
+			$OneCatString .= '</table>';
 		}
-		else {
-			$AdminForumsPanel = '';
-		}
-
-		//Вывод данных форума
-		$MainOutput .= $NewCharter .
-						'<tr class="ForumMainTR Charter' . $IDCharter . '">
-							<td class="ForumIconTD" style="width:40px;">
-								' . $ForumIcon . '
-							</td>
-							<td class="ForumNameTD InForumList">
-								' . $ForumName . '
-							</td>
-							<td style="width:26px;" class="RSSIconTD">
-								<!--' . $RSSIcon . '-->
-							</td>
-							<td class="ForumNumThemesTD">' . $NumTh . '</td>
-							<td class="ForumNumPostsTD">' . $NumP . '</td>
-							<td class="ForumUpdateTD">' . $UpdateForum . '</td>
-							' . $AdminForumsPanel . '
-						</tr>';
-
-		//Смена ид категории (для сравнения в след. итерации)
-		$CurrentChart = $IDCharter;
-
-		//Приплюсовывание статистических данных
-		$Stat_NumForums += 1;
-		$Stat_NumThemes += $NumTh;
-		$Stat_NumPosts  += $NumP;
+		
+		$MainOutpurArray[] = $OneCatString;
 	}
-	$MainOutput .= '<tr>
-						<td class="ForumsTableBottom" colspan="' . $CharterColspan . '">
-							<div><!-- --></div>
-						</td>
-					</tr>';
+	
+	$MainOutput .= implode ('<div style="height:20px;"><!-- --></div>', $MainOutpurArray);
 }
 else {
-	$MainOutput .= '<tr>
-						<td colspan="' . $CharterColspan . '">' . $ForumLang['NoForums'] . '</td>
-					</tr>';
+	$MainOutput .= '<div>' . $ForumLang['NoForums'] . '</div>';
 }
-
-//Конец вывода форумов 
-$MainOutput .= '</table>';
 
 //ФЛАГ:
 //Если 
