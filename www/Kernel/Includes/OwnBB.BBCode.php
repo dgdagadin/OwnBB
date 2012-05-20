@@ -20,7 +20,7 @@ require_once (OBB_BB_LIB_DIR . '/nbbc.php');
 ////// 9)[mail][/mail]   - адрес эл. почты,     заменяется на <a href="mailto:\1">(\1 | \2)</a> - ПРИМЕЧАНИЕ - временно удалён
 //10)[list][/list]   - список,              заменяется на <ul></ul>
 //11)[*]             - элемент списка,      заменяется на <li></li>, используется ТОЛЬКО внутри [list][/list]
-//12)[color][/color] - цветной текст,       заменяется на <font color="\1">\2</font>
+//12)[color][/color] - цветной текст,       заменяется на <span color="\1">\2</span>
 
 //ПРИМЕЧАНИЕ - ВСЕ CALLBACK-функции основанны на стандартных ф-циях файла nbbc_lib.php
 
@@ -191,7 +191,7 @@ function OBB_BBCode_DoQuoteStandart($bbcode, $action, $name, $default, $params, 
 //   --2.Заменяет [list][/list]
 function OBB_BBCode_DoListStandart ($bbcode, $action, $name, $default, $params, $content) {
 	if ($action == BBCODE_CHECK) {
-	   return (TRUE);
+		return (TRUE);
 	}
 	return ("<ul class=\"BBUl\">$content</ul>");
 }

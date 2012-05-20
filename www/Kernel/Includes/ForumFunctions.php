@@ -1460,7 +1460,7 @@ META;
 							<!-- Content table -->
 							<table id="MainTable" cellpadding="0" cellspacing="0" border="0">
 								<!-- Header TD -->
-								<tr>
+								<!-- <tr>
 									<td id="Header">
 										<table id="HeaderTable" cellpadding="0" cellspacing="0" border="0">
 											<tr>
@@ -1501,7 +1501,7 @@ META;
 											</tr>
 										</table>
 									</td>
-								</tr>
+								</tr> -->
 								<!-- Header TD END -->
 								<!-- Shalom TD -->
 								<tr>
@@ -2155,7 +2155,7 @@ function OBB_Search_Highlight ($HighlightArray, $Text, $IsSimpleReplace) {
 }
 
 //функция очистки поста от html-тегов - для поиска
-function OBB_Search_PrepareToSearch ($Text) {
+function OBB_Search_PrepareToSearch_old ($Text) {
 	//1)Простая замена: <b> <u> <i> <s>
 	$SimpleStartArray   = array ();
 	$SimpleReplaceArray = array ();
@@ -2227,6 +2227,59 @@ function OBB_Search_PrepareToSearch ($Text) {
 	//8)htmlspecialchars_decode
 	$Text = htmlspecialchars_decode ($Text, ENT_QUOTES);
 
+	return ($Text);
+}
+
+//функция очистки поста от html-тегов - для поиска - v2
+function OBB_Search_PrepareToSearch ($Text) {
+	//ЗАМЕНА ПРОСТЫХ ТЕГОВ (span/strong)
+	//  --span
+	$Text = preg_replace ('/\<(?:\/)?span.*?\>/ui', '', $Text);
+
+	//  --strong
+	$Text = preg_replace ('/\<(?:\/)?strong\>/ui', '', $Text);
+	//ЗАМЕНА ПРОСТЫХ ТЕГОВ (span/strong) - КОНЕЦ
+
+	//ЗАМЕНА ТЕГОВ, ПОДЛЕЖАЩИХ ПОЛНОМУ УДАЛЕНИЮ (a/img/div class="head"/br)
+	//  --ссылки (a)
+	$Text = preg_replace('/\<a(?:.*?)\>.*?\<\/a\>/ui', "\n", $Text);
+
+	//  --изображения (img)
+	$Text = preg_replace('/\<img(?:.*?)\/\>/ui', "\n", $Text);
+
+	//  --теги заголовков цитаты и кода (div class="head")
+	$Text = preg_replace('/\<div[\s]+class="head"\>.*?\<\/div\>/ui', "\n", $Text);
+
+	//  --переосы строк (br)
+	$Text = preg_replace('/(\<br(?: \/)?\>)+/ui', "\n", $Text);
+	//ЗАМЕНА ТЕГОВ, ПОДЛЕЖАЩИХ ПОЛНОМУ УДАЛЕНИЮ (a/img) - КОНЕЦ
+
+	//УДАЛЕНИЕ ОСТАВШИХСЯ ТЕГОВ DIV
+	$Text = preg_replace('/\<(?:\/)?div.*?\>/ui', "\n", $Text);
+	//УДАЛЕНИЕ ОСТАВШИХСЯ ТЕГОВ DIV - КОНЕЦ
+
+	//ЗАМЕНА ТЕГОВ СПИСКОВ (ul/li)
+	//$Text = preg_replace_callback ('/(\<ul(?:.*?)\>(.*?)\<\/ul\>)/ui', 'OBB_Callback_Ul', $Text);
+	$Text = OBB_Search_RemoveList ($Text);
+	//ЗАМЕНА ТЕГОВ СПИСКОВ (ul/li) - КОНЕЦ
+
+	//ПОСЛЕДНЯЯ СТАДИЯ ФОРМАТИРОВАНИЯ
+	$Text = preg_replace ("/\n{2,}/ui", "\n", $Text);
+	$Text = trim ($Text);
+	$Text = preg_replace ("/\n/ui", ' ', $Text);
+	$Text = preg_replace ("/\s{2,}/ui", " ", $Text);
+	//ПОСЛЕДНЯЯ СТАДИЯ ФОРМАТИРОВАНИЯ - КОНЕЦ
+
+	//ПЕРЕВОД ОСТАВШИХСЯ htmlspecialchars-енных тегов в нормальный вид, для последующего поиска по ним
+	$Text = htmlspecialchars_decode ($Text, ENT_QUOTES);
+
+	return ($Text);
+}
+
+//функция для очистки тегов ul и li
+function OBB_Search_RemoveList ($Text) {
+	$Text = preg_replace ('/\<(?:\/)?ul.*?\>/ui', "\n", $Text);
+	$Text = preg_replace ('/\<(?:\/)?li.*?\>/ui', "\n", $Text);
 	return ($Text);
 }
 
