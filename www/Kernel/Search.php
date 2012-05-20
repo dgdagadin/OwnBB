@@ -529,7 +529,7 @@ $vvvv = microtime();
 									<td class="ForumNameTD ThemeNameTD">'
 										. $SearchThemeUser    . 
 									'</td>
-									<td style="background:#DFE6EF;" class="ForumNameTD ThemeNameTD">'
+									<td style="background:#D9E0EA;" class="ForumNameTD ThemeNameTD">'
 										. $SearchForumName    .
 									'</td>
 									<td class="ForumNumThemesTD">'
@@ -542,8 +542,8 @@ $vvvv = microtime();
 			}
 
 			$SearchHTML .= '	<tr>
-									<td class="ForumsTableBottom" colspan="6">
-										<div><!-- --></div>
+									<td class="ForumsTablePreBottom" colspan="6">
+										<div style="height:10px;"><!-- --></div>
 									</td>
 								</tr>
 							</table>';
@@ -757,7 +757,7 @@ $vvvv = microtime();
 	}
 	//если не найдено ни одного эл-та
 	else {
-		$SearchHTML = $ForumLang['SearchNoResults'];
+		$SearchHTML = '<div class="NoThemes">' . $ForumLang['SearchNoResults'] . '</div>';
 	}
 
 	//Вывод результатов поиска
@@ -1205,7 +1205,7 @@ else {
 									<table style="width:100%;" class="FormsTable" cellspacing="0" cellpadding="0" border="0">
 										<tr>
 											<td style="border-top:1px solid #FFF; width:233px;" class="ForumCharter">
-												<span style="margin-left:30px;" class="ThemesTitle">' . $ForumLang['SearchWhat'] . '</span>
+												<span style="margin-left:10px;" class="ThemesTitle">' . $ForumLang['SearchWhat'] . '</span>
 											</td>
 											<td style="border-top:1px solid #FFF; text-align:right; vertical-align:middle;" class="ForumCharter">
 												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'SearchWhatClassHide\',\'' . OBB_IMAGE_DIR . '\',\'SearchWhatImgID\');"><img id="SearchWhatImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
@@ -1260,7 +1260,7 @@ else {
 										</tr>
 										<tr>
 											<td style="border-top:1px solid #FFF; width:233px;" class="ForumCharter">
-												<span style="margin-left:30px;" class="ThemesTitle">' . $ForumLang['SearchWhere'] . '</span>
+												<span style="margin-left:10px;" class="ThemesTitle">' . $ForumLang['SearchWhere'] . '</span>
 											</td>
 											<td style="border-top:1px solid #FFF; text-align:right; vertical-align:middle;" class="ForumCharter">
 												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'SearchWhereClassHide\',\'' . OBB_IMAGE_DIR . '\',\'SearchWhereImgID\');"><img id="SearchWhereImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
@@ -1294,7 +1294,7 @@ else {
 										</tr>
 										<tr>
 											<td style="border-top:1px solid #FFF; width:233px;" class="ForumCharter">
-												<span style="margin-left:30px;" class="ThemesTitle">' . $ForumLang['SearchOther'] . '</span>
+												<span style="margin-left:10px;" class="ThemesTitle">' . $ForumLang['SearchOther'] . '</span>
 											</td>
 											<td style="border-top:1px solid #FFF; text-align:right; vertical-align:middle;" class="ForumCharter">
 												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'SearchOptionsClassHide\',\'' . OBB_IMAGE_DIR . '\',\'SearchOptionsImgID\');"><img id="SearchOptionsImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
@@ -1329,7 +1329,7 @@ else {
 										' . $HighlightCheckbox . '
 										<tr>
 											<td style="padding:7px; background:#D1DCEB !important; border-bottom:1px solid #FFF; border-top:1px solid #5176B5; width:233px;" class="ForumCharter">
-												<span style="margin-left:30px;" class="ThemesTitle">' . $ForumLang['SearchFAQ'] . '</span>
+												<span style="margin-left:10px;" class="ThemesTitle">' . $ForumLang['SearchFAQ'] . '</span>
 											</td>
 											<td style="adding:7px; background:#D1DCEB !important; border-bottom:1px solid #FFF; border-top:1px solid #5176B5; text-align:right; vertical-align:middle;" class="ForumCharter">
 												<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'SearchFAQClassHide\',\'' . OBB_IMAGE_DIR . '\',\'SearchFAQImgID\');"><img id="SearchFAQImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/expand.gif" /></a>

@@ -852,7 +852,8 @@ img {
 	vertical-align:middle;
 	font-size:12px;
 	padding:9px 5px 10px 5px;
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#D9E0EA;
 }
 .SearchAuthorDatePermalink .AuthornameTitle {
 	font-weight:bold;
@@ -896,6 +897,7 @@ img {
 }
 .SearchPostContent {
 	background:#E4EAF2;
+	/* background:#DFE6EF; */
 	border:1px solid #FFFFFF;
 	border-bottom:0;
 	padding:20px 20px;
@@ -1217,7 +1219,8 @@ img {
 	border-left:1px solid #ffffff;
 	border-top:0px solid #ffffff;
 	/* background:#E4EAF2; */
-	background:#D9E0EA;
+	/* background:#D9E0EA; */
+	background:#DFE6EF;
 	padding:5px;
 	vertical-align:top;
 }
@@ -1266,12 +1269,14 @@ img {
 	border-left:1px solid #ffffff;
 	border-top:0px solid #ffffff;
 	/* background:#E4EAF2; */
-	background:#D9E0EA;
+	/* background:#D9E0EA; */
+	background:#DFE6EF;
 	padding:5px;
 	vertical-align:middle;
 }
 .FormsTable .AdditionalTD {
-	background:#D9E0EA;
+	/* background:#D9E0EA; */
+	background:#DFE6EF;
 }
 .FormsTable .CenterTD {
 	background:#D1DCEB;
