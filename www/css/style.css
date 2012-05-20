@@ -222,7 +222,7 @@ img {
 #HeaderTopMenuUL {
 	position:absolute;
 	bottom:-5px;
-	left:20px;
+	left:0px;
 	margin:0;
 	padding:0;
 	list-style:none;
@@ -407,12 +407,14 @@ img {
 .MainForumsTable {
 	width:100%;
 	/* border:1px solid #BCD0ED; */
-	border:1px solid #a9b4c8;
+	/* border:1px solid #a9b4c8; */
+	border:1px solid #8394B2;
 }
 
 .MainForumsTable .AdminShowFirst {
 	border-top:1px solid #FFFFFF;
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#CFDAE7;
 	text-align:center;
 	vertical-align:middle;
 }
@@ -420,7 +422,8 @@ img {
 	border-top:1px solid #FFFFFF;
 	border-left:1px solid #FFFFFF;
 	border-right:1px solid #FFFFFF;
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+	background:#CFDAE7;
 	text-align:center;
 	vertical-align:middle;
 }
@@ -432,7 +435,7 @@ img {
 	color:#FFFFFF;
 	font-weight:bold;
 	padding:5px;
-	font-size:14px;
+	font-size:13px;
 }
 .MainColumnName span {
 	padding-left:7px;
@@ -509,7 +512,7 @@ img {
 .ForumNameTD .ForumNameDiv{
 	font-weight:bold;
 	/* font-size:13px; */
-	font-size:14px;
+	font-size:13px;
 	padding:0;
 	margin:0;
 }
@@ -707,7 +710,7 @@ img {
 	color:#AA0000;
 	font-weight:normal;
 }
-.ForumsTableBottom {
+.ForumsTableBottom, .ForumsTablePreBottom {
 	padding:0;
 	background:#FFFFFF;
 	border-top:1px solid #FFFFFF;
@@ -719,6 +722,15 @@ img {
 	width:100%;
 	height:4px;
 	background:#8394B2;
+}
+.ForumsTablePreBottom {
+	border-left:0px solid #FFFFFF;
+	border-right:0px solid #FFFFFF;
+}
+.ForumsTablePreBottom div {
+	width:100%;
+	height:24px;
+	background:#D6DEEA url(../images/tile_sub.gif) repeat-x top left;
 }
 
 .ForumStatTD {
@@ -1104,7 +1116,7 @@ img {
 	border-right:1px solid #FFFFFF;
 }
 .PostsTable {
-	border:1px solid #a9b4c8;
+	/* border:1px solid #a9b4c8; */
 }
 
 .AddThemePost {
@@ -1204,7 +1216,8 @@ img {
 .FormsTable .FormTitleTD {
 	border-left:1px solid #ffffff;
 	border-top:0px solid #ffffff;
-	background:#E4EAF2;
+	/* background:#E4EAF2; */
+	background:#D9E0EA;
 	padding:5px;
 	vertical-align:top;
 }
@@ -1252,12 +1265,13 @@ img {
 	border-right:1px solid #ffffff;
 	border-left:1px solid #ffffff;
 	border-top:0px solid #ffffff;
-	background:#E4EAF2;
+	/* background:#E4EAF2; */
+	background:#D9E0EA;
 	padding:5px;
 	vertical-align:middle;
 }
 .FormsTable .AdditionalTD {
-	background:#E4EAF2;
+	background:#D9E0EA;
 }
 .FormsTable .CenterTD {
 	background:#D1DCEB;
