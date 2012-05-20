@@ -98,6 +98,16 @@ function hideCharterForums (Class, ImgPath, ImageID) {
 	}
 }
 
+function hideCharterForums2 (Class, ImgPath, ImageID) {
+	$('.'+Class).toggle();
+	if ($('.'+Class).css('display') == 'none') {
+		$('#'+ImageID).attr('src', ImgPath+'/cat_maximize.gif');
+	}
+	else {
+		$('#'+ImageID).attr('src', ImgPath+'/cat_minimize.gif');
+	}
+}
+
 function mousehoverBBEditorButton (object) {
 	$(object).css('cursor', 'pointer');
 	$(object).css('background-color', '#E4E8DC');
