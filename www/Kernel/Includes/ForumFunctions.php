@@ -1211,7 +1211,7 @@ function Echo_Navigation ($NavigArray) {
 			$ClassA  = '';
 		}
 		if ($Value[0] <> '') {
-			$HrefStart = '<a' . $ClassA . ' title="' . $Value[1] . '" href=\'' . Defence_HTMLSpecials ($Value[0]) . '\'>';
+			$HrefStart = '<a' . $ClassA . ' title="' . Defence_HTMLSpecials($Value[1]) . '" href=\'' . Defence_HTMLSpecials ($Value[0]) . '\'>';
 			$HrefEnd   = '</a>';
 		}
 		else {
@@ -1219,7 +1219,7 @@ function Echo_Navigation ($NavigArray) {
 			$HrefEnd   = '';
 		}
 
-		$NavArray[] = '<li' . $ClassLi . '>' . $HrefStart . $Value[1] . $HrefEnd . '</li>';
+		$NavArray[] = '<li' . $ClassLi . '>' . $HrefStart . Defence_HTMLSpecials ($Value[1]) . $HrefEnd . '</li>';
 		$Logical = TRUE;
 	}
 	$Return = implode ('<li class="DividerLI"><img alt=">" src="' . OBB_IMAGE_DIR . '/home.gif" height="16" width="16" /></li>', $NavArray);
@@ -1371,7 +1371,7 @@ function Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title, $DelimiterDivNam
 	$Return .= "\r\n";
 
 	//  --Заголовок
-	$Return .= "\t".'<title>' . $Title . '</title>';
+	$Return .= "\t".'<title>' . Defence_HTMLSpecials ($Title) . '</title>';
 	$Return .= "\r\n";
 
 	//Важные заголовки
