@@ -769,7 +769,8 @@ img {
 }
 
 .PostsUserName, .PostsDateLink{
-	background:#DFE6EF;
+	/* background:#DFE6EF; */
+    background:#D9E0EA;
 	border-top:1px solid #FFFFFF;
 	border-left:1px solid #FFFFFF;
 	color:#222222;
@@ -811,7 +812,7 @@ img {
 .PostsDateLink .PostDate {
 	margin:0 0 0 7px;
 	float:left;
-	background:#DFE6EF url("../images/post_date.png") no-repeat left center;
+	background:#D9E0EA url("../images/post_date.png") no-repeat left center;
 	padding:0 0 0 17px;
 	color:#222222;
 	font-size:12px;
@@ -1745,9 +1746,9 @@ img {
 
 #BBEditor_Container #BBEditor_Smiles {
 	background:#E4EAF2;
-	border:1px solid #E4EAF2;
+	border:1px solid #62A3DB;
 	width:75%;
-	padding:0;
+	padding:5px;
 	margin:5px 0;
 }
 #BBEditor_Container img {
