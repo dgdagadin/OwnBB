@@ -31,7 +31,7 @@ img {
 	border:1px solid #9A1600;
 }
 .MessageContainer {
-	width:50%;
+	width:75%;
 	color:#000;
 	font-weight:bold;
 	margin:100px auto 0;
@@ -89,6 +89,7 @@ img {
 .MessageData a {
 	color:#222222;
 	text-decoration:underline;
+    font-weight:normal !important;
 }
 .MessageData a:hover {
 	color:#AA0000;
