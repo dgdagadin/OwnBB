@@ -1374,8 +1374,8 @@ else {
 							</td>
 						</tr>
 						<tr>
-							<td class="ForumsTableBottom" colspan="1">
-								<div><!-- --></div>
+							<td class="ForumsTablePreBottom" colspan="1">
+								<div style="height:10px;"><!-- --></div>
 							</td>
 						</tr>
 					</table>';
