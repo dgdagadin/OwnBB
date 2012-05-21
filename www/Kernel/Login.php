@@ -324,7 +324,7 @@ $MainOutput .= '<table style="width:100%;" class="MainForumsTable" cellpadding="
 												<a href="' . $SelfName . '?action=registration">' . $ForumLang['AuthRegistration'] . '</a>&nbsp;|&nbsp;<a href="' . $SelfName . '?action=forgot">' . $ForumLang['AuthForgotten'] . '</a>
 											</div>
 											<div class="AuthRemember">
-												<input type="checkbox" name="RememberMe" />&nbsp;&nbsp;' . $ForumLang['AuthRemember'] . '
+												<input id="Label_RememberMe" type="checkbox" name="RememberMe" />&nbsp;&nbsp;<label for="Label_RememberMe">' . $ForumLang['AuthRemember'] . '</label>
 											</div>
 										</td>
 									</tr>

@@ -895,8 +895,8 @@ switch ($Label) {
 		//важная ли тема
 		if ($_SESSION['UserData']['UserType'] == 'admin' && OBB_SHOW_ADMIN_ELEMENTS && !$IsPostAdding) {
 			$ThemeIsImportant = '<div>
-									<input class="InpCheckbox" type="checkbox"' . $CheckedThemeIsImportant . ' name="ThemeIsImportant" />
-									<span class="Usual">' . $ForumLang['AddThemeIsImportant'] . '</span>
+									<input id="Label_ThemeIsImportant" class="InpCheckbox" type="checkbox"' . $CheckedThemeIsImportant . ' name="ThemeIsImportant" />
+									<span class="Usual"><label for="Label_ThemeIsImportant">' . $ForumLang['AddThemeIsImportant'] . '</label></span>
 								</div>';
 
 		}
@@ -1083,8 +1083,8 @@ switch ($Label) {
 												</td>
 												<td class="FormInputTD">
 													<div>
-														<input class="InpCheckbox" type="checkbox"' . $CheckedAllowSm . ' name="AllowSmiles" />
-														<span class="Usual">' . $ForumLang['AddAllowSmiles'] . '</span>
+														<input id="Label_AllowSmiles" class="InpCheckbox" type="checkbox"' . $CheckedAllowSm . ' name="AllowSmiles" />
+														<span class="Usual"><label for="Label_AllowSmiles">' . $ForumLang['AddAllowSmiles'] . '</label></span>
 													</div>
 													' . $ThemeIsImportant . '
 													<div style="height:15px;"><!-- --></div>
@@ -1728,16 +1728,16 @@ switch ($Label) {
 												</div>
 												<div>
 													<div class="RadioClass">
-														<span><input class="RadioButtonClass" type="radio" checked="checked" name="AttachAction" value="Save" /></span>
-														<span>' . $ForumLang['AddAttachSave'] . '</span>
+														<span><input id="Label_AttachActionSave" class="RadioButtonClass" type="radio" checked="checked" name="AttachAction" value="Save" /></span>
+														<span><label for="Label_AttachActionSave">' . $ForumLang['AddAttachSave'] . '</label></span>
 													</div>
 													<div class="RadioClass">
-														<span><input class="RadioButtonClass" type="radio" name="AttachAction" value="Delete" /></span>
-														<span>' . $ForumLang['AddAttachDelete'] . '</span>
+														<span><input id="Label_AttachActionDelete" class="RadioButtonClass" type="radio" name="AttachAction" value="Delete" /></span>
+														<span><label for="Label_AttachActionDelete">' . $ForumLang['AddAttachDelete'] . '</label></span>
 													</div>
 													<div class="RadioClass">
-														<span><input class="RadioButtonClass" type="radio" name="AttachAction" value="Replace" /></span>
-														<span>' . $ForumLang['AddAttachReplace'] . '</span>
+														<span><input id="Label_AttachActionReplace" class="RadioButtonClass" type="radio" name="AttachAction" value="Replace" /></span>
+														<span><label for="Label_AttachActionReplace">' . $ForumLang['AddAttachReplace'] . '</label></span>
 													</div>
 												</div>
 											</div>
@@ -1831,8 +1831,8 @@ switch ($Label) {
 												</td>
 												<td class="FormInputTD">
 													<div>
-														<input class="InpCheckbox" type="checkbox" ' . $CheckedAllowSm . ' name="AllowSmiles" />
-														<span class="Usual">' . $ForumLang['AddAllowSmiles'] . '</span>
+														<input id="Label_AllowSmiles" class="InpCheckbox" type="checkbox" ' . $CheckedAllowSm . ' name="AllowSmiles" />
+														<span class="Usual"><label for="Label_AllowSmiles">' . $ForumLang['AddAllowSmiles'] . '</label></span>
 													</div>
 													<div style="height:15px;"><!-- --></div>
 												</td>

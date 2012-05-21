@@ -881,7 +881,7 @@ if ($CanEditProfile) {
 											<img alt="" title="" src="' . OBB_AVATAR_DIR . '/' . $UserID . '.' . (string)$ProfileAvatar . '" />
 										</div>
 										<div style="margin-top:5px; margin-bottom:19px;">
-											<span class="AttachInfo">' . $AvatarSizeString . ',&nbsp;' . $AvatarGabaritsString . '</span><span style="margin-left:17px;"><input type="checkbox" name="ProfileNoUseAvatar" /></span><span>' . $ForumLang['UserProfileAvatarDel'] . '</span>
+											<span class="AttachInfo">' . $AvatarSizeString . ',&nbsp;' . $AvatarGabaritsString . '</span><span style="margin-left:17px;"><input id="Label_ProfileNoUseAvatar" type="checkbox" name="ProfileNoUseAvatar" /></span><label for="Label_ProfileNoUseAvatar">' . $ForumLang['UserProfileAvatarDel'] . '</label>
 										</div>
 									</div>';
 		}
@@ -989,9 +989,9 @@ if ($CanEditProfile) {
 												</div>
 											</td>
 											<td style="padding-bottom:12px;" class="FormInputTD">
-												<input type="radio"' . $MaleChecked   . ' name="ProfileSex" value="male" />&nbsp;' . $ForumLang['UserProfileMale'] . '
+												<input id="Label_ProfileSexMale" type="radio"' . $MaleChecked   . ' name="ProfileSex" value="male" />&nbsp;<label for="Label_ProfileSexMale">' . $ForumLang['UserProfileMale'] . '</label>
 												&nbsp;
-												<input type="radio"' . $FemaleChecked . ' name="ProfileSex" value="female" />&nbsp;' . $ForumLang['UserProfileFemale'] . '
+												<input id="Label_ProfileSexFemale" type="radio"' . $FemaleChecked . ' name="ProfileSex" value="female" />&nbsp;<label for="Label_ProfileSexFemale">' . $ForumLang['UserProfileFemale'] . '</label>
 											</td>
 										</tr>
 										<tr class="ProfilePersonalsClassHide">
@@ -1071,7 +1071,7 @@ if ($CanEditProfile) {
 											<td style="border-top:1px solid #FFFFFF; padding-bottom:7px;" class="FormInputTD">
 												<input style="width:280px;" class="InpEl InpText" id="ProfileMail" type="text" name="ProfileMail" maxlength="' . OBB_MAX_MAIL_LENGTH . '" value="' . Defence_HTMLSpecials ($ProfileMailVar) . '" />
 												&nbsp;&nbsp;
-												<input' . $HidChecked . ' type="checkbox" name="ProfileHidMail" />' . $ForumLang['UserProfileHidden'] . '
+												<input id="Label_ProfileHidMail"' . $HidChecked . ' type="checkbox" name="ProfileHidMail" /><label for="Label_ProfileHidMail">' . $ForumLang['UserProfileHidden'] . '</label>
 											</td>
 										</tr>
 										<tr class="ProfileContactsClassHide">
@@ -1111,8 +1111,8 @@ if ($CanEditProfile) {
 												</div>
 											</td>
 											<td style="padding-top:10px; padding-bottom:14px;" class="FormInputTD">
-												<input' . $AdmMailCheck . ' type="checkbox" name="ProfileAdmMail" />'  . $ForumLang['UserProfileAdmMail'] . '<br />
-												<input' . $OthMailCheck . ' type="checkbox" name="ProfileOthMail" />'  . $ForumLang['UserProfileOthMail'] . '<br />
+												<input id="Label_ProfileAdmMail"' . $AdmMailCheck . ' type="checkbox" name="ProfileAdmMail" /><label for="Label_ProfileAdmMail">'  . $ForumLang['UserProfileAdmMail'] . '</label><br />
+												<input id="Label_ProfileOthMail"' . $OthMailCheck . ' type="checkbox" name="ProfileOthMail" /><label for="Label_ProfileOthMail">'  . $ForumLang['UserProfileOthMail'] . '</label><br />
 											</td>
 										</tr>
 										' . $AvatarFullBlock . '

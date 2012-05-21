@@ -1111,8 +1111,8 @@ else {
 									</div>
 								</td>
 								<td style="border-bottom:1px solid #FFF; vertical-align:top; padding-bottom:28px;" class="FormInputTD">
-									<input' . $SearchHighlightVal . ' type="checkbox" name="SearchHighlight" />
-									<span class="Usual">' . $ForumLang['SearchHighlight'] . '</span>
+									<input id="Label_SearchHighlight"' . $SearchHighlightVal . ' type="checkbox" name="SearchHighlight" />
+									<span class="Usual"><label for="Label_SearchHighlight">' . $ForumLang['SearchHighlight'] . '</label></span>
 								</td>
 							</tr>';
 		$SortHowPaddingTD  = '';
@@ -1254,7 +1254,7 @@ else {
 											</td>
 											<td style="padding-top:0 !important;vertical-align:top;" class="FormInputTD">
 												<div style="margin-top:0px; margin-bottom:20px; " class="AuthRemember">
-													<input' . $SearchFullUserValue . ' type="checkbox" name="SearchFullUser" />&nbsp;&nbsp;' . $ForumLang['SearchFullUserLogin'] . '
+													<input id="Label_SearchFullUser"' . $SearchFullUserValue . ' type="checkbox" name="SearchFullUser" />&nbsp;&nbsp;<label for="Label_SearchFullUser">' . $ForumLang['SearchFullUserLogin'] . '</label>
 												</div>
 											</td>
 										</tr>

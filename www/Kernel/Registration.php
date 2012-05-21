@@ -91,8 +91,8 @@ switch ($RegAction) {
 													<div>
 														<input type="hidden" name="action" value="registration" />
 														<input type="hidden" name="r_stage" value="2" />
-														<input style="padding:0; margin:0;" type="checkbox" name="rules_agreement" />
-														<span style="font-size:13px; color:#000; margin:0 15px 0 1px;">' . $ForumLang['AgreeWithRules'] . '</span>
+														<input id="Label_rules_agreement" style="padding:0; margin:0;" type="checkbox" name="rules_agreement" />
+														<span style="font-size:13px; color:#000; margin:0 15px 0 1px;"><label for="Label_rules_agreement">' . $ForumLang['AgreeWithRules'] . '</label></span>
 														<input class="InpButton" id="RegSubmit" type="submit" value="' . $ForumLang['RegContinue'] . '" />
 													</div>
 												</form>
@@ -754,9 +754,9 @@ switch ($RegAction) {
 													</div>
 												</td>
 												<td style="padding-bottom:14px; padding-bottom" class="FormInputTD">
-													<input type="checkbox" ' . (isset ($_POST['RegHideMail'])  ? 'checked="checked" ' : '') . 'name="RegHideMail" />'  . $ForumLang['RegHideMail']     . '<br />
-													<input type="checkbox" ' . (isset ($_POST['GetAdminMail']) ? 'checked="checked" ' : '') . 'name="GetAdminMail" />' . $ForumLang['RegGetAdminMail'] . '<br />
-													<input type="checkbox" ' . (isset ($_POST['GetUserMail'])  ? 'checked="checked" ' : '') . 'name="GetUserMail" />'  . $ForumLang['RegGetUserMail']  . '
+													<input id="Label_RegHideMail"  type="checkbox" ' . (isset ($_POST['RegHideMail'])  ? 'checked="checked" ' : '') . 'name="RegHideMail" /><label for="Label_RegHideMail">'  . $ForumLang['RegHideMail']     . '</label><br />
+													<input id="Label_GetAdminMail" type="checkbox" ' . (isset ($_POST['GetAdminMail']) ? 'checked="checked" ' : '') . 'name="GetAdminMail" /><label for="Label_GetAdminMail">' . $ForumLang['RegGetAdminMail'] . '</label><br />
+													<input id="Label_GetUserMail"  type="checkbox" ' . (isset ($_POST['GetUserMail'])  ? 'checked="checked" ' : '') . 'name="GetUserMail" /><label for="Label_GetUserMail">'  . $ForumLang['RegGetUserMail']  . '</label>
 												</td>
 											</tr>
 											' . $RegAvatar    . '

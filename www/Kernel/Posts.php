@@ -990,8 +990,8 @@ if (!$ThemeIsBlocked && ($_SESSION['UserData']['UserType'] == 'admin' || (OBB_SH
 												</div>
 											</td>
 											<td class="FormInputTD">
-												<input class="InpCheckbox" type="checkbox" checked="checked" name="AllowSmiles" />
-												<span class="Usual">' . $ForumLang['PostsAllowSmiles'] . '</span>
+												<input id="Label_AllowSmiles" class="InpCheckbox" type="checkbox" checked="checked" name="AllowSmiles" />
+												<span class="Usual"><label for="Label_AllowSmiles">' . $ForumLang['PostsAllowSmiles'] . '</label></span>
 											</td>
 										</tr>
 										' . $CaptchaBlock . '
