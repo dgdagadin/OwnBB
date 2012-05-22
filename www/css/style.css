@@ -1474,13 +1474,20 @@ img {
 }
 .PageTable td {
 	border:1px solid #666666;
-	padding:2px 5px;
+	/* padding:2px 5px; */
 	color:#222222;
 	background:#F0F5FA;
+}
+.PageTable .LinkTD {
+	padding:2px 0;
+}
+.PageTable .NoLinkTD {
+	padding:2px 5px;
 }
 .PageTable a{
 	color:#222222;
 	text-decoration:underline;
+	padding:0 5px;
 }
 .PageTable .PageDottes {
 	border:0;

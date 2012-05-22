@@ -10,7 +10,7 @@ function PL_PageList ($NumPages, $CurrentPage, $Url, $PageVarName, $NumStart, $N
 	$NextCurrentPage  = $CurrentPage + 1;
 	$NextNextCur_Page = $CurrentPage + 2;
 
-	$CurrentPageTD = '<td class="CurrentPage">' . $CurrentPage . '</td>';
+	$CurrentPageTD = '<td class="CurrentPage NoLinkTD">' . $CurrentPage . '</td>';
 	
 	if ($LeftRest < 1) {
 		$LeftPart = "";
@@ -92,7 +92,7 @@ function PL_PageList ($NumPages, $CurrentPage, $Url, $PageVarName, $NumStart, $N
 
 	$Return = '<table class="PageTable" cellspacing="2" cellpadding="0" border="0">
 					<tr>
-						<td class="PageNum">' . $NumPages . ' ' . $ForumLang['Paginator']['Pages'] . '</td>' .$StartPage . $PrevPage . $LeftPart . $CurrentPageTD . $RightPart . $NextPage . $EndPage . '
+						<td class="NoLinkTD">' . $NumPages . ' ' . $ForumLang['Paginator']['Pages'] . '</td>' .$StartPage . $PrevPage . $LeftPart . $CurrentPageTD . $RightPart . $NextPage . $EndPage . '
 					</tr>
 				</table>';
 	return ($Return);
@@ -100,7 +100,7 @@ function PL_PageList ($NumPages, $CurrentPage, $Url, $PageVarName, $NumStart, $N
 
 //возврат ссылок
 function PL_ReturnHref ($Url, $PageVarName, $PageValue, $HrefName, $Title) {
-	$Return = "<td class=\"PageHref\"><a title=\"" . $Title . "\" href='" . Defence_HTMLSpecials ($Url . "&" . $PageVarName . "=" . $PageValue) . "'>" . $HrefName . "</a></td>";
+	$Return = "<td class=\"LinkTD\"><a title=\"" . $Title . "\" href='" . Defence_HTMLSpecials ($Url . "&" . $PageVarName . "=" . $PageValue) . "'>" . $HrefName . "</a></td>";
 	return ($Return);
 }
 
