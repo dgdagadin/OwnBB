@@ -16,12 +16,12 @@ function scrollToTop () {
 }
 
 function findUserThemes () {
-	$('#ProfileSearchMethodIn').val('1');
+	$('#ProfileSearchMethodIn1').val('1');
 	$('#UserSearchFormID').submit();
 }
 
-function findUserPosts () {alert('aaa');
-	$('#ProfileSearchMethodIn').val('2');
+function findUserPosts () {
+	$('#ProfileSearchMethodIn1').val('2');
 	$('#UserSearchFormID').submit();
 }
 
