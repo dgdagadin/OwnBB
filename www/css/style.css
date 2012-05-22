@@ -444,7 +444,7 @@ img {
 	border-collapse:collapse;
 }
 .ForumCharter {
-	background:#D6DEEA url(../images/tile_sub.gif) repeat-x top left;
+	background:#D6DEEA url(../images/tile_sub1.gif) repeat-x top left;
 	padding:5px;
 	color:#3A4F6C;
 	font-size:13px;
@@ -577,16 +577,17 @@ img {
 .ForumNameTD .ThemeADPDDiv .SmallLink {
 	border:1px solid #C2CFDF;
 	margin:0 1px 0 0;
-	padding:1px 4px;
+	padding:1px 0px;
 	font-size:11px;
 	background:#F0F5FA;
 }
 .ForumNameTD .ThemeADPDDiv .SmallLink a {
+    padding:0 5px;
 	color:#222222;
 	text-decoration:none;
 }
 .ForumNameTD .ThemeADPDDiv .SmallLink a:hover {
-	color:#2a567b;
+	color:#AA0000;
 }
 .ForumNameTD .ThemeADPDDiv .CreateAcr{
 	text-transform:lowercase;
@@ -730,7 +731,7 @@ img {
 .ForumsTablePreBottom div {
 	width:100%;
 	height:24px;
-	background:#D6DEEA url(../images/tile_sub.gif) repeat-x top left;
+	background:#D6DEEA url(../images/tile_sub1.gif) repeat-x top left;
 }
 
 .ForumStatTD {
