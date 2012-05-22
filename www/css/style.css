@@ -1753,8 +1753,8 @@ img {
 }
 
 #BBEditor_Container #BBEditor_Smiles {
-	background:#E4EAF2;
-	border:1px solid #62A3DB;
+	background:#DFE6EF;
+	border:none;
 	width:75%;
 	padding:5px;
 	margin:5px 0;
