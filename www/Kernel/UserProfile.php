@@ -527,7 +527,7 @@ if (isset ($_POST['EditProfile']) && $CanEditProfile) {
 }
 
 //Формируем массив главной навигации
-$IsYourProfile = $ProfileOwner ? '&nbsp;(' . $ForumLang['UserProfileYourOwnProfile'] . ')' : '';
+$IsYourProfile = $ProfileOwner ? ' (' . $ForumLang['UserProfileYourOwnProfile'] . ')' : '';
 $NavigProfile = $ForumLang['UserProfileTitle'] . ' \'' . Defence_HTMLSpecials ($ProfileLogin) . '\'' . $IsYourProfile;
 $NavigUsers   = $ForumLang['UserProfileUsers'];
 $NavigArray = array (
@@ -702,92 +702,101 @@ else {
 $UserActivity  = '<img style="vertical-align:middle;" class="OnlineImg" title="' . $OnlineStatus . '" alt="" src="' . OBB_IMAGE_DIR . '/' . $Image . '.png" />';
 $UserActivity .= '&nbsp;<span style="font-weight:normal !important;" class="OnlineActivity">' . $ActionString . '</span>';
 
+if ($CanEditProfile) {
+	$CommonBlockDisplay = ' style="display:none;"';
+	$CommonBlockIcon    = 'expand';
+}
+else {
+	$CommonBlockDisplay = '';
+	$CommonBlockIcon    = 'collapse';
+}
+
 //  --output
 $CommonUserInfo = '<tr>
 						<td style="width:200px;" class="ForumCharter">
 							<span class="ThemesTitle">' . $ForumLang['UserProfileStatistics'] . '</span>
 						</td>
 						<td style=" text-align:right; vertical-align:middle;" class="ForumCharter">
-							<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileCommonClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileCommonImgID\');"><img id="ProfileCommonImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/collapse.gif" /></a>
+							<a href="javascript:void(0);" onclick="javascript:hideCharterForums(\'ProfileCommonClassHide\',\'' . OBB_IMAGE_DIR . '\',\'ProfileCommonImgID\');"><img id="ProfileCommonImgID" alt="" title="" src="' . OBB_IMAGE_DIR . '/' . $CommonBlockIcon . '.gif" /></a>
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; border-top:1px solid #FFFFFF; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; border-top:1px solid #FFFFFF; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileLogin'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top; border-top:1px solid #FFFFFF;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top; border-top:1px solid #FFFFFF;" class="FormInputTD">
 							' . Defence_HTMLSpecials ($ProfileLogin) . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:12px; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileGroup'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:13px; vertical-align:top;" class="FormInputTD">
 							' . $StatisticsGroup . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileRegDate'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top;" class="FormInputTD">
 							' . $StatisticsReg . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileNumber'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top;" class="FormInputTD">
 							' . $StatisticsNum . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileThemes'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top;" class="FormInputTD">
 							<span>' . $StatisticsThemes . '</span>&nbsp;' . $ShowAllThemes . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:top; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:top; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfilePosts'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top;" class="FormInputTD">
 							<span>' . $StatisticsPosts . '</span>&nbsp;' . $ShowAllPosts . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:6px; vertical-align:middle; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:14px; vertical-align:middle; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileStatus'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:7px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:15px; vertical-align:top;" class="FormInputTD">
 							' . $StatisticsStat . '
 						</td>
 					</tr>
-					<tr class="ProfileCommonClassHide">
-						<td style="padding-top:6px; padding-bottom:14px; vertical-align:middle; width:200px;" class="FormTitleTD">
+					<tr class="ProfileCommonClassHide"' . $CommonBlockDisplay . '>
+						<td style="padding-top:6px; padding-bottom:16px; vertical-align:middle; width:200px;" class="FormTitleTD">
 							<div class="InputTitle">
 								' . $ForumLang['UserProfileActivity'] . '
 							</div>
 						</td>
-						<td style="padding-bottom:14px; vertical-align:top;" class="FormInputTD">
+						<td style="padding-bottom:16px; vertical-align:top;" class="FormInputTD">
 							' . $UserActivity . '
 						</td>
 					</tr>';
@@ -904,7 +913,7 @@ if ($CanEditProfile) {
 									</div>
 								</td>
 								<td style="border-top:1px solid #FFF; padding-bottom:7px;" class="FormInputTD">
-									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
+									<div style="margin-bottom:10px; border:none; background:#DFE6EF;" class="MainBlockAttach">
 										' . $CurrentAvatarBlock . '
 										<div class="AttachAddAction">
 											<strong>' . $ForumLang['UserProfileAvatarNew'] . '</strong>
@@ -1230,7 +1239,7 @@ else {
 									</div>
 								</td>
 								<td style="border-top:1px solid #FFF; padding-bottom:7px; padding-top:0;" class="FormInputTD">
-									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
+									<div style="margin-bottom:10px; border:none; background:#DFE6EF;" class="MainBlockAttach">
 										' . $CurrentAvatar . '
 									</div>
 								</td>
