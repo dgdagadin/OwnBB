@@ -397,7 +397,7 @@ $MainOutput .= ' <table class="MainForumsTable" cellpadding="0" cellspacing="0" 
 						<td class="ForumCharter"  style="text-align:center; border-top:1px solid #FFFFFF; width:50px;">
 							<span class="ThemesTitle">' . $ForumLang['UserlistMainMail'] . '</span>
 						</td>
-						<td class="ForumCharter"  style="border-top:1px solid #FFFFFF;">
+						<td class="ForumCharter"  style="border-top:1px solid #FFFFFF; width:330px;">
 							<span class="ThemesTitle">&nbsp;&nbsp;&nbsp;' . $ForumLang['UserlistMainStatus'] . '</span>
 						</td>
 						' . $UserListAdminHeaders . '
@@ -581,22 +581,22 @@ if ($NumUsers > 0) {
 
 		//обобщение
 		$MainOutput .= '<tr>
-							<td style="padding:5px 5px; vertical-align:middle;" class="ForumNameTD ThemeNameTD">
+							<td style="background:#CFDAE7 !important; padding:5px 5px; vertical-align:middle;" class="ForumNameTD ThemeNameTD">
 								' . $LoginSex     . '
 							</td>
-							<td style="padding:5px 2px; border-right:0; text-align:center; vertical-align:middle;" class="ForumUpdateTD">
+							<td style="background:#D9E0EA !important; padding:5px 2px; border-right:0; text-align:center; vertical-align:middle;" class="ForumUpdateTD">
 								' . $RegDate      . '
 							</td>
-							<td style="padding:5px 5px; vertical-align:middle;" class="ForumNumThemesTD">
+							<td style="background:#D9E0EA !important; padding:5px 5px; vertical-align:middle;" class="ForumNumThemesTD">
 								' . $UNumPosts    . '
 							</td>
-							<td style="padding:5px 5px; text-align:left; vertical-align:middle;" class="ForumNumThemesTD">
+							<td style="background:#D9E0EA !important; padding:5px 5px; text-align:left; vertical-align:middle;" class="ForumNumThemesTD">
 								' . $UserGroup    . '
 							</td>
-							<td style="padding:5px 5px; text-align:center; vertical-align:middle;" class="ForumNumThemesTD">
+							<td style="background:#D9E0EA !important; padding:5px 5px; text-align:center; vertical-align:middle;" class="ForumNumThemesTD">
 								' . $UMailString  . '
 							</td>
-							<td style="border-right:1px solid #FFF; padding:5px 5px;" class="ForumNameTD ThemeNameTD">
+							<td style="background:#CFDAE7 !important; border-right:1px solid #FFF; padding:5px 5px;" class="ForumNameTD ThemeNameTD">
 								' . $UserActivity . '
 							</td>
 							' . $AdminUserListPanel . '
@@ -612,8 +612,8 @@ else {
 }
 
 	$MainOutput .= '	<tr>
-							<td class="ForumsTableBottom" colspan="' . $Colspan . '">
-								<div><!-- --></div>
+							<td class="ForumsTablePreBottom" colspan="' . $Colspan . '">
+								<div style="height:10px;"><!-- --></div>
 							</td>
 						</tr>
 					</table>';
