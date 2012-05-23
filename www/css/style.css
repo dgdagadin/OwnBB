@@ -1131,13 +1131,14 @@ img {
 	font-size:14px;
 	font-weight:bold;
 }
+.AddThemePost:hover {
+	cursor:pointer;
+}
 .AddThemePost  a{
 	color:#FFFFFF;
 	text-decoration:none;
 }
-.AddThemePost  a:hover{
-	text-decoration:underline;
-}
+
 .AddTheme {
 	width:125px;
 }

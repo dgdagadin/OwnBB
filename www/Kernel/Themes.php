@@ -96,7 +96,7 @@ $NewBlockButton = '<div class="BlockThemePost BlockTheme">
 
 $URL = $SelfName . '?action=add&label=theme&id_forum=' . $IdForum;
 $URL = Defence_HTMLSpecials ($URL);
-$NewThemeButton = '<div class="AddThemePost AddTheme">
+$NewThemeButton = '<div onclick="javascript:location.href=\'' . $URL . '\';" class="AddThemePost AddTheme">
 						<div class="AddThemeIcon">
 							<a href="' . $URL . '">
 								<span>' . $ForumLang['ThemesAddTheme'] . '</span>

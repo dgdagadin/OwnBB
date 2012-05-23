@@ -156,7 +156,7 @@ $NewBlckButton = ' <div class="BlockThemePost BlockTheme">
 
 $URL = $SelfName . '?action=add&label=theme&id_forum=' . $IdForum;
 $URL = Defence_HTMLSpecials ($URL);
-$NewThmButton = '  <div style="float:right;" class="AddThemePost AddTheme">
+$NewThmButton = '  <div onclick="javascript:location.href=\'' . $URL . '\';" style="float:right;" class="AddThemePost AddTheme">
 						<div class="AddThemeIcon">
 							<a href="' . $URL . '">
 								<span>' . $ForumLang['PostsAddTheme'] . '</span>
@@ -187,7 +187,7 @@ $BlockAnswerButton = '<div style="float:right;" class="BlockThemePost BlockPost"
 
 $AnswerURL = $SelfName . '?action=add&label=add&id_forum=' . $IdForum . '&id_theme=' . $IdTheme;
 $AnswerURL = Defence_HTMLSpecials ($AnswerURL);
-$NewAnswerButton = '<div style="float:right;" class="AddThemePost AddPost">
+$NewAnswerButton = '<div onclick="javascript:location.href=\'' . $AnswerURL . '\';" style="float:right;" class="AddThemePost AddPost">
 						<div class="AddPostIcon">
 							<a href="' . $AnswerURL . '">
 								<span>' . $ForumLang['PostsAddPost'] . '</span>
