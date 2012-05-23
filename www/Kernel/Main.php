@@ -222,7 +222,12 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 				if ($ForumValue['NumP'] > '0' && $ForumValue['NumTh'] > '0') {
 					//6.1 Время обновления
 					if ($LastUpDate <> '') {
-						$UpdateTimeConvert = Main_ConvertDate ($LastUpDate, $ForumLang['DateArray']);
+						//$UpdateTimeConvert = Main_ConvertDate ($LastUpDate, $ForumLang['DateArray']);
+						$UpdateDay = date('l', $LastUpDate);
+						$UpdateDay = $ForumLang['DateArray'][$UpdateDay];
+						$UpdateTime = date('d.m.Y, H:i', $LastUpDate);
+						$UpdateTimeTitle = $UpdateDay . ', ' . $UpdateTime;
+						$UpdateTimeConvert = $UpdateDay . ', <strong>' . $UpdateTime . '</strong>';
 						$UpdateTime = '<div class="UpdateTime">
 											<acronym class="UpdateAcr" title="' . $UpdateTimeConvert . '">' . $UpdateTimeConvert . '</acronym>
 										</div>';
