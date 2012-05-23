@@ -1919,6 +1919,12 @@ function Echo_BBEditor ($Parameters) {
 					$Title   = 'List';
 					break;
 				}
+				case'listitem': {
+					$Onclick = 'addTagListItem(\'' . $FormID . '\', \'' . $TextareaID . '\')';
+					$Source  = 'listitem';
+					$Title   = 'ListItem';
+					break;
+				}
 				case'url': {
 					$Onclick = 'addTagURL(\'' . $FormID . '\', \'' . $TextareaID . '\')';
 					$Source  = 'url';

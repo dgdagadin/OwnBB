@@ -938,6 +938,7 @@ if (!$ThemeIsBlocked && ($_SESSION['UserData']['UserType'] == 'admin' || (OBB_SH
 									array ('BBType'=>'simple', 'BBSubType'=>'url'),
 									array ('BBType'=>'simple', 'BBSubType'=>'img'),
 									array ('BBType'=>'simple', 'BBSubType'=>'list'),
+									array ('BBType'=>'simple', 'BBSubType'=>'listitem'),
 									array ('BBType'=>'simple', 'BBSubType'=>'smile'),
 									array ('BBType'=>'simple', 'BBSubType'=>'color')
 								),

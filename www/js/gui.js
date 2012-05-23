@@ -49,6 +49,10 @@ function addTagList (FormName, InputName) {
 	bbfontstyle('[list][*]', '[/list]', FormName, InputName);
 }
 
+function addTagListItem (FormName, InputName) {
+	bbfontstyle('[*]', '', FormName, InputName);
+}
+
 function addTagImg (FormName, InputName) {
 	bbfontstyle('[img]', '[/img]', FormName, InputName);
 }

@@ -260,6 +260,7 @@ $ForumLang['BBEditor']['Strike'] = 'Перечеркнутый';
 $ForumLang['BBEditor']['Code'] = 'Исходный код';
 $ForumLang['BBEditor']['Quote'] = 'Цитата';
 $ForumLang['BBEditor']['List'] = 'Список';
+$ForumLang['BBEditor']['ListItem'] = 'Элмент списка';
 $ForumLang['BBEditor']['Url'] = 'Вставить ссылку';
 $ForumLang['BBEditor']['Img'] = 'Вставить изображение';
 $ForumLang['BBEditor']['Smile'] = 'Смайлы';
