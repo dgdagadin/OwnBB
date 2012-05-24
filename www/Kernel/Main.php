@@ -229,7 +229,7 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 						$UpdateTimeTitle = $UpdateDay . ', ' . $UpdateTime;
 						$UpdateTimeConvert = $UpdateDay . ', <strong>' . $UpdateTime . '</strong>';
 						$UpdateTime = '<div class="UpdateTime">
-											<acronym class="UpdateAcr" title="' . $UpdateTimeConvert . '">' . $UpdateTimeConvert . '</acronym>
+											<acronym class="UpdateAcr" title="' . $UpdateTimeTitle . '">' . $UpdateTimeConvert . '</acronym>
 										</div>';
 					}
 					else {
@@ -296,10 +296,10 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 										<td class="ForumIconTD" style="width:40px;">
 											' . $ForumIcon . '
 										</td>
-										<td class="ForumNameTD InForumList">
+										<td style="background:#DFE6EF !important;" class="ForumNameTD InForumList">
 											' . $ForumName . '
 										</td>
-										<td style="width:26px;" class="RSSIconTD">
+										<td style="background:#DFE6EF !important; width:26px;" class="RSSIconTD">
 											<!--' . $RSSIcon . '-->
 										</td>
 										<td class="ForumNumThemesTD">' . $NumTh . '</td>

@@ -757,6 +757,31 @@ INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':(', 'frown.gif'
 INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':D', 'bigsmile.gif', 'восторг');
 INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('>:(', 'angry.gif', 'злость');
 INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('>;)', 'sneaky.gif', 'сник');
+
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('^_^', 'anime.gif', 'аниме');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('8-)', 'bigeyes.gif', 'большие глаза');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (';-D', 'bigwink.gif', 'подмигивает');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':blue:', 'blue.gif', 'синий');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('O.o', 'boggle.gif', 'сильно удивлен');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-?', 'confuse.gif', 'сконфужен');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('B-)', 'cool.gif', 'отлично');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('>:-)', 'evil.gif', 'бес');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('<3', 'heart.gif', 'сердце');
+--INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-\\', 'irritated.gif', 'раздраженный');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('X-D', 'laugh.gif', 'смех');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('<.<', 'lookleft.gif', 'глянуть влево');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('>.>', 'lookright.gif', 'глянуть вправо');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-|', 'neutral.gif', 'все равно');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('O:-)', 'saint.gif', 'святой');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':zzz:', 'sleepy.gif', 'сон');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-3', 'smile3.gif', 'странная улыбка');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':star:', 'star.gif', 'звезда');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-O', 'surprise.gif', 'сюрприз');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('^^;', 'sweatdrop.gif', 'слезы счастья');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES ('<G>', 'teeth.gif', 'зубы');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (';-3', 'wink3.gif', 'подмигивает');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (';-)', 'wink.gif', 'подмигивает');
+INSERT INTO smiles (SmileChars, SmileImage, SmileName) VALUES (':-S', 'worry.gif', 'тревога');
 -------------------------------
 
 --Триггер обновления статистики сообщений в темах и форумах - при добавлении поста
