@@ -997,7 +997,7 @@ if (!$ThemeIsBlocked && ($_SESSION['UserData']['UserType'] == 'admin' || (OBB_SH
 										</tr>
 										' . $CaptchaBlock . '
 										<tr>
-											<td colspan="2" class="FormInputTD AdditionalTD">
+											<td style="border-top:1px solid #FFFFFF;" colspan="2" class="FormInputTD AdditionalTD">
 												<span class="Important">*</span> - ' . $ForumLang['PostsImportantFields'] . '
 											</td>
 										</tr>

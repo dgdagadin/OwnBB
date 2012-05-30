@@ -250,8 +250,8 @@ $OnlineChecked = $FilterUserOnline == 'yes' ? ' checked="checked"' : '';
 if ($_SESSION['UserData']['UserType'] == 'admin') {
 	$ActivatedChecked = isset ($_GET['user_act']) ? ' checked="checked"' : '';
 	$OnlyActivatedFlag = '  <div>
-								<input' . $ActivatedChecked . ' type="checkbox" name="user_act" />
-								<span class="Usual">' . $ForumLang['UserlistFilterActivated'] . '</span>
+								<input id="Labels_user_act"' . $ActivatedChecked . ' type="checkbox" name="user_act" />
+								<span class="Usual"><label for="Labels_user_act">' . $ForumLang['UserlistFilterActivated'] . '</label></span>
 							</div>';
 
 	if (isset ($_GET['user_act'])) {
@@ -304,8 +304,8 @@ $FilterForm = '<table style="width:100%;" class="MainForumsTable" cellpadding="0
 										</td>
 										<td class="FormInputTD">
 											<div>
-												<input' . $OnlineChecked . ' type="checkbox" name="user_online" />
-												<span class="Usual">' . $ForumLang['UserlistFilterOnline'] . '</span>
+												<input id="Labels_user_online"' . $OnlineChecked . ' type="checkbox" name="user_online" />
+												<span class="Usual"><label for="Labels_user_online">' . $ForumLang['UserlistFilterOnline'] . '</label></span>
 											</div>
 											' . $OnlyActivatedFlag . '
 										</td>

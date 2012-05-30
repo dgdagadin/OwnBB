@@ -21,11 +21,11 @@ $Config_GuestGroupID = 3; //Идентификатор гостевой груп
 define ('OBB_CONNECTION_HOST', 'localhost'); //Сервер БД
 define ('OBB_CONNECTION_USER', 'root'); //Пользователь БД
 define ('OBB_CONNECTION_PASSWORD', 'root'); //Пароль БД
-define ('OBB_CONNECTION_DB', 'large_forum'); //Название БД
+define ('OBB_CONNECTION_DB', 'ownbb'); //Название БД
 //Конец данных о соединении
 
 //Пути
-define ('OBB_ROOT_DIR', 'own_bb'); //Корневая директория форума
+define ('OBB_ROOT_DIR', ''); //Корневая директория форума
 define ('OBB_FORUM_KERNEL_DIR', 'Kernel');//Папка с исполняемыми файлами
 define ('OBB_KERNEL_DIR', OBB_FORUM_KERNEL_DIR . '/Includes'); //Путь к функциям
 define ('OBB_SHOW_DIR', OBB_FORUM_KERNEL_DIR); //Путь к показывающим скриптам

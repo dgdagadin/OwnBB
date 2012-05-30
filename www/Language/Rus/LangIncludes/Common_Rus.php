@@ -28,6 +28,7 @@ $ForumLang['CommonSearchButton'] = 'Искать';
 $ForumLang['MessageTitle'] = 'Страница сообщает';
 $ForumLang['MessageBack'] = 'Вернуться назад';
 $ForumLang['MessageMainPage'] = 'Главная страница';
+$ForumLang['AdvancedSearch'] = 'Расширенный поиск по форуму';
 $ForumLang['Errors'] = array (
 							  'ErrorTitle'  => 'Ошибка',
 							  'ErrorsArray' => array (

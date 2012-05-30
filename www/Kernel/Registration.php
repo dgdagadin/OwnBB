@@ -78,7 +78,7 @@ switch ($RegAction) {
 								</td>
 							</tr>
 							<tr>
-								<td style="border-top:none !important; padding:15px 15px 25px 15px;" class="ForumUpdateTD">
+								<td style="background:#D9E0EA !important; border-top:none !important; padding:15px 15px 25px 15px;" class="ForumUpdateTD">
 									' . $Rules . '
 								</td>
 							</tr>
@@ -728,9 +728,9 @@ switch ($RegAction) {
 													</div>
 												</td>
 												<td style="padding-bottom:12px;" class="FormInputTD">
-													<input checked="checked" type="radio" name="RegSex" value="male" />&nbsp;' . $ForumLang['RegSexMTitle'] . '
+													<input id="Labels_SexMale" checked="checked" type="radio" name="RegSex" value="male" />&nbsp;<label for="Labels_SexMale">' . $ForumLang['RegSexMTitle'] . '</label>
 													&nbsp;
-													<input type="radio" name="RegSex" value="female" />&nbsp;' . $ForumLang['RegSexFTitle'] . '
+													<input id="Labels_SexFemale" type="radio" name="RegSex" value="female" />&nbsp;<label for="Labels_SexFemale">' . $ForumLang['RegSexFTitle'] . '</label>
 												</td>
 											</tr>
 											<tr>

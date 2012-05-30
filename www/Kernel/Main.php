@@ -165,7 +165,7 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 							</tr>
 							<tr class="Charter' . $CharterID . '">
 								<td style="border-right:0px solid #FFF; border-left:0px solid #FFF;" colspan="3" class="ForumCharter">
-									<span style="padding-left:45px !important;" class="ThemesTitle">'  . $ForumLang['ForumsTitle']    . '</span>
+									<span style="padding-left:5px !important;" class="ThemesTitle">'  . $ForumLang['ForumsTitle']    . '</span>
 								</td>
 								<td style="border-right:0px solid #FFF; width:53px;" class="ForumCharter"><span>'  . $ForumLang['NumThemesTitle'] . '</span></td>
 								<td style="border-right:0px solid #FFF; width:70px;" class="ForumCharter"><span>'   . $ForumLang['NumPostsTitle']  . '</span></td>
@@ -194,7 +194,7 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 				//3.Иконка степени блокировки форума
 				if ($Block == 'yes') {
 					//$ForumBlockDiv = '<div class="ForumBlockDiv">' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '</div>';
-					$ForumBlockImage = '<img style="margin-right:3px; vertical-align:top;" alt="" title="' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '" src="' . OBB_IMAGE_DIR . '/lock_small.png" />';
+					$ForumBlockImage = '<img style="margin-left:3px; vertical-align:top;" alt="" title="' . Defence_HTMLSpecials ($ForumLang['ForumsBlockTitle']) . '" src="' . OBB_IMAGE_DIR . '/lock_small.png" />';
 				}
 				else {
 					//$ForumBlockDiv = '';
@@ -211,7 +211,7 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 				$RSSForumCur = '<img class="RSSForumIcon" alt="RSS" title="RSS" src="' . OBB_IMAGE_DIR . '/rss_small.png" /><a class="CurRSSHref" href="' . $RSSIconHref . '">' . $ForumLang['RSSOfCurForum'] . '</a>';
 				$ForumNameHref = Defence_HTMLSpecials ($SelfName . '?action=forumview&id_forum=' . $IdForum);
 				$ForumName = '<div class="ForumNameDiv">
-								' . $ForumBlockImage . '<a href="' . $ForumNameHref . '">' . $NameForum . '</a>' . $RSSForumCur . '
+								<a href="' . $ForumNameHref . '">' . $NameForum . '</a>' . $ForumBlockImage . $RSSForumCur . '
 							 </div>
 							  <div class="ForumDescriptionDiv">
 								' . $Description . '
@@ -293,7 +293,7 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 
 				//Вывод данных форума
 				$OneCatString .=   '<tr class="ForumMainTR Charter' . $CharterID . '">
-										<td class="ForumIconTD" style="width:40px;">
+										<td class="ForumIconTD" style="width:34px;">
 											' . $ForumIcon . '
 										</td>
 										<td style="background:#DFE6EF !important;" class="ForumNameTD InForumList">
@@ -316,21 +316,17 @@ if (DB_NumRows ($Config_DBType, $ForumListQuery) > 0) {
 			
 			$OneCatString .= '<tr>
 								<td class="ForumsTablePreBottom" colspan="' . $CharterColspan . '">
-									<div><!-- --></div>
+									<div style="height:24px !important;"><!-- --></div>
 								</td>
 							</tr>
-							<tr>
-								<td class="ForumsTableBottom" colspan="' . $CharterColspan . '">
-									<div><!-- --></div>
-								</td>
-							</tr>';
+							';
 			$OneCatString .= '</table>';
 		}
 		
 		$MainOutpurArray[] = $OneCatString;
 	}
 	
-	$MainOutput .= implode ('<div style="height:20px;"><!-- --></div>', $MainOutpurArray);
+	$MainOutput .= implode ('<div style="height:12px;"><!-- --></div>', $MainOutpurArray);
 }
 else {
 	$MainOutput .= '<div>' . $ForumLang['NoForums'] . '</div>';

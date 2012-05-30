@@ -481,7 +481,8 @@ if ($Label == 'mail') {
 
 	//навигация
 	$ToolsMailTitleTo = OBB_Main_ReplaceSymbols ($ForumLang['ToolsMailTitleTo'], array('username'=>$UserName));
-	$ToolsMailTitleTo = Defence_HTMLSpecials ($ToolsMailTitleTo);
+	//$ToolsMailTitleTo = Defence_HTMLSpecials ($ToolsMailTitleTo);
+	$ToolsMailTitleTo = $ToolsMailTitleTo;
 	$NavigArray = array (
 					array ($SelfName, $ForumLang['MainPage']),
 					array('', $ToolsMailTitleTo)
@@ -709,13 +710,13 @@ else if ($Label == 'rules') {
 								</td>
 							</tr>
 							<tr>
-								<td style="border-top:0 !important; padding:15px 15px 25px 15px;" class="ForumUpdateTD">
+								<td style="background:#D9E0EA !important; border-top:0 !important; padding:15px 15px 25px 15px;" class="ForumUpdateTD">
 									' . $Rules . '
 								</td>
 							</tr>
 							<tr>
-								<td class="ForumsTableBottom" colspan="1">
-									<div style="height:5px;"><!-- --></div>
+								<td class="ForumsTablePreBottom" colspan="1">
+									<div style="height:15px;"><!-- --></div>
 								</td>
 							</tr>
 						</table>';

@@ -1460,48 +1460,42 @@ META;
 							<!-- Content table -->
 							<table id="MainTable" cellpadding="0" cellspacing="0" border="0">
 								<!-- Header TD -->
-								<!-- <tr>
-									<td id="Header">
-										<table id="HeaderTable" cellpadding="0" cellspacing="0" border="0">
-											<tr>
-												<td id="HeaderLogoTD">
-													<div id="HeaderLogoCommonDiv">
-														<div id="HeaderLogoDiv">
-															<a href="' . Defence_HTMLSpecials ($SelfName) . '">
-																<img title="Own Bulletin Board" alt="OwnBB" src="' . OBB_IMAGE_DIR . '/logo1.gif" width="120" height="41" />
-															</a>
-														</div>
-														<div id="HeaderLogoDescription1">
-															Own Bulletin Board
-														</div>
-														<div id="HeaderLogoDescription2">
-															' . $Config_ShortDescription . '
-														</div>
-														<div id="HeaderLogoSearch">
-															<form id="LogoSubmit" action="' . Defence_HTMLSpecials ($SelfName . '?action=search&search_build=1') . '" method="post">
-																<div>
-																	<input type="hidden"  name="SearchMethod" value="1" />
-																	<input type="hidden" name="SearchMethod" value="1" />
-																	<input type="hidden" name="SearchUser" value="" />
-																	<input type="hidden" name="SearchSortBy" value="1" />
-																	<input type="hidden" name="SearchSortHow" value="2" />
-																	<input id="ProfileSearchMethodIn" type="hidden" name="SearchMethodIn" value="1" />
-																	<input type="hidden" name="search" value="1" />
-																	<input onblur="javascript:headerSearch2(this, \'' . $ForumLang['CommonSearch'] . '\');" onclick="javascript:headerSearch1(this, \'' . $ForumLang['CommonSearch'] . '\');" class="HeaderSearchInput" id="SearchWord1" type="text" name="SearchWord" size="20" maxlength="' . OBB_MAX_SEARCH_WORD . '" value="' . $ForumLang['CommonSearch'] . '..." />
-																	<input class="HeaderSearchSubmit" type="submit" value="' . $ForumLang['CommonSearchButton'] . '" />
-																</div>
-															</form>
-														</div>
-														<div id="HeaderAdvancdSearch">
-															<a href="' . $SelfName . '?action=search">Расширенный поиск</a>
-														</div>
-														' . Echo_PrintMainNavigation () . '
-													</div>
-												</td>
-											</tr>
-										</table>
+								<tr>
+									<td id="HeaderTDTop">
+										<div id="HeaderTDTopContainer">
+											<div id="LogoContainer">
+												<a id="LogoTitleLink" title="OwnBB" href="' . Defence_HTMLSpecials ($SelfName . '?action=main') . '">Own Bulletin Board</a>
+											</div>
+										</div>
 									</td>
-								</tr> -->
+								</tr>
+								<tr>
+									<td id="HeaderTDBottom">
+										<div id="HeaderTopMenuULContainer">
+											' . Echo_PrintMainNavigation () . '
+										</div>
+										<div id="HeaderSearchFormContainer">
+											<form id="LogoSubmit" action="' . Defence_HTMLSpecials ($SelfName . '?action=search&search_build=1') . '" method="post">
+												<div id="InputContainer">
+													<input type="hidden"  name="SearchMethod" value="1" />
+													<input type="hidden" name="SearchMethod" value="1" />
+													<input type="hidden" name="SearchUser" value="" />
+													<input type="hidden" name="SearchSortBy" value="1" />
+													<input type="hidden" name="SearchSortHow" value="2" />
+													<input id="ProfileSearchMethodIn" type="hidden" name="SearchMethodIn" value="1" />
+													<input type="hidden" name="search" value="1" />
+													<input onblur="javascript:headerSearch2(this, \'' . $ForumLang['CommonSearch'] . '\');" onclick="javascript:headerSearch1(this, \'' . $ForumLang['CommonSearch'] . '\');" id="SearchWord1" type="text" name="SearchWord" maxlength="' . OBB_MAX_SEARCH_WORD . '" value="' . $ForumLang['CommonSearch'] . '..." />
+													<a id="SubmitLink" onclick="$(\'#LogoSubmit\').submit();" href="javascript:void(0);">
+														<img src="' . OBB_IMAGE_DIR . '/search_div_submit.png" alt="" title="' . $ForumLang['CommonSearch'] . '" />
+													</a>
+												</div>
+											</form>
+											<a id="SearchMoreLink" href="' . Defence_HTMLSpecials ($SelfName . '?action=search') . '">
+												<img src="' . OBB_IMAGE_DIR . '/search_more.png" alt="" title="' . $ForumLang['AdvancedSearch'] . '" />
+											</a>
+										</div>
+									</td>
+								</tr>
 								<!-- Header TD END -->
 								<!-- Shalom TD -->
 								<tr>
@@ -1733,16 +1727,31 @@ function Echo_InitializeJSData ($Parameters) {
 function Echo_PrintMainNavigation () {
 	global $SelfName, $ForumLang, $UserGroups_Permissions;
 
+	$Action = isset ($_GET['action']) ? trim($_GET['action']) : '';
+	$Label  = isset ($_GET['label'])  ? trim($_GET['label'])  : '';
+	
 	$Return = '';
 	$HeaderHref = array ();
 
 	//1.Главная
-	$HeadHref[$SelfName] = $ForumLang['Navig']['Main'];
+	if ($Action <> 'registration' && $Action <> 'profile' && $Action <> 'usersview' && ($Label <> 'rules') && $Action <> 'search' && $Action <> 'login') {
+		$Current = TRUE;
+	}
+	else {
+		$Current = false;
+	}
+	$HeadHref[$SelfName] = array ($ForumLang['Navig']['Main'], $Current);
 
 	//2.Профиль/Регистрация
 	if ($_SESSION['UserData']['UserType'] == 'guest') {
 		if (OBB_ALLOW_REGISTRATION) {
-			$HeadHref[$SelfName . '?action=registration'] = $ForumLang['Navig']['Reg'];
+			if ($Action == 'registration') {
+				$Current = TRUE;
+			}
+			else {
+				$Current = false;
+			}
+			$HeadHref[$SelfName . '?action=registration'] = array($ForumLang['Navig']['Reg'], $Current);
 		}
 	}
 	else {
@@ -1755,13 +1764,25 @@ function Echo_PrintMainNavigation () {
 					OBB_WATCH_PROFILE
 				)
 		) {
-			$HeadHref[$SelfName . '?action=profile&user_id=' . $_SESSION['UserData']['UserID']] = $ForumLang['Navig']['Profile'];
+			if ($Action == 'profile') {
+				$Current = TRUE;
+			}
+			else {
+				$Current = false;
+			}
+			$HeadHref[$SelfName . '?action=profile&user_id=' . $_SESSION['UserData']['UserID']] = array($ForumLang['Navig']['Profile'], $Current);
 		}
 	}
 
 	//2.Вход/Выход
 	if ($_SESSION['UserData']['UserType'] == 'guest') {
-		$HeadHref[$SelfName . '?action=login'] = $ForumLang['Navig']['Login'];
+		if ($Action == 'login') {
+			$Current = TRUE;
+		}
+		else {
+			$Current = false;
+		}
+		$HeadHref[$SelfName . '?action=login'] = array($ForumLang['Navig']['Login'], $Current);
 	}
 	/* else {
 		$HeadHref[$SelfName . '?action=logout'] = $ForumLang['Navig']['Logout'];
@@ -1777,14 +1798,32 @@ function Echo_PrintMainNavigation () {
 				OBB_SHOW_USERLIST
 			)
 	) {
-		$HeadHref[$SelfName . '?action=usersview'] = $ForumLang['Navig']['Members'];
+		if ($Action == 'usersview') {
+			$Current = TRUE;
+		}
+		else {
+			$Current = false;
+		}
+		$HeadHref[$SelfName . '?action=usersview'] = array($ForumLang['Navig']['Members'], $Current);
 	}
 
 	//4.Поиск
-	$HeadHref[$SelfName . '?action=search'] = $ForumLang['Navig']['Search'];
+	if ($Action == 'search') {
+		$Current = TRUE;
+	}
+	else {
+		$Current = false;
+	}
+	$HeadHref[$SelfName . '?action=search'] = array($ForumLang['Navig']['Search'], $Current);
 
 	//5.Правила
-	$HeadHref[$SelfName.'?action=tooling&label=rules'] = $ForumLang['Navig']['Rules'];
+	if ($Action == 'tooling' && isset($_GET['label']) && $_GET['label'] == 'rules') {
+		$Current = TRUE;
+	}
+	else {
+		$Current = false;
+	}
+	$HeadHref[$SelfName.'?action=tooling&label=rules'] = array($ForumLang['Navig']['Rules'], $Current);
 
 	$SizeOf = sizeof ($HeadHref);
 	$First  = 0;
@@ -1793,6 +1832,8 @@ function Echo_PrintMainNavigation () {
 
 	$Return .= '<ul id="HeaderTopMenuUL">';
 	foreach ($HeadHref as $key=>$value) {
+		$MenuWord  = $value[0];
+		$IsCurrent = $value[1];
 		if ($Count == $First) {
 			$Class = 'First';
 		}
@@ -1802,7 +1843,13 @@ function Echo_PrintMainNavigation () {
 		else {
 			$Class = 'Standart';
 		}
-		$Return .= '<li class="' . $Class . '"><a title="' . $value . '" href="' . Defence_HTMLSpecials ($key) . '">' . $value . '</a></li>';
+		if ($IsCurrent) {
+			$CurrentClass = ' class="Current"';
+		}
+		else {
+			$CurrentClass = '';
+		}
+		$Return .= '<li class="' . $Class . '"><a' . $CurrentClass . ' title="' . $MenuWord . '" href="' . Defence_HTMLSpecials ($key) . '">' . $MenuWord . '</a></li>';
 		$Count++;
 	}
 	$Return .= '</ul>';
