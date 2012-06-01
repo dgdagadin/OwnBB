@@ -112,7 +112,7 @@ switch ($Action) {
 
 	case "admin":
 	{
-		include (OBB_SHOW_DIR . '/Admin.php');
+		include (OBB_ADMIN_DIR . '/Admin.php');
 		break;
 	}
 
