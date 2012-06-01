@@ -472,14 +472,14 @@ if ($ThemeNumPosts > 0) {
 			$UserIsDeleted = '';
 
 			$IsUserAdminGroup = OBB_Main_IsAdminGroup ($PGroupID);
-			$CurrentUserAvatarPermissions = OBB_Main_GetSpecifiedPermission ($PGroupID, 'AvatarsAllowed');
-			if ($IsUserAdminGroup || (!$IsUserAdminGroup && $CurrentUserAvatarPermissions)) {
-				$AvatarPermissions = TRUE;
-			}
-			else {
-				$AvatarPermissions = false;
-			}
-			if (OBB_ALLOW_AVATARS && !OBB_Main_IsEmpty ($PUserAvatar) && $AvatarPermissions) {
+			// $CurrentUserAvatarPermissions = OBB_Main_GetSpecifiedPermission ($PGroupID, 'AvatarsAllowed');
+			// if ($IsUserAdminGroup || (!$IsUserAdminGroup && $CurrentUserAvatarPermissions)) {
+			// 		$AvatarPermissions = TRUE;
+			// }
+			// else {
+			// 		$AvatarPermissions = false;
+			// }
+			if (OBB_ALLOW_AVATARS && !OBB_Main_IsEmpty ($PUserAvatar) /* && $AvatarPermissions */) {
 				$UserAvatar = '<img class="AvatarImg" alt="" title="" src="' . OBB_AVATAR_DIR . '/' . $PUserID . '.' . $PUserAvatar . '" />';
 			}
 			else {
