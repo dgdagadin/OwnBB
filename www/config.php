@@ -149,6 +149,7 @@ define ('OBB_MAIL_CURRENT_CHARSET', 'utf-8');//текущая кодировка
 define ('OBB_MAIL_TRUE_CHARSET', 'koir-8');//корректная кодировка отправки письма
 define ('OBB_MAIL_MAIL_MIME', 'text/html');//mime-тип письма
 define ('OBB_MAIL_ADMIN_MAIL', TRUE);//слать ли письма администратору
+define ('OBB_MAIL_DEBUG', TRUE); //Включен ли отладочный режим работы почты
 //Почтовые настройки - конец
 
 //Настройки капчи

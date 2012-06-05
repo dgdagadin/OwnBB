@@ -41,6 +41,7 @@ include (OBB_KERNEL_DIR . '/Service.php');
 include (OBB_KERNEL_DIR . '/OwnBB.CheckUpload.class.php');
 //include (OBB_KERNEL_DIR . '/OwnBB.Transactions.Class.php');
 include (OBB_KERNEL_DIR . '/OwnBB.BBCode.php');
+include (OBB_KERNEL_DIR . '/OwnBB.SendMail.php');
 
 //Подключение файла языка
 include (OBB_LANGUAGE_DIR . '/UserProfile_' . $Config_Lang . '.php');
@@ -499,7 +500,7 @@ if (isset ($_POST['EditProfile']) && $CanEditProfile) {
 
 		//  --4.Письмо администратору
 		if ($Config_Mail['AdminMail'] == TRUE) {
-			$AdminProfLogin = $ProfileLogin;
+			/* $AdminProfLogin = $ProfileLogin;
 			$AdminEditerID  = $_SESSION['UserData']['UserID'];
 			$AdminProfOwner = $UserID;
 			$AdminProfDate  = Main_ConvertDate (time (), '', $Format = 'd.m.y, H:i');
@@ -515,7 +516,40 @@ if (isset ($_POST['EditProfile']) && $CanEditProfile) {
 			$AdminLetter = str_replace ('{userownerid}', $AdminProfOwner, $AdminLetter);
 
 			#$RegMailer->SendMail ($AdminName, $AdminMail, $AdmTheme, $AdminLetter);
-			file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_EditProfLog' . $AdminProfOwner . '_' . microtime () . '.html', $AdminLetter);
+			file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_EditProfLog' . $AdminProfOwner . '_' . microtime () . '.html', $AdminLetter); */
+			$LetterAdminName = $Config_Mail['FromName'];
+			$LetterAdminMail = $Config_Mail['FromMail'];
+
+			//МАССИВ ОТПРАВИТЕЛЯ ПИСЬМА
+			$LetterSenderArray = array('address'=>$LetterAdminMail,'name'=>$LetterAdminName);
+
+			//МАССИВ ПОЛУЧАТЕЛЯ ПИСЬМА
+			$LetterGetterArray = array('address'=>$LetterAdminMail,'name'=>$LetterAdminName);
+			
+			//ТЕМА ПИСЬМА
+			$LetterSubject = $ForumLang['ProfileMail']['EditMailTheme'] . ' "' . $Config_ForumName . '"';
+			
+			//ТЕЛО ПИСЬМА
+			//  --данные для реплейса
+			$LetterEditerID  = $_SESSION['UserData']['UserID'];
+			$LetterProfOwner = $UserID;
+			$LetterProfDate  = Main_ConvertDate (time (), '', $Format = 'd.m.y, H:i');
+			$LetterProfLogin = $ProfileLogin;
+			
+			//  --генерация
+			$AdminLetter = file_get_contents (OBB_HTML_LANGUAGE_DIR . '/AdminMailProfile.html');
+			$AdminLetter = str_replace ('{username}', $LetterProfLogin, $AdminLetter);
+			$AdminLetter = str_replace ('{userid}', $LetterEditerID, $AdminLetter);
+			$AdminLetter = str_replace ('{userdate}', $LetterProfDate, $AdminLetter);
+			$AdminLetter = str_replace ('{userownerid}', $LetterProfOwner, $AdminLetter);
+			
+			//если отладочный режим - ложим в файл, иначе - отправляем письмо на ящик
+			if (OBB_MAIL_DEBUG == false) {
+				OBB_Mail_Send ($LetterSenderArray, $LetterGetterArray, $LetterSubject, $AdminLetter);
+			}
+			else {
+				file_put_contents (OBB_ERROR_MAIL_DIR . '/Admin_EditProfLog' . $LetterProfOwner . '_' . microtime () . '.html', $AdminLetter);
+			}
 		}
 
 		//редирект - если нет ошибок
@@ -913,7 +947,7 @@ if ($CanEditProfile) {
 									</div>
 								</td>
 								<td style="border-top:1px solid #FFF; padding-bottom:7px;" class="FormInputTD">
-									<div style="margin-bottom:10px; border:none; background:#DFE6EF;" class="MainBlockAttach">
+									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
 										' . $CurrentAvatarBlock . '
 										<div class="AttachAddAction">
 											<strong>' . $ForumLang['UserProfileAvatarNew'] . '</strong>
@@ -1239,7 +1273,7 @@ else {
 									</div>
 								</td>
 								<td style="border-top:1px solid #FFF; padding-bottom:7px; padding-top:0;" class="FormInputTD">
-									<div style="margin-bottom:10px; border:none; background:#DFE6EF;" class="MainBlockAttach">
+									<div style="margin-bottom:10px; border:none; background:#D9E0EA;" class="MainBlockAttach">
 										' . $CurrentAvatar . '
 									</div>
 								</td>

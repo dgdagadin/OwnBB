@@ -80,6 +80,7 @@ $ForumLang['UserProfileDeleteUser'] = 'Удалить';
 $ForumLang['UserProfileEditUser'] = 'Редактировать';
 $ForumLang['UserProfileCaptchaTitle'] = 'Защитный код';
 $ForumLang['UserProfileActions'] = array ();
+$ForumLang['ProfileMail']['EditMailTheme'] = 'Редактирование профиля на';
 $ForumLang['UserProfileActions']['main_page'] = 'просматривает главную страницу';
 $ForumLang['UserProfileActions']['forum_page'] = 'просматривает темы форумов';
 $ForumLang['UserProfileActions']['theme_page'] = 'просматривает сообщения темы';
