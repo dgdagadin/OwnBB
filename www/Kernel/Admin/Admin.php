@@ -20,7 +20,6 @@ $AdminModule = OBB_Admin_GetAdminModule ();
 //подключение скрипта модуля
 include (OBB_ADMIN_DIR  . '/' . $AdminModule . '.php');
 
-//контрольный выход
 exit;
 
 ?>

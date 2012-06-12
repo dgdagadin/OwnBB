@@ -5,6 +5,8 @@ if (!isset ($VALIDATION) || $VALIDATION <> '1') {
 	exit ('Hi, hacker!');
 }
 
+$MainOutput = '';
+
 if (isset ($_GET['cid'])) {
 	$TestPhrase = 'Edit';
 }

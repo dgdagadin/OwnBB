@@ -10,7 +10,6 @@ $CategoriesActionArray = array ('list', 'edit', 'del');
 $CategoriesModuleArray = array (
 						'list' =>'AdminCategoriesList',
 						'edit' =>'AdminCategoryEdit',
-						'block'=>'AdminCategoryBlock',
 						'del'  =>'AdminCategoryDelete'
 					);
 $CategoriesActionVar = 'cact';
