@@ -1285,7 +1285,7 @@ function Echo_CaptchaBlock2 ($CaptchaTitle, $EnterPaptchaWord, $CaptchaInputID =
 
 //хедер
 function Echo_PrintHead ($NavigArray, $JavaScriptArray, $Title, $DelimiterDivName='DelimiterDiv') {
-	global $Action, $SelfName, $ForumLang, $VALIDATION, $Config_JSTabs, $UserGroups_Array, $Config_ShortDescription, $UserGroups_Permissions;
+	global $Action, $SelfName, $HostName, $ForumLang, $VALIDATION, $Config_JSTabs, $UserGroups_Array, $Config_ShortDescription, $UserGroups_Permissions;
 	$Return = '';
 
 	//SOME FEATURES
@@ -1434,7 +1434,8 @@ META;
 	else {
 		$ShalomLeft .= '<a title="' . $ForumLang['Shalom']['RSSTitle'] . '" href="' . $SelfName . '?action=rss">' . $ForumLang['Shalom']['RSS'] . '</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a title="' . $ForumLang['Shalom']['RulesTitle'] . '" href="' . Defence_HTMLSpecials ($SelfName . '?action=tooling&label=rules') . '">' . $ForumLang['Shalom']['Rules'] . '</a>';
 		if ($_SESSION['UserData']['UserType'] == 'admin') {
-			$ShalomLeft .= '&nbsp;&nbsp;|&nbsp;&nbsp;<a title="' . $ForumLang['Shalom']['AdminTitle'] . '" class="Admin" href="' . Defence_HTMLSpecials ($SelfName . '?action=admin') . '">' . $ForumLang['Shalom']['Admin'] . '</a>';
+			//$ShalomLeft .= '&nbsp;&nbsp;|&nbsp;&nbsp;<a title="' . $ForumLang['Shalom']['AdminTitle'] . '" class="Admin" href="' . Defence_HTMLSpecials ($SelfName . '?action=admin') . '">' . $ForumLang['Shalom']['Admin'] . '</a>';
+			$ShalomLeft .= '&nbsp;&nbsp;|&nbsp;&nbsp;<a title="' . $ForumLang['Shalom']['AdminTitle'] . '" class="Admin" href="http://' . $HostName . '/Kernel/Admin/AdminMain.php">' . $ForumLang['Shalom']['Admin'] . '</a>';
 		}
 		if ($_SESSION['UserData']['UserType'] == 'admin' || ($UserGroups_Permissions['VisitUserProfile'] && OBB_WATCH_PROFILE)) {
 			$ProfileString = ' | <a title="' . $ForumLang['Shalom']['ProfileTitle'] . '" href="' . Defence_HTMLSpecials ($SelfName . '?action=profile&user_id=' . $_SESSION['UserData']['UserID']) . '">' . $ForumLang['Shalom']['Profile'] . '</a>';
@@ -1729,7 +1730,7 @@ function Echo_PrintMainNavigation () {
 
 	$Action = isset ($_GET['action']) ? trim($_GET['action']) : '';
 	$Label  = isset ($_GET['label'])  ? trim($_GET['label'])  : '';
-	
+
 	$Return = '';
 	$HeaderHref = array ();
 

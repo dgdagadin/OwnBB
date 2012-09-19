@@ -15,6 +15,7 @@ $Config_JSTabs = '    '; //Табуляция в JSBuilder
 $Config_ShortDescription = 'Новый форумный движок!';
 $Config_FooterText = 'Powered by <a href="' . $_SERVER['PHP_SELF'] . '">OwnBB</a>&nbsp;|&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '">Own Bulletin Board</a>&nbsp;|&nbsp;2011-2012&nbsp;&copy;&nbsp;&nbsp;';
 $Config_GuestGroupID = 3; //Идентификатор гостевой группы
+$Config_HostName = 'ownbb.local'; //
 //Переменные - конец
 
 //Данные соединения с БД
